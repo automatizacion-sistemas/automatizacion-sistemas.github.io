@@ -6,3 +6,6 @@ Se alojan en este sitio para que las demos de Python no dependan de servicios ex
 Paquetes de Python incluidos en ../python/ (archivos .whl sin modificar, de PyPI):
   openpyxl 3.1.5     — licencia MIT — https://foss.heptapod.net/openpyxl/openpyxl
   et_xmlfile 2.0.0   — licencia MIT — https://foss.heptapod.net/openpyxl/et_xmlfile
+  fpdf2 2.9.0        — licencia LGPL-3.0 — https://github.com/py-pdf/fpdf2
+  fonttools 4.68.0   — licencia MIT — https://github.com/fonttools/fonttools
+  defusedxml 0.7.1   — licencia PSF-2.0 — https://github.com/tiran/defusedxml

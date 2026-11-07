@@ -178,6 +178,8 @@
       { titulo: "Archivo", html: function (o) { return esc(o.archivo) + (o.fila ? "<small class='sub'>fila " + o.fila + "</small>" : ""); } },
       { titulo: "Detalle", clase: "celda-titular celda-detalle", html: function (o) { return esc(o.detalle); } }
     ], lista, { vacio: "No hay observaciones de este tipo." });
+    const env = $("#tabla-observaciones .tabla-envoltura");
+    if (env) { env.tabIndex = 0; env.setAttribute("role", "region"); env.setAttribute("aria-label", "Observaciones (se desplaza)"); }
   }
 
   /* =================== Código =================== */

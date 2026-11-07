@@ -1,0 +1,74 @@
+/* ==========================================================================
+   pdf.css — Estilos propios del generador de PDF
+   Reutiliza de ../excel/css/excel.css la consola, el visor de código, los
+   pasos del proyecto, el botón de archivo y el estado «cargando».
+   ========================================================================== */
+.pastilla-python { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--gris-100); color: var(--gris-700); font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.pastilla-python svg { width: 15px; height: 15px; animation: girar 1s linear infinite; }
+.pastilla-python--listo { background: var(--exito-fondo); color: var(--exito); }
+.pastilla-python--error { background: var(--error-fondo); color: var(--error); }
+.pastilla-python--listo svg, .pastilla-python--error svg { animation: none; }
+@media (max-width: 480px) { .pastilla-python { padding: 6px 8px; } }
+
+/* Tipo de documento */
+.tipos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-3); margin-bottom: var(--esp-4); max-width: 720px; }
+.tipo { position: relative; cursor: pointer; }
+.tipo input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.tipo > span { display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; column-gap: var(--esp-3); align-items: center; padding: var(--esp-3) var(--esp-4); border: 2px solid var(--gris-200); border-radius: var(--radio-lg); background: var(--blanco); transition: border-color var(--transicion), background var(--transicion); }
+.tipo svg { grid-row: span 2; width: 40px; height: 40px; padding: 8px; border-radius: 10px; background: var(--celeste-100); color: var(--celeste-600); }
+.tipo b { font-size: var(--texto-sm); }
+.tipo small { color: var(--gris-500); font-size: var(--texto-xs); }
+.tipo input:checked + span { border-color: var(--azul-700); background: #f5fbff; }
+.tipo input:focus-visible + span { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+@media (max-width: 480px) { .tipos { grid-template-columns: 1fr; } }
+
+.rejilla-pdf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--esp-4); align-items: start; }
+@media (max-width: 1150px) { .rejilla-pdf { grid-template-columns: 1fr; } }
+
+/* Plantilla */
+.columnas { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--esp-2) 0 var(--esp-3); }
+.columna-chip { min-height: 32px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--gris-200); background: var(--blanco); font: 600 0.75rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--gris-700); cursor: pointer; }
+button.columna-chip:hover { border-color: var(--celeste-500); background: var(--celeste-100); }
+.columna-chip--usada { border-color: #9fd8f5; color: var(--azul-700); background: #f1faff; }
+.columna-chip--falta { border-color: #f5c2c2; background: var(--error-fondo); color: var(--error); cursor: default; }
+.plantilla { width: 100%; min-height: 360px; padding: var(--esp-3); border: 1px solid var(--gris-300); border-radius: var(--radio); font: 0.82rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--texto); resize: vertical; background: #fbfcfe; }
+.plantilla:focus { outline: 3px solid var(--celeste-500); outline-offset: 1px; border-color: var(--celeste-500); }
+.ayuda-formatos { margin-top: var(--esp-3); font-size: var(--texto-sm); }
+.ayuda-formatos summary { cursor: pointer; font-weight: 700; color: var(--azul-700); min-height: 32px; display: flex; align-items: center; }
+.ayuda-formatos ul { margin: var(--esp-2) 0 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--gris-700); }
+
+/* Datos */
+.datos-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-2) var(--esp-3); margin-bottom: var(--esp-3); }
+.archivo-actual { display: flex; align-items: center; gap: var(--esp-3); flex: 1; min-width: 200px; }
+.archivo-actual b { display: block; font-size: var(--texto-sm); overflow-wrap: anywhere; }
+.archivo-actual small { color: var(--gris-500); font-size: var(--texto-xs); }
+.tabla--datos td, .tabla--datos th { font-size: var(--texto-xs); }
+.tabla--datos .sub { display: block; color: var(--error); white-space: normal; max-width: 260px; }
+.fila-error td { background: #fffafa; }
+#tabla-datos .tabla-envoltura { max-height: 520px; overflow-y: auto; }
+
+/* Generar */
+.generar-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--esp-3) var(--esp-5); }
+.generar-barra h2 { margin: 0; }
+.generar-barra .campo__ayuda { margin: 4px 0 0; max-width: 70ch; }
+.generar-barra .btn--grande { width: auto; min-width: 240px; }
+@media (max-width: 640px) { .generar-barra .btn--grande { width: 100%; } }
+
+/* Resultado */
+.rejilla-resultado { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--esp-4); align-items: start; }
+@media (max-width: 1150px) { .rejilla-resultado { grid-template-columns: 1fr; } }
+.fila-activa td { background: #f1faff; }
+.errores-generacion { margin-top: var(--esp-4); padding: var(--esp-3) var(--esp-4); border-radius: var(--radio); background: var(--error-fondo); color: #7f1d1d; font-size: var(--texto-sm); }
+.errores-generacion h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 var(--esp-2); font-size: var(--texto-sm); }
+.errores-generacion svg { width: 16px; height: 16px; }
+.errores-generacion ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.vista-previa { position: sticky; top: var(--esp-4); }
+.vista-previa iframe { width: 100%; height: 640px; border: 1px solid var(--gris-200); border-radius: var(--radio); background: var(--gris-100); }
+.vista-previa .campo__ayuda { margin: 0 0 var(--esp-2); overflow-wrap: anywhere; }
+@media (max-width: 1150px) { .vista-previa { position: static; } }
+/* Muchos celulares no muestran PDF dentro de la página: se usa el botón «Abrir» */
+@media (max-width: 640px) { .vista-previa iframe { display: none; } .vista-previa .campo__ayuda::after { content: " · Toca «Abrir» para verlo."; } }
+details.caja summary { cursor: pointer; font-weight: 700; min-height: 32px; display: flex; align-items: center; }
+details.caja .consola { margin-top: var(--esp-3); height: 220px; }
+code { overflow-wrap: anywhere; }
+.tabla--datos td:last-child { min-width: 190px; }

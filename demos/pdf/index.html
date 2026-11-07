@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo · Generador de PDF — Automatización &amp; Sistemas</title>
+  <meta name="description" content="Demostración funcional: un programa en Python que genera constancias y cartas en PDF a partir de una plantilla editable y un Excel, con validaciones, nombres de archivo automáticos y códigos de verificación.">
+  <meta name="theme-color" content="#0a1f44">
+  <link rel="icon" href="../../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="../comun/css/demo.css">
+  <link rel="stylesheet" href="../excel/css/excel.css">
+  <link rel="stylesheet" href="css/pdf.css">
+</head>
+<body>
+
+<div class="app" id="app">
+  <aside class="lateral">
+    <a class="lateral__marca" href="../../index.html#portafolio" title="Volver al portafolio">
+      <img src="../../assets/img/logo-marca.svg" alt="" width="36" height="36">
+      <span><b>Generador de PDF</b><small>Comercializadora Los Andes · demo</small></span>
+    </a>
+    <nav class="lateral__nav" aria-label="Secciones">
+      <a href="#generar" data-vista="generar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" /> <path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z" /> <path d="M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" /> </svg><span>Generar documentos</span></a>
+      <a href="#codigo" data-vista="codigo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 12.5 8 15l2 2.5" /> <path d="m14 12.5 2 2.5-2 2.5" /> </svg><span>Código Python</span></a>
+      <a href="#proyecto" data-vista="proyecto"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" /> <path d="M20.054 15.987H3.946" /> </svg><span>Úsalo en tu empresa</span></a>
+    </nav>
+    <div class="lateral__pie">
+      <a class="btn btn--acento btn--chico" href="../../index.html#contacto">Quiero generar mis documentos</a>
+      <a class="lateral__volver" href="../../index.html#portafolio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg> Volver al portafolio</a>
+    </div>
+  </aside>
+
+  <div class="principal">
+    <header class="barra">
+      <h1 id="titulo-vista">Generar documentos</h1>
+      <div class="barra__acciones">
+        <span class="pastilla-python" id="pastilla-python" role="status"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 12a9 9 0 1 1-6.219-8.56" /> </svg><span>Cargando Python…</span></span>
+        <a class="btn btn--secundario btn--chico" href="descargas/generador-documentos-pdf.zip" download><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /> </svg><span class="solo-escritorio">Descargar el proyecto</span></a>
+      </div>
+    </header>
+
+    <main class="vistas">
+      <div class="aviso-demo">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /> </svg>
+        <p><b>Python real, ejecutándose en tu navegador.</b> El mismo programa que se instala en la computadora de una oficina genera aquí los PDF. Tus datos no se suben a ningún servidor.</p>
+      </div>
+
+      <!-- ===== GENERAR ===== -->
+      <section class="vista" data-vista="generar" aria-labelledby="titulo-vista">
+        <div class="tipos" role="radiogroup" aria-label="Tipo de documento">
+          <label class="tipo"><input type="radio" name="tipo" value="constancia_trabajo" checked><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /> <path d="m16 9-5.5 5.5L8 12" /> </svg><b>Constancias de trabajo</b><small>Datos de 12 trabajadores</small></span></label>
+          <label class="tipo"><input type="radio" name="tipo" value="carta_cobranza"><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M22 10.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12.5" /> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /> <path d="M20 14v4" /> <path d="M20 22v.01" /> </svg><b>Cartas de cobranza</b><small>8 facturas vencidas</small></span></label>
+        </div>
+
+        <div class="rejilla-pdf">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>1. Plantilla</h2><button type="button" class="btn btn--secundario btn--chico" id="btn-restaurar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> </svg> Restaurar</button></div>
+            <p class="campo__ayuda">Edita el texto como en el Bloc de notas. Lo que está entre llaves se reemplaza con la columna del Excel. Toca una columna para insertarla.</p>
+            <div class="columnas" id="columnas" role="group" aria-label="Columnas del Excel"></div>
+            <label class="visualmente-oculto" for="plantilla">Texto de la plantilla</label>
+            <textarea id="plantilla" class="plantilla" rows="18" spellcheck="false"></textarea>
+            <div class="form-mov__error" id="error-plantilla" role="alert"></div>
+            <details class="ayuda-formatos">
+              <summary>Formatos y bloques disponibles</summary>
+              <ul>
+                <li><code>{FechaIngreso:fecha}</code> → 15 de marzo de 2019 · <code>:fecha_corta</code> → 15/03/2019</li>
+                <li><code>{Saldo:soles}</code> → S/ 12,750.00 · <code>{Saldo:letras}</code> → DOCE MIL SETECIENTOS CINCUENTA CON 00/100 SOLES</li>
+                <li><code>{Nombres:mayus}</code> → MAYÚSCULAS · <code>:titulo</code> → Tipo Título · <code>{Vencimiento:dias}</code> → días transcurridos</li>
+                <li><code>{si FechaCese}</code>texto si tiene valor<code>{sino}</code>texto si está vacío<code>{fin}</code></li>
+                <li><code>**negrita**</code> · una línea en blanco separa párrafos · <code>{codigo}</code> y <code>{hoy:fecha}</code> los pone el sistema</li>
+                <li>En el encabezado: <code>archivo:</code> define el nombre de cada PDF y <code>obligatorios:</code> las columnas que no pueden estar vacías.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="caja caja--tabla">
+            <div class="caja__cabecera"><h2>2. Datos</h2><small id="resumen-datos"></small></div>
+            <div class="datos-acciones">
+              <span class="archivo-actual" id="archivo-actual"></span>
+              <a class="btn-icono" id="descargar-ejemplo" href="#" download title="Descargar el Excel de ejemplo" aria-label="Descargar el Excel de ejemplo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /> </svg></a>
+              <label class="btn btn--secundario btn--chico boton-archivo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 3v12" /> <path d="m17 8-5-5-5 5" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> </svg> Usar mi Excel<input type="file" id="mi-excel" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label>
+            </div>
+            <div class="form-mov__error" id="error-datos" role="alert"></div>
+            <div id="tabla-datos"><p class="vacio">Leyendo el Excel con Python…</p></div>
+          </div>
+        </div>
+
+        <div class="caja espacio-arriba generar-barra">
+          <div>
+            <h2>3. Generar</h2>
+            <p class="campo__ayuda" id="estado-generar">Se generará un PDF por cada fila sin errores, un PDF con todos juntos y el registro en Excel.</p>
+          </div>
+          <button type="button" class="btn btn--primario btn--grande" id="btn-generar" disabled><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4.226 20.925A2 2 0 0 0 6 22h12a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v3.127" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="m5 11-3 3" /> <path d="m5 17-3-3h10" /> </svg> Generar PDF</button>
+        </div>
+
+        <section class="resultado" id="resultado" hidden aria-labelledby="titulo-resultado">
+          <div class="resultado__cabecera">
+            <div><h2 id="titulo-resultado">4. Documentos generados</h2><p class="campo__ayuda" id="resultado-sub"></p></div>
+            <div class="fila-botones-izq">
+              <button type="button" class="btn btn--acento" id="btn-zip"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" /> <path d="M12 10v6" /> <path d="m15 13-3 3-3-3" /> </svg> Descargar todo (.zip)</button>
+              <button type="button" class="btn btn--secundario btn--chico" id="btn-combinado"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" /> <rect x="6" y="14" width="12" height="8" rx="1" /> </svg> PDF para imprimir</button>
+              <button type="button" class="btn btn--secundario btn--chico" id="btn-registro"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Registro</button>
+            </div>
+          </div>
+          <div class="rejilla-resultado">
+            <div class="caja caja--tabla">
+              <div id="tabla-documentos"></div>
+              <div id="lista-errores"></div>
+            </div>
+            <div class="caja vista-previa">
+              <div class="caja__cabecera"><h2>Vista previa</h2><a class="btn btn--secundario btn--chico" id="abrir-pdf" href="#" target="_blank" rel="noopener"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /> </svg> Abrir</a></div>
+              <p class="campo__ayuda" id="nombre-previa"></p>
+              <iframe id="previa" title="Vista previa del PDF"></iframe>
+            </div>
+          </div>
+          <details class="caja espacio-arriba">
+            <summary>Salida del programa</summary>
+            <div class="consola" id="consola" role="log" aria-label="Salida del programa" tabindex="0"></div>
+          </details>
+        </section>
+      </section>
+
+      <!-- ===== CÓDIGO ===== -->
+      <section class="vista" data-vista="codigo" hidden>
+        <div class="caja">
+          <div class="caja__cabecera"><h2>generar_documentos.py</h2><small id="codigo-lineas"></small>
+            <a class="btn btn--secundario btn--chico" href="python/generar_documentos.py" download><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /> </svg> Descargar</a>
+          </div>
+          <p class="campo__ayuda">Este es exactamente el archivo que genera los PDF en la pestaña «Generar documentos», comentado en español.</p>
+          <pre class="codigo" id="codigo" tabindex="0" aria-label="Código fuente de generar_documentos.py"><code>Cargando…</code></pre>
+        </div>
+      </section>
+
+      <!-- ===== PROYECTO ===== -->
+      <section class="vista" data-vista="proyecto" hidden>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Úsalo en una computadora con Windows</h2></div>
+            <ol class="pasos">
+              <li><b>Instala Python 3</b> desde <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a> y marca «Add python.exe to PATH».</li>
+              <li><b>Descarga el proyecto</b> y descomprímelo.</li>
+              <li><b>Edita la plantilla</b> de la carpeta <code>plantillas</code> con el Bloc de notas y <b>llena el Excel</b> de la carpeta <code>datos</code>.</li>
+              <li><b>Haz doble clic en <code>ejecutar.bat</code></b>: genera los PDF de los dos ejemplos en la carpeta <code>salida</code> y la abre.</li>
+            </ol>
+            <a class="btn btn--primario btn--chico" href="descargas/generador-documentos-pdf.zip" download><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /> </svg> Descargar el proyecto (.zip)</a>
+            <p class="campo__ayuda espacio-arriba">Por línea de comandos: <code>python generar_documentos.py plantillas/constancia_trabajo.txt datos/trabajadores.xlsx --zip</code></p>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Qué incluye</h2></div>
+            <ul class="lista-proyecto">
+              <li><code>generar_documentos.py</code> — el programa.</li>
+              <li><code>plantillas/</code> — constancia de trabajo y carta de cobranza.</li>
+              <li><code>datos/</code> — los Excel de ejemplo y <code>generar_ejemplos.py</code> para recrearlos.</li>
+              <li><code>tests/</code> — 19 pruebas automáticas (<code>python -m pytest</code>).</li>
+              <li><code>ejecutar.bat</code> y <code>ejecutar.sh</code> — para ejecutarlo con un clic.</li>
+            </ul>
+            <h3 class="subtitulo-caja">Se adapta a cada oficina</h3>
+            <ul class="lista-proyecto">
+              <li>Certificados, contratos, cartas de presentación, boletas informativas o memorandos.</li>
+              <li>Logotipo y diseño de la empresa, varias páginas y tablas.</li>
+              <li>Firma digital con certificado (requiere el certificado digital de la empresa o de la persona que firma) y envío por correo (requiere una cuenta de correo de la empresa): no incluidos en esta demo.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="nav-movil" aria-label="Secciones">
+    <a href="#generar" data-vista="generar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" /> <path d="M16.706 2.706A2.4 2.4 0 0 0 15 2v5a1 1 0 0 0 1 1h5a2.4 2.4 0 0 0-.706-1.706z" /> <path d="M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1" /> </svg><span>Generar</span></a>
+    <a href="#codigo" data-vista="codigo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 12.5 8 15l2 2.5" /> <path d="m14 12.5 2 2.5-2 2.5" /> </svg><span>Código</span></a>
+    <a href="#proyecto" data-vista="proyecto"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" /> <path d="M20.054 15.987H3.946" /> </svg><span>Tu empresa</span></a>
+  </nav>
+</div>
+
+<div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+
+<script src="../comun/js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

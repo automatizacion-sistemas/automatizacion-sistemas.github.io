@@ -105,11 +105,13 @@ window.PROYECTOS = [
     id: "pdf",
     titulo: "Generador automático de documentos PDF",
     categoria: "automatizacion",
-    estado: "proximamente",
+    estado: "disponible",
+    demo: "demos/pdf/",
+    captura: "assets/img/capturas/pdf.webp",
     vista: "pdf",
     problema: "Para oficinas que redactan uno por uno contratos, constancias o cartas que siempre tienen el mismo formato.",
-    funciones: ["Plantilla con campos variables", "Genera cientos de documentos de una vez", "Nombres de archivo automáticos", "Listos para enviar o firmar"],
-    tecnologias: ["Python", "SQLite"],
+    funciones: ["Plantilla editable con campos del Excel", "Valida los datos antes de generar", "Un PDF por persona con nombre automático", "Registro con código de verificación y PDF para imprimir"],
+    tecnologias: ["Python", "fpdf2"],
     servicio: "Generación automática de PDF y documentos"
   }
 ];

@@ -1,0 +1,21 @@
+---
+# Datos del documento. Lo que está entre llaves se reemplaza con la columna del Excel.
+titulo: CONSTANCIA DE TRABAJO
+archivo: Constancia_{DNI}_{ApellidoPaterno}
+prefijo: CT
+empresa: Comercializadora Los Andes S.A.C.
+ruc: 20601234569
+direccion: Av. Los Próceres 1450, Santiago de Surco, Lima
+lugar: Lima
+firma_nombre: Patricia Salazar Vega
+firma_cargo: Jefa de Recursos Humanos
+obligatorios: Nombres, ApellidoPaterno, DNI, Cargo, Area, FechaIngreso
+resumen: {Nombres} {ApellidoPaterno} {ApellidoMaterno} (DNI {DNI})
+---
+La Jefatura de Recursos Humanos de **Comercializadora Los Andes S.A.C.** deja constancia de que:
+
+**{Nombres:mayus} {ApellidoPaterno:mayus} {ApellidoMaterno:mayus}**, identificado(a) con DNI N° {DNI}, {si FechaCese}laboró en nuestra empresa desde el {FechaIngreso:fecha} hasta el {FechaCese:fecha}{sino}labora en nuestra empresa desde el {FechaIngreso:fecha} hasta la fecha{fin}, desempeñando el cargo de **{Cargo}** en el área de {Area}.
+
+{si FechaCese}Durante su permanencia en la empresa demostró responsabilidad, puntualidad y compromiso con las funciones asignadas.{sino}A la fecha mantiene un vínculo laboral vigente con la empresa.{fin}
+
+Se expide la presente constancia a solicitud del (de la) interesado(a), para los fines que estime convenientes.

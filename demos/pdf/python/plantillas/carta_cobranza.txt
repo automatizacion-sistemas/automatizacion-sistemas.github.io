@@ -1,0 +1,29 @@
+---
+# Datos del documento. Lo que está entre llaves se reemplaza con la columna del Excel.
+titulo: RECORDATORIO DE PAGO
+archivo: Cobranza_{Comprobante}_{Cliente}
+prefijo: CB
+empresa: Comercializadora Los Andes S.A.C.
+ruc: 20601234569
+direccion: Av. Los Próceres 1450, Santiago de Surco, Lima
+lugar: Lima
+fecha_arriba: si
+firma_nombre: Miguel Ramos Medina
+firma_cargo: Jefe de Créditos y Cobranzas
+obligatorios: Cliente, Contacto, Comprobante, Emision, Vencimiento, Saldo
+resumen: {Cliente} - {Comprobante}
+---
+Señor(a):
+**{Contacto}**
+{Cliente}{si RUC} - RUC {RUC}{fin}
+Presente.-
+
+De nuestra consideración:
+
+Le recordamos que la factura **{Comprobante}**, emitida el {Emision:fecha}, venció el **{Vencimiento:fecha}** y a la fecha registra un saldo pendiente de **{Saldo:soles}** ({Saldo:letras}), con {Vencimiento:dias} días de atraso.
+
+Le agradeceremos regularizar el pago en los próximos cinco días hábiles en la cuenta indicada en la factura. Si ya realizó el pago, le pedimos responder esta carta adjuntando la constancia para actualizar su estado de cuenta.
+
+Agradecemos su preferencia y quedamos atentos a cualquier consulta.
+
+Atentamente,

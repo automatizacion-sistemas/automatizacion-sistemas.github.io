@@ -184,3 +184,20 @@ Después de los cambios compartidos, las suites de las 5 demos volvieron a pasar
 | Casos de uso | ✅ Solo un archivo, ningún archivo (botón deshabilitado), solo el archivo que no es de ventas (mensaje claro), archivo propio con otros encabezados y fila de TOTAL (se procesa y la sucursal sale del nombre), archivo que no es .xlsx y nombre repetido (se rechazan) |
 | Accesibilidad (axe-core) | ✅ 0 problemas en las 3 pantallas y en el resultado; al marcar archivos no se pierde el foco del teclado |
 | Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (el código se desplaza dentro de su recuadro) |
+
+---
+
+# Demo del generador de documentos PDF
+
+| Verificación | Resultado |
+|---|---|
+| Pruebas del programa (pytest) | ✅ 19 pruebas: montos en letras (CIEN, CIENTO UNO, VEINTIÚN MIL, UN MILLÓN, TREINTA Y UN MILLONES…), fechas, montos, nombres de archivo seguros, bloques condicionales, plantillas mal escritas, resultado exacto con los dos ejemplos, columnas faltantes, solo validar y nombres repetidos |
+| Contenido de los PDF | ✅ Revisado extrayendo el texto: la constancia de una persona que cesó dice «laboró… hasta el 30 de junio de 2026» y la de una vigente «hasta la fecha»; la ñ y las tildes se ven bien; no queda ningún campo sin reemplazar; la carta dice «S/ 12,750.00 (DOCE MIL SETECIENTOS CINCUENTA CON 00/100 SOLES)»; si el cliente no tiene RUC, no aparece «RUC» vacío |
+| Constancias | ✅ 9 PDF y 3 filas omitidas con su motivo (DNI de 7 dígitos, cargo vacío, cese anterior al ingreso); PDF combinado de 9 páginas; registro con 9 códigos únicos; .zip con 11 archivos |
+| Cartas de cobranza | ✅ 6 PDF y 2 filas omitidas (RUC de 10 dígitos, saldo en cero) |
+| Editor de plantilla | ✅ Detecta al instante una columna que no existe en el Excel (y bloquea la generación), un `{si}` sin `{fin}`, inserta columnas donde está el cursor y restaura la plantilla original |
+| Excel propio | ✅ Uno con columnas faltantes muestra exactamente cuáles faltan; uno correcto genera su PDF con nombre seguro (`Cobranza_F002-00000077_Optica_Vision_SAC.pdf`); se rechaza un archivo que no es .xlsx; se puede volver al ejemplo |
+| Paquete descargable | ✅ El .zip se descomprime, sus pruebas pasan y `ejecutar.sh` genera los documentos de los dos ejemplos |
+| Python en el navegador | ✅ Pyodide, fpdf2 y openpyxl se cargan desde el propio sitio: 0 solicitudes externas; vista previa del PDF dentro de la página |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 3 pantallas y en el resultado |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px; en celulares la vista previa se abre con el botón «Abrir» |

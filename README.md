@@ -30,7 +30,8 @@ jorgeluis-portafolio/
 │   ├── personal/              Demo: gestión de personal (ver su README)
 │   ├── finanzas/              Demo: control de ingresos y gastos (ver su README)
 │   ├── clientes/              Demo: seguimiento de clientes (ver su README)
-│   └── excel/                 Demo: automatización de Excel con Python (ver su README)
+│   ├── excel/                 Demo: automatización de Excel con Python (ver su README)
+│   └── pdf/                   Demo: generador de documentos PDF con Python (ver su README)
 └── README.md
 ```
 
@@ -72,7 +73,7 @@ captura: "assets/img/capturas/nombre.webp",
 
 - No hay contraseñas ni credenciales en el código: la clave de Web3Forms es pública por diseño.
 - El formulario tiene validación y un campo trampa contra spam (`botcheck`).
-- Las demos guardan los datos solo en el navegador del visitante. La demo de Excel ejecuta Python dentro del navegador: los archivos del visitante no se envían a ningún servidor.
+- Las demos guardan los datos solo en el navegador del visitante. Las demos de Excel y de PDF ejecutan Python dentro del navegador: los archivos del visitante no se envían a ningún servidor.
 
 ## Licencias de terceros
 

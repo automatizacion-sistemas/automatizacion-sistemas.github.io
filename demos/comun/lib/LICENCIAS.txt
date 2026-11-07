@@ -4,3 +4,5 @@ Librerías de terceros incluidas en esta carpeta (todas de uso libre, incluso co
 - SheetJS xlsx 0.18.5, versión "mini" (exportar a Excel) — Licencia Apache 2.0 — https://sheetjs.com
 - Pyodide 314.0.7 (Python compilado a WebAssembly) — Mozilla Public License 2.0 — https://github.com/pyodide/pyodide (carpeta pyodide/, ver LEEME.txt)
 - openpyxl 3.1.5 y et_xmlfile 2.0.0 (paquetes de Python para Excel) — Licencia MIT — https://foss.heptapod.net/openpyxl/openpyxl (carpeta python/)
+- fpdf2 2.9.0 (generación de PDF) — Licencia LGPL-3.0, sin modificar — https://github.com/py-pdf/fpdf2 (carpeta python/)
+- fonttools 4.68.0 — Licencia MIT — https://github.com/fonttools/fonttools ; defusedxml 0.7.1 — Licencia PSF-2.0 — https://github.com/tiran/defusedxml (carpeta python/)
