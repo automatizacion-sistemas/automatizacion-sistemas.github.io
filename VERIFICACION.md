@@ -85,4 +85,21 @@ La demo ejecuta una base de datos SQLite completa dentro del navegador. En la pr
 
 - **Navegadores:** las pruebas se hicieron en Chrome. No se pudieron descargar los motores de Firefox y Safari en el entorno de pruebas. Todo el código usa funciones compatibles con las versiones actuales de los tres navegadores, pero conviene abrir el sitio una vez en un iPhone (Safari) cuando esté publicado.
 - **Formulario:** la conexión con Web3Forms se probó con respuestas simuladas. El envío real se confirmará en la Etapa 6.
-- **Prueba intermitente:** en 2 de unas 20 ejecuciones de la suite de la demo, un producto recién creado no apareció, justo después de editar archivos con el servidor encendido. No se volvió a presentar en las 14 ejecuciones siguientes. Se mantiene en observación.
+- **Prueba intermitente (resuelta):** en algunas ejecuciones de la demo de inventarios, un producto recién creado no aparecía. Se encontró la causa: al abrir un formulario, el cursor se movía al primer campo con un pequeño retraso, y si para entonces ya se estaba escribiendo en otro campo, el texto terminaba en el lugar equivocado (por ejemplo, el precio "12" se agregaba al código). Ahora el cursor se ubica de inmediato. Después del arreglo, la suite pasó en 6 de 6 ejecuciones seguidas.
+
+---
+
+# Demo de ventas y cobranzas (agregada después de la Etapa 5)
+
+| Verificación | Resultado |
+|---|---|
+| Cuadre contable de los datos de ejemplo | ✅ Ventas (S/ 174 377,20) − cobros (S/ 126 368,00) = por cobrar (S/ 48 009,20) = suma de los tramos de antigüedad |
+| Integridad | ✅ Sin saldos negativos, sin cobros anteriores a su venta, sin fechas futuras, sin facturas a clientes con DNI y sin saltos en la numeración |
+| Reglas de negocio | ✅ 12 grupos de pruebas, 3 de 3 ejecuciones completas sin fallos |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 5 pantallas |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px |
+| Exportaciones | ✅ Registro de ventas, antigüedad de saldos (2 hojas) y estado de cuenta; abiertos y revisados con openpyxl |
+
+Casos probados: validación de RUC/DNI, documento duplicado y celular; factura solo con RUC (en el formulario la opción se desactiva); desglose de IGV (800,00 = 677,97 + 122,03); bloqueo al superar la línea de crédito y su liberación después de un cobro; cobro mayor que el saldo; cobro con fecha anterior a la venta; cobro parcial; estado de cuenta; recordatorio por WhatsApp; bloqueo al eliminar un cliente con ventas; filtros; guardado al recargar; restablecer.
+
+También en esta etapa: las piezas que comparten las demos (motor SQLite, tablas, gráficos, estilos y librerías) se movieron a `demos/comun/`. La demo de inventarios volvió a pasar todas sus pruebas después del cambio.

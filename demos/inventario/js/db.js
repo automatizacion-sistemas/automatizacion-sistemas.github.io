@@ -9,18 +9,10 @@
 window.DB = (function () {
   "use strict";
 
-  let SQL = null;      // módulo sql.js
-  let db = null;       // base de datos abierta
-  let persistente = false;
-
-  const IDB_NOMBRE = "demo-inventario";
-  const IDB_ALMACEN = "archivos";
-  const IDB_CLAVE = "inventario.sqlite";
+  let B = null;        // base de datos (ver demos/comun/js/sqlite.js)
 
   /* ---------- Esquema ---------- */
   const ESQUEMA = `
-    PRAGMA foreign_keys = ON;
-
     CREATE TABLE IF NOT EXISTS productos (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       codigo        TEXT    NOT NULL UNIQUE,
@@ -56,125 +48,22 @@ window.DB = (function () {
       GROUP BY p.id;
   `;
 
-  /* ---------- Utilidades de consulta ---------- */
-  function consultar(sql, params) {
-    const stmt = db.prepare(sql);
-    try {
-      if (params) stmt.bind(params);
-      const filas = [];
-      while (stmt.step()) filas.push(stmt.getAsObject());
-      return filas;
-    } finally {
-      stmt.free();
-    }
-  }
-  function uno(sql, params) { return consultar(sql, params)[0] || null; }
-  function ejecutar(sql, params) { db.run(sql, params || []); }
+  /* ---------- Acceso a la base ---------- */
+  function consultar(sql, params) { return B.consultar(sql, params); }
+  function uno(sql, params) { return B.uno(sql, params); }
+  function ejecutar(sql, params) { B.ejecutar(sql, params); }
+  function guardar() { B.guardar(); }
 
-  /* ---------- Persistencia en IndexedDB ---------- */
-  function abrirIDB() {
-    return new Promise(function (ok, error) {
-      try {
-        const req = indexedDB.open(IDB_NOMBRE, 1);
-        req.onupgradeneeded = function () { req.result.createObjectStore(IDB_ALMACEN); };
-        req.onsuccess = function () { ok(req.result); };
-        req.onerror = function () { error(req.error); };
-      } catch (e) { error(e); }
-    });
-  }
-  async function leerGuardado() {
-    try {
-      const idb = await abrirIDB();
-      return await new Promise(function (ok) {
-        const req = idb.transaction(IDB_ALMACEN, "readonly").objectStore(IDB_ALMACEN).get(IDB_CLAVE);
-        req.onsuccess = function () { ok(req.result || null); };
-        req.onerror = function () { ok(null); };
-      });
-    } catch (e) { return null; }
-  }
-  let temporizador = null;
-  function guardar() {
-    // Se agrupan los guardados para no escribir en cada cambio pequeño
-    clearTimeout(temporizador);
-    temporizador = setTimeout(async function () {
-      try {
-        const bytes = db.export();
-        db.exec("PRAGMA foreign_keys = ON;"); // export() reabre la conexión
-        const idb = await abrirIDB();
-        idb.transaction(IDB_ALMACEN, "readwrite").objectStore(IDB_ALMACEN).put(bytes, IDB_CLAVE);
-        persistente = true;
-      } catch (e) {
-        persistente = false;
-        console.warn("No se pudo guardar en este navegador:", e);
-      }
-    }, 300);
-  }
-  async function borrarGuardado() {
-    try {
-      const idb = await abrirIDB();
-      await new Promise(function (ok) {
-        const tx = idb.transaction(IDB_ALMACEN, "readwrite");
-        tx.objectStore(IDB_ALMACEN).delete(IDB_CLAVE);
-        tx.oncomplete = ok; tx.onerror = ok;
-      });
-    } catch (e) { /* sin almacenamiento: no hay nada que borrar */ }
-  }
-
-  /* ---------- Carga de sql.js ---------- */
-  function cargarScript(src) {
-    return new Promise(function (ok, error) {
-      const s = document.createElement("script");
-      s.src = src; s.onload = ok; s.onerror = error;
-      document.head.appendChild(s);
-    });
-  }
-  async function cargarSQL() {
-    // 1º intenta la versión WebAssembly (rápida y liviana)
-    try {
-      if (typeof window.initSqlJs !== "function") await cargarScript("lib/sql-wasm.js");
-      return await window.initSqlJs({ locateFile: function (f) { return "lib/" + f; } });
-    } catch (e) {
-      // 2º si el navegador o el servidor no permiten WebAssembly, usa la versión JavaScript pura
-      console.warn("WebAssembly no disponible, se usa la versión JavaScript de SQLite.", e);
-      window.initSqlJs = undefined;
-      await cargarScript("lib/sql-asm.js");
-      return await window.initSqlJs();
-    }
-  }
-
-  /* ---------- API pública ---------- */
   async function iniciar() {
-    SQL = await cargarSQL();
-    const guardado = await leerGuardado();
-    let nuevo = false;
-    if (guardado) {
-      db = new SQL.Database(guardado);
-      persistente = true;
-    } else {
-      db = new SQL.Database();
-      db.exec(ESQUEMA);
-      window.DATOS_EJEMPLO.cargar(api);
-      nuevo = true;
-      guardar();
-    }
-    db.exec("PRAGMA foreign_keys = ON;");
-    return { nuevo: nuevo };
+    B = await SQLiteDemo.crear({
+      idb: "demo-inventario",
+      esquema: ESQUEMA,
+      sembrar: function (base) { B = base; window.DATOS_EJEMPLO.cargar(api); }
+    });
+    return { nuevo: B.nuevo };
   }
-
-  async function reiniciar() {
-    await borrarGuardado();
-    db.close();
-    db = new SQL.Database();
-    db.exec(ESQUEMA);
-    window.DATOS_EJEMPLO.cargar(api);
-    guardar();
-  }
-
-  function exportarArchivo() {
-    const bytes = db.export();
-    db.exec("PRAGMA foreign_keys = ON;");
-    return bytes;
-  }
+  function reiniciar() { return B.reiniciar(); }
+  function exportarArchivo() { return B.exportar(); }
 
   /* ---------- Productos ---------- */
   function categorias() {
@@ -222,7 +111,7 @@ window.DB = (function () {
       return p.id;
     }
     ejecutar("INSERT INTO productos (codigo, nombre, categoria, unidad, precio_venta, stock_minimo) VALUES (?,?,?,?,?,?)", valores);
-    const id = uno("SELECT last_insert_rowid() AS id").id;
+    const id = B.ultimoId();
     guardar();
     return id;
   }
@@ -276,7 +165,7 @@ window.DB = (function () {
 
   /** Inserción masiva sin validaciones, solo para cargar los datos de ejemplo (mucho más rápida). */
   function insertarMovimientosEnLote(lista) {
-    const stmt = db.prepare("INSERT INTO movimientos (producto_id, fecha, tipo, motivo, cantidad, costo_unitario, referencia) VALUES (?,?,?,?,?,?,?)");
+    const stmt = B.preparar("INSERT INTO movimientos (producto_id, fecha, tipo, motivo, cantidad, costo_unitario, referencia) VALUES (?,?,?,?,?,?,?)");
     try {
       lista.forEach(function (m) { stmt.run([m.producto_id, m.fecha, m.tipo, m.motivo, m.cantidad, m.costo_unitario || 0, m.referencia || ""]); });
     } finally {
@@ -372,15 +261,12 @@ window.DB = (function () {
   }
 
   /* ---------- Fechas y formatos ---------- */
-  function iso(d) {
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  }
-  function hoy() { return iso(new Date()); }
+  const iso = SQLiteDemo.iso, hoy = SQLiteDemo.hoy;
   function formatoCantidad(n) { return Number(n).toLocaleString("es-PE", { maximumFractionDigits: 2 }); }
 
   const api = {
     iniciar: iniciar, reiniciar: reiniciar, exportarArchivo: exportarArchivo,
-    esPersistente: function () { return persistente; },
+    esPersistente: function () { return B.esPersistente(); },
     consultar: consultar, uno: uno,
     categorias: categorias, listarProductos: listarProductos, obtenerProducto: obtenerProducto,
     guardarProducto: guardarProducto, eliminarProducto: eliminarProducto,

@@ -1,8 +1,12 @@
 /* ==========================================================================
-   ui.js — Utilidades de interfaz: formatos, tablas, avisos, diálogos y descargas
+   ui.js — Utilidades de interfaz compartidas por las demos:
+   formatos (S/, números, fechas), tablas, avisos, diálogos, descargas y Excel
    ========================================================================== */
 window.UI = (function () {
   "use strict";
+
+  // Carpeta de librerías compartidas (demos/comun/lib/)
+  const LIB = new URL("../lib/", document.currentScript.src).href;
 
   const ICONOS = {
     editar: '<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /> </svg>',
@@ -43,7 +47,8 @@ window.UI = (function () {
       h += "<tr" + (opciones.claseFila ? ' class="' + opciones.claseFila(f) + '"' : "") + ">";
       columnas.forEach(function (c) {
         const valor = c.html ? c.html(f) : esc(f[c.campo]);
-        h += '<td class="' + (c.clase || "") + '" data-label="' + esc(c.etiqueta || c.titulo) + '">' + valor + "</td>";
+        // El contenido va envuelto en .celda para que en celulares se apile bien junto a su etiqueta
+        h += '<td class="' + (c.clase || "") + '" data-label="' + esc(c.etiqueta || c.titulo) + '"><span class="celda">' + valor + "</span></td>";
       });
       h += "</tr>";
     });
@@ -96,7 +101,7 @@ window.UI = (function () {
     if (!cargaXLSX) {
       cargaXLSX = new Promise(function (ok, error) {
         const s = document.createElement("script");
-        s.src = "lib/xlsx.mini.min.js"; s.onload = ok; s.onerror = error;
+        s.src = LIB + "xlsx.mini.min.js"; s.onload = ok; s.onerror = error;
         document.head.appendChild(s);
       });
     }

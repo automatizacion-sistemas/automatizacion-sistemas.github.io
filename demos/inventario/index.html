@@ -10,9 +10,10 @@
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="../comun/css/demo.css">
   <link rel="stylesheet" href="css/inventario.css">
   <!-- Descarga el motor SQLite en paralelo mientras se lee el resto de la página -->
-  <link rel="preload" href="lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+  <link rel="preload" href="../comun/lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
 </head>
 <body>
 
@@ -216,11 +217,14 @@
 <!-- Notificaciones -->
 <div class="notificaciones" id="notificaciones" aria-live="polite"></div>
 
-<script src="lib/sql-wasm.js"></script>
+<!-- Piezas compartidas por todas las demos -->
+<script src="../comun/lib/sql-wasm.js"></script>
+<script src="../comun/js/sqlite.js"></script>
+<script src="../comun/js/ui.js"></script>
+<script src="../comun/js/graficos.js"></script>
+<!-- Piezas propias de esta demo -->
 <script src="js/datos-ejemplo.js"></script>
 <script src="js/db.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/graficos.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

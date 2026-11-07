@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo · Sistema de ventas y cobranzas — Automatización &amp; Sistemas</title>
+  <meta name="description" content="Demostración funcional de un sistema de ventas y cobranzas: facturas al crédito, cuentas por cobrar con antigüedad de saldos, estado de cuenta y recordatorios por WhatsApp.">
+  <meta name="theme-color" content="#0a1f44">
+  <link rel="icon" href="../../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="../comun/css/demo.css">
+  <link rel="stylesheet" href="css/ventas.css">
+  <link rel="preload" href="../comun/lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+</head>
+<body>
+
+<div class="cargando-app" id="cargando">
+  <img src="../../assets/img/logo-marca.svg" alt="" width="56" height="56">
+  <p>Preparando la base de datos…</p>
+</div>
+
+<div class="app app--5" id="app" hidden>
+
+  <!-- ================= Barra lateral ================= -->
+  <aside class="lateral">
+    <a class="lateral__marca" href="../../index.html#portafolio" title="Volver al portafolio">
+      <img src="../../assets/img/logo-marca.svg" alt="" width="36" height="36">
+      <span><b>Ventas y cobranzas</b><small>Distribuidora Andina · demo</small></span>
+    </a>
+    <nav class="lateral__nav" aria-label="Módulos">
+      <a href="#dashboard" data-vista="dashboard"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Dashboard</span></a>
+      <a href="#ventas" data-vista="ventas"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 17V7" /> <path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" /> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /> </svg><span>Ventas</span></a>
+      <a href="#cobranzas" data-vista="cobranzas"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /> <path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /> <path d="m2 16 6 6" /> <circle cx="16" cy="9" r="2.9" /> <circle cx="6" cy="5" r="3" /> </svg><span>Cobranzas</span></a>
+      <a href="#por-cobrar" data-vista="por-cobrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /> </svg><span>Cuentas por cobrar</span></a>
+      <a href="#clientes" data-vista="clientes"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /> </svg><span>Clientes</span></a>
+    </nav>
+    <div class="lateral__pie">
+      <a class="btn btn--acento btn--chico" href="../../index.html#contacto">Quiero un sistema así</a>
+      <a class="lateral__volver" href="../../index.html#portafolio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg> Volver al portafolio</a>
+    </div>
+  </aside>
+
+  <div class="principal">
+    <header class="barra">
+      <h1 id="titulo-vista">Dashboard</h1>
+      <div class="barra__acciones">
+        <button type="button" class="btn btn--primario btn--chico" id="btn-nueva-venta"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="M12 5v14" /> </svg><span class="solo-escritorio">Nueva venta</span></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-descargar-db" title="Descarga la base de datos SQLite con tus cambios" aria-label="Descargar base de datos .sqlite"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" /> </svg></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-reiniciar" title="Vuelve a los datos de ejemplo originales" aria-label="Restablecer demo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> </svg></button>
+      </div>
+    </header>
+
+    <main class="vistas">
+      <div class="aviso-demo" id="aviso-demo">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /> </svg>
+        <p><b>Demostración con datos ficticios.</b> Registra ventas y cobros: todo se guarda solo en este navegador y nadie más lo ve. <span id="estado-guardado"></span></p>
+      </div>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="vista" data-vista="dashboard" aria-labelledby="titulo-vista">
+        <div class="kpis" id="kpis"></div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Ventas vs. cobranzas</h2><small>Últimos 6 meses (S/)</small></div>
+            <div class="grafico"><canvas id="graf-meses" role="img" aria-label="Gráfico de ventas y cobranzas por mes"></canvas></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Antigüedad de la deuda</h2><small>Saldo pendiente por días de atraso (S/)</small></div>
+            <div class="grafico"><canvas id="graf-antiguedad" role="img" aria-label="Gráfico de antigüedad de la deuda"></canvas></div>
+          </div>
+        </div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /> </svg> Cobranza prioritaria</h2><small>Comprobantes vencidos, del más antiguo al más reciente</small></div>
+            <div id="tabla-prioritarias"></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Vencen en los próximos 7 días</h2></div>
+            <div id="tabla-proximas"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VENTAS ===== -->
+      <section class="vista" data-vista="ventas" hidden>
+        <div class="herramientas">
+          <div class="buscador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /> </svg><input type="search" id="v-buscar" placeholder="Cliente, RUC/DNI o comprobante" aria-label="Buscar ventas"></div>
+          <select id="v-estado" aria-label="Filtrar por estado">
+            <option value="">Todos los estados</option><option value="pendiente">Pendientes</option><option value="vencida">Vencidas</option><option value="pronto">Vencen pronto</option><option value="pagada">Pagadas</option>
+          </select>
+          <select id="v-condicion" aria-label="Filtrar por condición"><option value="">Contado y crédito</option><option value="CONTADO">Contado</option><option value="CREDITO">Crédito</option></select>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-ventas"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+        </div>
+        <div class="caja caja--tabla"><div id="tabla-ventas"></div></div>
+        <p class="nota-tabla" id="resumen-ventas"></p>
+      </section>
+
+      <!-- ===== COBRANZAS ===== -->
+      <section class="vista" data-vista="cobranzas" hidden>
+        <div class="rejilla-mov">
+          <form class="caja form-mov" id="form-cobro" novalidate>
+            <div class="caja__cabecera"><h2>Registrar cobro</h2></div>
+            <div class="campo">
+              <label for="c-venta">Comprobante pendiente <span class="obligatorio">*</span></label>
+              <select id="c-venta" name="venta_id" required></select>
+              <span class="campo__ayuda" id="c-info"></span>
+            </div>
+            <div class="form-mov__fila">
+              <div class="campo">
+                <label for="c-monto">Monto S/ <span class="obligatorio">*</span></label>
+                <input type="number" id="c-monto" name="monto" min="0.01" step="0.01" inputmode="decimal" required>
+              </div>
+              <div class="campo">
+                <label for="c-fecha">Fecha <span class="obligatorio">*</span></label>
+                <input type="date" id="c-fecha" name="fecha" required>
+              </div>
+            </div>
+            <div class="form-mov__fila">
+              <div class="campo">
+                <label for="c-medio">Medio de pago</label>
+                <select id="c-medio" name="medio"><option>Transferencia</option><option>Yape/Plin</option><option>Depósito</option><option>Efectivo</option></select>
+              </div>
+              <div class="campo">
+                <label for="c-operacion">N° de operación</label>
+                <input type="text" id="c-operacion" name="operacion" maxlength="20" inputmode="numeric">
+              </div>
+            </div>
+            <div class="form-mov__error" id="c-error" role="alert"></div>
+            <button class="btn btn--primario" type="submit"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Registrar cobro</button>
+          </form>
+          <div class="caja caja--tabla">
+            <div class="caja__cabecera"><h2>Últimos cobros</h2>
+              <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-cobros"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Excel</button>
+            </div>
+            <div id="tabla-cobros"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CUENTAS POR COBRAR ===== -->
+      <section class="vista" data-vista="por-cobrar" hidden>
+        <div class="kpis kpis--5" id="tramos"></div>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera">
+            <h2>Antigüedad de saldos por cliente</h2>
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-antiguedad"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+          <div id="tabla-antiguedad"></div>
+        </div>
+      </section>
+
+      <!-- ===== CLIENTES ===== -->
+      <section class="vista" data-vista="clientes" hidden>
+        <div class="herramientas">
+          <div class="buscador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /> </svg><input type="search" id="cl-buscar" placeholder="Nombre o RUC/DNI" aria-label="Buscar clientes"></div>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--primario btn--chico" id="btn-nuevo-cliente"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <line x1="19" x2="19" y1="8" y2="14" /> <line x1="22" x2="16" y1="11" y2="11" /> </svg> Nuevo cliente</button>
+          </div>
+        </div>
+        <div class="caja caja--tabla"><div id="tabla-clientes"></div></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="nav-movil" aria-label="Módulos">
+    <a href="#dashboard" data-vista="dashboard"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Inicio</span></a>
+    <a href="#ventas" data-vista="ventas"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 17V7" /> <path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" /> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /> </svg><span>Ventas</span></a>
+    <a href="#cobranzas" data-vista="cobranzas"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /> <path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /> <path d="m2 16 6 6" /> <circle cx="16" cy="9" r="2.9" /> <circle cx="6" cy="5" r="3" /> </svg><span>Cobrar</span></a>
+    <a href="#por-cobrar" data-vista="por-cobrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /> </svg><span>Por cobrar</span></a>
+    <a href="#clientes" data-vista="clientes"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /> </svg><span>Clientes</span></a>
+  </nav>
+</div>
+
+<!-- Nueva venta -->
+<dialog class="dialogo" id="dialogo-venta" aria-labelledby="dv-titulo">
+  <form method="dialog" id="form-venta" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dv-titulo">Nueva venta</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <div class="campo">
+      <label for="v-cliente">Cliente <span class="obligatorio">*</span></label>
+      <select id="v-cliente" name="cliente_id" required></select>
+      <span class="campo__ayuda" id="v-cliente-info"></span>
+    </div>
+    <div class="segmentado" role="radiogroup" aria-label="Condición de pago">
+      <label><input type="radio" name="condicion" value="CONTADO" checked><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="20" height="12" x="2" y="6" rx="2" /> <circle cx="12" cy="12" r="2" /> <path d="M6 12h.01M18 12h.01" /> </svg> Contado</span></label>
+      <label><input type="radio" name="condicion" value="CREDITO"><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 14v2.2l1.6 1" /> <path d="M16 2v3" /> <path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338" /> <path d="M3 9h5.859" /> <path d="M8 2v3" /> <circle cx="16" cy="16" r="6" /> </svg> Crédito</span></label>
+    </div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="v-comprobante">Comprobante</label>
+        <select id="v-comprobante" name="comprobante"><option value="FACTURA">Factura</option><option value="BOLETA">Boleta</option></select>
+        <span class="campo__ayuda" id="v-numero"></span></div>
+      <div class="campo"><label for="v-fecha">Fecha <span class="obligatorio">*</span></label><input type="date" id="v-fecha" name="fecha" required></div>
+    </div>
+    <div class="campo"><label for="v-descripcion">Descripción</label><input type="text" id="v-descripcion" name="descripcion" maxlength="80" placeholder="Ej.: Útiles de oficina — pedido mensual"></div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="v-total">Importe total S/ (incluye IGV) <span class="obligatorio">*</span></label><input type="number" id="v-total" name="total" min="0.01" step="0.01" inputmode="decimal" required>
+        <span class="campo__ayuda" id="v-igv"></span></div>
+      <div class="campo" id="campo-vencimiento" hidden><label for="v-vencimiento">Vencimiento</label><input type="date" id="v-vencimiento" name="vencimiento"></div>
+      <div class="campo" id="campo-medio"><label for="v-medio">Medio de pago</label><select id="v-medio" name="medio"><option>Efectivo</option><option>Yape/Plin</option><option>Transferencia</option><option>Depósito</option></select></div>
+    </div>
+    <div class="form-mov__error" id="v-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico">Registrar venta</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Detalle de venta -->
+<dialog class="dialogo" id="dialogo-detalle" aria-labelledby="dd-titulo">
+  <header class="dialogo__cabecera"><h2 id="dd-titulo">Detalle</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+  <div id="dd-cuerpo"></div>
+</dialog>
+
+<!-- Cliente -->
+<dialog class="dialogo" id="dialogo-cliente" aria-labelledby="dcl-titulo">
+  <form method="dialog" id="form-cliente" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dcl-titulo">Nuevo cliente</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <input type="hidden" name="id">
+    <div class="campo"><label for="cl-documento">RUC o DNI <span class="obligatorio">*</span></label><input type="text" id="cl-documento" name="documento" inputmode="numeric" maxlength="11" required><span class="campo__ayuda">RUC: 11 dígitos (permite factura) · DNI: 8 dígitos (solo boleta)</span></div>
+    <div class="campo"><label for="cl-nombre">Nombre o razón social <span class="obligatorio">*</span></label><input type="text" id="cl-nombre" name="nombre" maxlength="80" required></div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="cl-telefono">Celular</label><input type="tel" id="cl-telefono" name="telefono" inputmode="tel" maxlength="11" placeholder="9XXXXXXXX"></div>
+      <div class="campo"><label for="cl-correo">Correo</label><input type="email" id="cl-correo" name="correo" maxlength="80"></div>
+    </div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="cl-dias">Días de crédito</label><input type="number" id="cl-dias" name="dias_credito" min="0" max="180" step="1" value="30" inputmode="numeric"></div>
+      <div class="campo"><label for="cl-limite">Línea de crédito S/</label><input type="number" id="cl-limite" name="limite_credito" min="0" step="100" value="0" inputmode="decimal"><span class="campo__ayuda">0 = sin límite</span></div>
+    </div>
+    <div class="form-mov__error" id="cl-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico">Guardar</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Estado de cuenta -->
+<dialog class="dialogo dialogo--ancho" id="dialogo-cuenta" aria-labelledby="dec-titulo">
+  <header class="dialogo__cabecera"><h2 id="dec-titulo">Estado de cuenta</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+  <div id="dec-cuerpo"></div>
+</dialog>
+
+<!-- Recordatorio por WhatsApp -->
+<dialog class="dialogo" id="dialogo-recordatorio" aria-labelledby="dr-titulo">
+  <header class="dialogo__cabecera"><h2 id="dr-titulo">Recordatorio de pago</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+  <label class="campo"><span class="visualmente-oculto">Mensaje</span><textarea id="dr-mensaje" rows="7"></textarea></label>
+  <p class="campo__ayuda">Puedes editar el mensaje. En la demo, WhatsApp te deja elegir el contacto; en un sistema real se envía directo al celular registrado del cliente.</p>
+  <footer class="dialogo__pie">
+    <button type="button" class="btn btn--secundario btn--chico" id="dr-copiar">Copiar</button>
+    <a class="btn btn--whatsapp btn--chico" id="dr-enviar" href="#" target="_blank" rel="noopener"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /> </svg> Abrir WhatsApp</a>
+  </footer>
+</dialog>
+
+<!-- Confirmación -->
+<dialog class="dialogo dialogo--chico" id="dialogo-confirmar" aria-labelledby="dc-titulo">
+  <form method="dialog">
+    <h2 id="dc-titulo">¿Confirmar?</h2>
+    <p id="dc-texto"></p>
+    <footer class="dialogo__pie">
+      <button type="submit" class="btn btn--secundario btn--chico" value="no">Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico" value="si" id="dc-si">Confirmar</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+
+<script src="../comun/lib/sql-wasm.js"></script>
+<script src="../comun/js/sqlite.js"></script>
+<script src="../comun/js/ui.js"></script>
+<script src="../comun/js/graficos.js"></script>
+<script src="js/datos-ejemplo.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

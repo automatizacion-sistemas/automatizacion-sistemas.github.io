@@ -68,8 +68,17 @@
       kpi("Para reponer", num(r.stockBajo.length), r.stockBajo.length ? "con stock bajo" : "todo en orden", r.stockBajo.length ? "alerta" : "") +
       kpi("Ventas del mes", soles(r.ventasMes), num(r.movimientosMes) + " movimientos este mes");
 
-    GRAFICOS.flujo(DB.flujoSemanal(8));
-    GRAFICOS.categorias(r.porCategoria);
+    const flujo = DB.flujoSemanal(8);
+    GRAFICOS.barras("graf-flujo", {
+      etiquetas: flujo.etiquetas.map(function (e) { return "Sem. " + e; }), soles: true,
+      series: [{ nombre: "Compras", datos: flujo.entradas, color: "celeste" }, { nombre: "Salidas (costo)", datos: flujo.salidas, color: "azul" }]
+    });
+    const cats = Object.keys(r.porCategoria).map(function (k) { return [k, Math.round(r.porCategoria[k] * 100) / 100]; })
+      .sort(function (a, b) { return b[1] - a[1]; });
+    GRAFICOS.barras("graf-categorias", {
+      etiquetas: cats.map(function (c) { return c[0]; }), horizontal: true, soles: true,
+      series: [{ nombre: "Valor", datos: cats.map(function (c) { return c[1]; }), color: "celeste" }]
+    });
 
     const alertas = r.stockBajo.slice().sort(function (a, b) { return (a.stock / (a.stock_minimo || 1)) - (b.stock / (b.stock_minimo || 1)); });
     $("#tabla-alertas").innerHTML = tabla([
@@ -133,7 +142,7 @@
       $("#p-nota").hidden = false;
     }
     d.showModal();
-    setTimeout(function () { f.codigo.focus(); }, 50);
+    f.codigo.focus(); // foco inmediato (un foco con retraso podía desviar lo que el usuario ya estaba escribiendo)
   }
 
   function guardarProducto(e) {
@@ -199,7 +208,7 @@
       f.producto_id.value = String(pre.producto);
       actualizarMotivos(pre.motivo);
       f.cantidad.value = ""; f.referencia.value = "";
-      setTimeout(function () { f.cantidad.focus(); }, 100);
+      f.cantidad.focus();
     } else {
       f.producto_id.value = actual;
       actualizarMotivos();
@@ -302,7 +311,7 @@
       { titulo: "Saldo", clase: "num grupo-saldo", html: function (f) { return "<b>" + num(f.saldo.cantidad) + "</b>"; } },
       { titulo: "C.U. prom.", etiqueta: "Costo promedio", clase: "num grupo-saldo", html: function (f) { return soles(f.saldo.costo); } },
       { titulo: "Valor", clase: "num grupo-saldo", html: function (f) { return soles(f.saldo.total); } }
-    ], filas, { clase: "tabla--kardex", vacio: "Este producto aún no tiene movimientos.", claseFila: function (f) { return f.entrada ? "fila-entrada" : "fila-salida"; } });
+    ], filas, { clase: "tabla--kardex tabla--ancha", vacio: "Este producto aún no tiene movimientos.", claseFila: function (f) { return f.entrada ? "fila-entrada" : "fila-salida"; } });
   }
 
   function exportarKardex() {

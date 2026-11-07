@@ -1,0 +1,43 @@
+/* ==========================================================================
+   ventas.css — Estilos propios de la demo de ventas y cobranzas
+   Los estilos generales están en ../comun/css/demo.css
+   ========================================================================== */
+
+/* Estado de cada comprobante */
+.chip-estado { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-estado--pagada { background: var(--exito-fondo); color: var(--exito); }
+.chip-estado--vigente { background: var(--celeste-100); color: var(--azul-700); }
+.chip-estado--pronto { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-estado--vencida { background: var(--error-fondo); color: var(--error); }
+
+/* Botón de WhatsApp en tablas */
+.btn-icono--wsp { color: var(--whatsapp-oscuro); }
+.btn-icono--wsp:hover { background: #dcfce7; color: var(--whatsapp-oscuro); }
+[data-cobrar] { color: var(--celeste-600); border-color: var(--celeste-100); }
+
+/* Ficha y totales en el detalle de una venta */
+.ficha { display: grid; grid-template-columns: 110px 1fr; gap: 8px 12px; margin: 0 0 var(--esp-4); font-size: var(--texto-sm); }
+.ficha dt { color: var(--gris-500); font-weight: 600; }
+.ficha dd { margin: 0; }
+.totales { width: 100%; border-collapse: collapse; font-size: var(--texto-sm); font-variant-numeric: tabular-nums; }
+.totales td { padding: 6px 0; border-bottom: 1px solid var(--gris-100); }
+.totales td:last-child { text-align: right; }
+.totales__total td { font-weight: 700; color: var(--texto); border-top: 1.5px solid var(--gris-300); }
+.totales__saldo td { font-weight: 700; color: var(--texto); border-bottom: 0; }
+.totales__saldo .chip-estado { margin-left: 6px; }
+
+/* Estado de cuenta */
+.cuenta-cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--esp-3); padding: var(--esp-3) var(--esp-4); margin-bottom: var(--esp-3); border-radius: var(--radio); background: var(--gris-50); }
+.cuenta-cabecera b { color: var(--texto); }
+.cuenta-saldos { display: flex; gap: var(--esp-4); font-size: var(--texto-sm); align-items: center; }
+
+/* Antigüedad: la columna de más de 90 días resalta */
+.tabla--antiguedad th.celda-peligro { color: var(--error); }
+.tabla--antiguedad td.celda-peligro { background: rgb(253 232 232 / 0.45); }
+.tabla--ventas td[data-label="Comprobante"] { white-space: nowrap; }
+
+/* Tablas compactas del dashboard: solo íconos en las acciones */
+.vista[data-vista="dashboard"] .btn-icono span { display: none; }
+.vista[data-vista="dashboard"] .tabla td { padding: 9px 8px; }
+.enlace-tabla, .tabla .sub { white-space: nowrap; }
+.tabla td[data-label="Cliente"] .sub, .tabla--ventas td[data-label="Cliente"] .sub { white-space: normal; }

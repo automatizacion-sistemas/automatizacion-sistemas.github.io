@@ -23,7 +23,9 @@ jorgeluis-portafolio/
 │   └── img/                   Logotipo, firma, capturas de las demos
 ├── data/proyectos.js          Las 8 tarjetas del portafolio
 ├── demos/
-│   └── inventario/            Demo funcional: sistema de inventarios (ver su README)
+│   ├── comun/                 Piezas compartidas: motor SQLite, tablas, gráficos, estilos y librerías
+│   ├── inventario/            Demo: sistema de inventarios (ver su README)
+│   └── ventas/                Demo: ventas y cobranzas (ver su README)
 └── README.md
 ```
 
@@ -71,4 +73,4 @@ captura: "assets/img/capturas/nombre.webp",
 
 - Íconos [Lucide](https://lucide.dev) (ISC).
 - Tipografías Plus Jakarta Sans e Inter (SIL OFL 1.1).
-- Librerías de las demos: ver `demos/*/lib/LICENCIAS.txt`.
+- Librerías de las demos: ver `demos/comun/lib/LICENCIAS.txt`.

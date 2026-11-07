@@ -52,8 +52,8 @@ window.DATOS_EJEMPLO = (function () {
     let boleta = 1200, factura = 340;
     const lote = []; // todos los movimientos se insertan juntos al final
 
-    DB.consultar("BEGIN");
-    try {
+    // (la carga ocurre dentro de una transacción abierta por sqlite.js)
+    {
       PRODUCTOS.forEach(function (p) {
         const id = DB.guardarProducto({ codigo: p[0], nombre: p[1], categoria: p[2], unidad: p[3], precio_venta: p[5], stock_minimo: p[6] });
         const costoBase = p[4], minimo = p[6], ritmo = p[7], terminaBajo = p[8];
@@ -92,10 +92,6 @@ window.DATOS_EJEMPLO = (function () {
       });
       // La simulación ya garantiza que el stock nunca sea negativo
       DB.insertarMovimientosEnLote(lote);
-      DB.consultar("COMMIT");
-    } catch (e) {
-      DB.consultar("ROLLBACK");
-      throw e;
     }
   }
 
