@@ -1,0 +1,82 @@
+/* ==========================================================================
+   excel.css — Estilos propios de la demo de Excel con Python
+   ========================================================================== */
+.intro { max-width: 70ch; margin: 0 0 var(--esp-4); color: var(--gris-700); }
+.rejilla-excel { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--esp-4); align-items: start; }
+@media (max-width: 1100px) { .rejilla-excel { grid-template-columns: 1fr; } }
+
+/* Lista de archivos */
+.archivos { list-style: none; margin: 0 0 var(--esp-3); padding: 0; display: grid; gap: var(--esp-2); }
+.archivo { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-2) var(--esp-2) var(--esp-2) var(--esp-3); border: 1px solid var(--gris-200); border-radius: var(--radio); background: var(--blanco); }
+.archivo:has(input:checked) { border-color: var(--celeste-500); background: #f5fbff; }
+.archivo input { width: 18px; height: 18px; flex: none; accent-color: var(--azul-700); }
+.archivo label, .archivo__etiqueta { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--esp-3); cursor: pointer; }
+.archivo__etiqueta { cursor: default; }
+.archivo label b, .archivo__etiqueta b { display: block; font-size: var(--texto-sm); overflow-wrap: anywhere; }
+.archivo small { display: block; color: var(--gris-500); font-size: var(--texto-xs); line-height: 1.4; }
+.archivo__icono { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #e7f6ec; color: #107c41; flex: none; }
+.archivo__icono svg { width: 19px; height: 19px; }
+.archivo--propio { border-style: dashed; border-color: var(--celeste-500); }
+.archivo__marca { width: 18px; flex: none; }
+.agregar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-2) var(--esp-3); }
+.boton-archivo { position: relative; }
+.boton-archivo input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.boton-archivo:focus-within { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+.boton-archivo svg { width: 16px; height: 16px; }
+
+/* Ejecución */
+.caja--ejecutar { position: sticky; top: var(--esp-4); }
+@media (max-width: 1100px) { .caja--ejecutar { position: static; } }
+.btn--grande { width: 100%; justify-content: center; padding: 14px 20px; font-size: var(--texto-base); }
+.btn--grande svg { width: 20px; height: 20px; }
+.btn.cargando { position: relative; color: transparent; pointer-events: none; }
+.btn.cargando::after { content: ""; position: absolute; inset: 0; margin: auto; width: 22px; height: 22px; border: 3px solid rgba(255, 255, 255, 0.35); border-top-color: var(--blanco); border-radius: 50%; animation: girar 0.8s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .btn.cargando::after { animation-duration: 2.5s; } }
+.estado-python { margin: var(--esp-3) 0; font-size: var(--texto-sm); color: var(--gris-700); min-height: 2.6em; }
+.consola { background: #0b1220; color: #cfd8e3; border-radius: var(--radio); padding: var(--esp-3) var(--esp-4); font: 0.78rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; height: 300px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.consola:focus-visible { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+.consola__vacia { color: #8a97a8; }
+.consola__linea--comando { color: #7dd3fc; }
+.consola__linea--ok { color: #86efac; }
+.consola__linea--mal { color: #fca5a5; }
+.consola__linea--error { color: #fca5a5; font-weight: 700; }
+.consola__linea--listo { color: #fde68a; font-weight: 700; }
+
+/* Resultado */
+.resultado { margin-top: var(--esp-6); scroll-margin-top: var(--esp-4); }
+.resultado__cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--esp-3); margin-bottom: var(--esp-4); }
+.resultado__cabecera h2 { margin: 0; }
+.resultado__cabecera .campo__ayuda { margin: 4px 0 0; }
+.resultado__cabecera .btn svg { width: 18px; height: 18px; }
+.barra-part { display: inline-block; width: 70px; height: 8px; border-radius: 4px; background: var(--gris-100); overflow: hidden; vertical-align: middle; margin-right: 6px; }
+.barra-part span { display: block; height: 100%; background: var(--celeste-500); }
+.chip-obs { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-obs--excluida { background: var(--error-fondo); color: var(--error); }
+.chip-obs--corregida { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-obs--unificada { background: var(--celeste-100); color: var(--azul-700); }
+.chip-obs--omitida { background: var(--gris-100); color: var(--gris-700); }
+.chip-obs--ok { background: var(--exito-fondo); color: var(--exito); }
+.celda-detalle { font-size: var(--texto-sm); max-width: 640px; }
+#tabla-observaciones .tabla-envoltura { max-height: 420px; overflow-y: auto; }
+.caja__cabecera select { margin-left: auto; }
+
+/* Código */
+.codigo { margin: var(--esp-3) 0 0; background: #0b1220; color: #d6deeb; border-radius: var(--radio); padding: var(--esp-4); font: 0.8rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow: auto; max-height: 75vh; tab-size: 4; }
+.codigo:focus-visible { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+.py-kw { color: #c792ea; }
+.py-str { color: #c3e88d; }
+.py-doc { color: #8bd1a0; font-style: italic; }
+.py-com { color: #8a97a8; font-style: italic; }
+.py-num { color: #f78c6c; }
+.py-fn { color: #82aaff; }
+.py-dec { color: #ffcb6b; }
+
+/* Proyecto */
+.pasos { margin: 0 0 var(--esp-4); padding-left: 1.3em; display: grid; gap: var(--esp-3); }
+.pasos li { padding-left: 4px; }
+.lista-proyecto { margin: 0 0 var(--esp-4); padding-left: 1.2em; display: grid; gap: var(--esp-2); font-size: var(--texto-sm); }
+.subtitulo-caja { font-size: var(--texto-base); margin: var(--esp-4) 0 var(--esp-2); }
+.vista code { background: var(--gris-100); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
+.codigo code { background: none; padding: 0; font-size: inherit; }
+.caja .btn svg { width: 16px; height: 16px; }

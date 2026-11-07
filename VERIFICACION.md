@@ -150,3 +150,37 @@ También se actualizó a S/ 1 230 el sueldo sugerido al registrar un trabajador 
 | Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (barra superior más compacta en celulares muy angostos, mejora aplicada a todas las demos) |
 
 Después de los cambios compartidos, las suites de las 5 demos volvieron a pasar completas.
+
+---
+
+# Demo de seguimiento de clientes
+
+| Verificación | Resultado |
+|---|---|
+| Integridad de los datos | ✅ Toda oportunidad abierta tiene seguimiento y próxima acción; las cerradas tienen fecha de cierre; las perdidas tienen motivo; ningún contacto está fuera de rango; la última etapa del historial coincide con la etapa actual; los 72 celulares y todos los RUC son válidos |
+| RUC | ✅ Dígito verificador probado con RUC válidos e inválidos y con longitud incorrecta |
+| Agenda | ✅ Los contadores de vencidos, hoy, próximos y sin contacto coinciden con la base de datos; el filtro por vendedor muestra solo sus oportunidades |
+| Validaciones del cliente | ✅ Celular corto o fijo, RUC inválido, RUC sin razón social, correo mal escrito, origen vacío y duplicados por celular (aunque se escriba con +51 y espacios), RUC y correo (sin importar mayúsculas); si falla la oportunidad, no se guarda el cliente |
+| Registro de contactos | ✅ Rechaza nota vacía, seguimiento pasado, acción vacía, fecha futura y fecha anterior a la oportunidad; los atajos de fecha funcionan; el seguimiento se reprograma |
+| Etapas | ✅ Exige acción y fecha válida al avanzar, motivo al perder y monto mayor a cero al ganar; al ganar se cierra, se bloquean los cambios y sube «Ganado este mes» por el monto exacto; una oportunidad cerrada no se puede reabrir |
+| Arrastrar y soltar | ✅ Al soltar una tarjeta en otra columna se piden los datos de la etapa y la tarjeta se mueve; las tarjetas cerradas no se pueden arrastrar |
+| WhatsApp | ✅ Enlace `wa.me/51…` con el mensaje de la plantilla y el nombre del cliente; el texto editado se respeta; al abrirlo se prepara el registro del contacto |
+| Reportes | ✅ El embudo de conversión siempre decrece; los totales por origen y por vendedor suman el total de oportunidades; las ventas por mes cuadran con SQL |
+| Otros | ✅ Edición de cliente, eliminación en cascada (oportunidades e historial), 2 exportaciones a Excel, guardado al recargar y restablecer |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 4 pantallas y en las fichas de oportunidad y de cliente y el formulario de cliente |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px; áreas táctiles de al menos 32 px |
+
+---
+
+# Demo de Excel con Python
+
+| Verificación | Resultado |
+|---|---|
+| Pruebas del programa (pytest) | ✅ 23 pruebas: lectura de montos y fechas en distintos formatos, comprobantes, encabezados, nombre de la sucursal, resultado exacto sobre los 7 ejemplos, estructura del Excel, período forzado, fecha futura y archivos inválidos o dañados |
+| Fórmulas del Excel | ✅ Recalculado con LibreOffice: la venta total, los SUMIFS por sucursal, los totales y la participación coinciden con lo que calcula Python (S/ 58,193.81) |
+| Paquete descargable | ✅ El .zip se descomprime, sus pruebas pasan y `ejecutar.sh` genera el consolidado con los ejemplos incluidos |
+| Python en el navegador | ✅ Pyodide 314.0.7 (Python 3.14) y openpyxl se cargan desde el propio sitio; con todas las conexiones externas bloqueadas, la demo funciona igual (0 solicitudes externas) |
+| Resultado en el navegador | ✅ Igual al de la computadora: 559 líneas, S/ 58,193.81, 8 excluidas, 1 corregida, 10 nombres unificados; el Excel descargado tiene las 4 hojas, la tabla filtrable y el gráfico |
+| Casos de uso | ✅ Solo un archivo, ningún archivo (botón deshabilitado), solo el archivo que no es de ventas (mensaje claro), archivo propio con otros encabezados y fila de TOTAL (se procesa y la sucursal sale del nombre), archivo que no es .xlsx y nombre repetido (se rechazan) |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 3 pantallas y en el resultado; al marcar archivos no se pierde el foco del teclado |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (el código se desplaza dentro de su recuadro) |

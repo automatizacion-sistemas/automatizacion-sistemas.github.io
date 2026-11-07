@@ -1,0 +1,8 @@
+Pyodide 314.0.7 — Python compilado a WebAssembly para ejecutarse en el navegador.
+Licencia: Mozilla Public License 2.0 — https://github.com/pyodide/pyodide
+Archivos sin modificar, tomados del paquete npm "pyodide" (versión 314.0.7).
+Se alojan en este sitio para que las demos de Python no dependan de servicios externos.
+
+Paquetes de Python incluidos en ../python/ (archivos .whl sin modificar, de PyPI):
+  openpyxl 3.1.5     — licencia MIT — https://foss.heptapod.net/openpyxl/openpyxl
+  et_xmlfile 2.0.0   — licencia MIT — https://foss.heptapod.net/openpyxl/et_xmlfile

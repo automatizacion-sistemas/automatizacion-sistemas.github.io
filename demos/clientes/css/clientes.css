@@ -1,0 +1,154 @@
+/* ==========================================================================
+   clientes.css — Estilos propios de la demo de seguimiento de clientes
+   Los estilos generales están en ../comun/css/demo.css
+   ========================================================================== */
+
+.fecha-hoy { margin: 0; color: var(--gris-500); font-weight: 600; font-size: var(--texto-sm); }
+.nota-embudo { margin: 0 0 0 auto; color: var(--gris-500); font-size: var(--texto-xs); }
+.contador { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; margin-left: 4px; border-radius: 999px; background: var(--gris-100); color: var(--gris-700); font: 700 var(--texto-xs) var(--fuente-texto); vertical-align: 2px; }
+.fila-botones-izq { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-2); }
+.fila-botones-izq .btn svg { width: 16px; height: 16px; }
+.enlace-tabla--fuerte { font-weight: 700; color: var(--texto); text-align: left; }
+.btn--whatsapp { background: var(--whatsapp); color: #06331b; border-color: var(--whatsapp); }
+.btn--whatsapp:hover { background: var(--whatsapp-oscuro); color: var(--blanco); }
+.btn--whatsapp svg { width: 16px; height: 16px; }
+.btn-icono--wa { color: #0d7a3c; border-color: #c8ecd6; }
+.btn-icono--wa:hover { background: #e7f8ee; color: #0a5c2d; }
+
+/* Chips */
+.chip-seg { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; background: var(--gris-100); color: var(--gris-700); }
+.chip-seg svg { width: 13px; height: 13px; flex: none; }
+.chip-seg--vencido { background: var(--error-fondo); color: var(--error); }
+.chip-seg--hoy { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-seg--ganado { background: var(--exito-fondo); color: var(--exito); }
+.chip-seg--perdido { background: var(--gris-100); color: var(--gris-500); white-space: normal; }
+.chip-etapa { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-etapa--prospecto { background: var(--gris-100); color: var(--gris-700); }
+.chip-etapa--cotizado { background: var(--celeste-100); color: var(--azul-700); }
+.chip-etapa--negociacion { background: #ede7fb; color: #4c2a9e; }
+.chip-etapa--ganado { background: var(--exito-fondo); color: var(--exito); }
+.chip-etapa--perdido { background: var(--error-fondo); color: var(--error); }
+
+/* ---------- Agenda ---------- */
+.agenda { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-4); }
+.agenda__bloque { background: var(--blanco); border: 1px solid var(--gris-200); border-radius: var(--radio-lg); padding: var(--esp-4); border-top: 4px solid var(--gris-300); min-width: 0; }
+.agenda__bloque h2 { font-size: var(--texto-base); margin: 0 0 var(--esp-3); }
+.agenda__bloque--vencidos { border-top-color: var(--error); }
+.agenda__bloque--hoy { border-top-color: #f59e0b; }
+.agenda__bloque--proximos { border-top-color: var(--celeste-500); }
+.agenda__bloque--estancadas { border-top-color: var(--gris-500); }
+.agenda__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--esp-2); max-height: 420px; overflow-y: auto; }
+.agenda__item { display: flex; align-items: center; gap: var(--esp-2); border: 1px solid var(--gris-200); border-radius: var(--radio); padding-right: var(--esp-2); }
+.agenda__item:hover { border-color: var(--celeste-500); }
+.agenda__abrir { flex: 1; min-width: 0; display: grid; gap: 4px; padding: var(--esp-3); background: none; border: 0; text-align: left; cursor: pointer; font: inherit; color: inherit; border-radius: var(--radio); }
+.agenda__fila { display: flex; align-items: center; justify-content: space-between; gap: var(--esp-3); min-width: 0; }
+.agenda__cliente { font-size: var(--texto-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agenda__monto { font-size: var(--texto-sm); white-space: nowrap; }
+.agenda__titulo { color: var(--gris-500); font-size: var(--texto-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agenda__fila--seg { justify-content: flex-start; gap: var(--esp-2); }
+.agenda__fila--seg small { color: var(--gris-700); font-size: var(--texto-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 1100px) { .agenda { grid-template-columns: 1fr; } }
+
+/* ---------- Embudo (tablero) ---------- */
+.tablero { display: grid; grid-template-columns: repeat(5, minmax(186px, 1fr)); gap: var(--esp-3); overflow-x: auto; padding-bottom: var(--esp-3); scroll-snap-type: x proximity; }
+.tablero:focus-visible { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+.columna { background: var(--gris-100); border-radius: var(--radio-lg); padding: var(--esp-3); min-width: 0; scroll-snap-align: start; border-top: 4px solid var(--gris-300); transition: background var(--transicion), box-shadow var(--transicion); }
+.columna--cotizado { border-top-color: var(--celeste-500); }
+.columna--negociacion { border-top-color: #7c4dff; }
+.columna--ganado { border-top-color: var(--exito); }
+.columna--perdido { border-top-color: var(--error); }
+.columna--destino { background: var(--celeste-100); box-shadow: inset 0 0 0 2px var(--celeste-500); }
+.columna__cabecera h2 { font-size: var(--texto-sm); margin: 0; }
+.columna__cabecera small { display: block; color: var(--gris-500); font-size: var(--texto-xs); margin: 2px 0 var(--esp-3); font-weight: 600; }
+.columna__tarjetas { display: grid; gap: var(--esp-2); align-content: start; min-height: 80px; }
+.columna .vacio { font-size: var(--texto-xs); padding: var(--esp-3); margin: 0; }
+.tarjeta { display: grid; gap: 4px; width: 100%; padding: var(--esp-3); background: var(--blanco); border: 1px solid var(--gris-200); border-radius: var(--radio); text-align: left; font: inherit; color: inherit; cursor: pointer; box-shadow: var(--sombra-sm); transition: border-color var(--transicion), transform var(--transicion); }
+.tarjeta[draggable="true"] { cursor: grab; }
+.tarjeta:hover { border-color: var(--celeste-500); }
+.tarjeta--vencida { border-left: 4px solid var(--error); }
+.tarjeta.arrastrando { opacity: 0.5; transform: rotate(1deg); }
+.tarjeta__cliente { font-weight: 700; font-size: var(--texto-sm); line-height: 1.3; }
+.tarjeta__titulo { font-size: var(--texto-xs); color: var(--gris-500); line-height: 1.35; }
+.tarjeta__fila { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+.tarjeta__fila b { font-size: var(--texto-sm); }
+.tarjeta__pie { display: flex; flex-wrap: wrap; gap: 4px; }
+.avatar { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--azul-900); color: var(--blanco); font-size: 0.68rem; font-weight: 700; flex: none; }
+@media (max-width: 900px) { .tablero { grid-template-columns: repeat(5, minmax(78vw, 1fr)); } }
+@media (min-width: 641px) and (max-width: 900px) { .tablero { grid-template-columns: repeat(5, minmax(300px, 1fr)); } }
+
+/* ---------- Reportes ---------- */
+.conversion { display: grid; gap: var(--esp-3); }
+.conversion__fila { display: grid; grid-template-columns: 130px 1fr 36px 70px; gap: var(--esp-3); align-items: center; font-size: var(--texto-sm); }
+.conversion__nombre { font-weight: 600; }
+.conversion__barra { height: 22px; background: var(--gris-100); border-radius: 6px; overflow: hidden; }
+.conversion__barra span { display: block; height: 100%; background: linear-gradient(90deg, var(--azul-700), var(--celeste-500)); border-radius: 6px; }
+.conversion__fila b { text-align: right; }
+.conversion__fila small { color: var(--gris-500); font-size: var(--texto-xs); }
+.tasa { font-weight: 700; }
+.tasa--alta { color: var(--exito); }
+.tasa--baja { color: var(--error); }
+@media (max-width: 480px) { .conversion__fila { grid-template-columns: 1fr 34px 62px; } .conversion__barra { grid-column: 1 / -1; grid-row: 2; } }
+
+/* ---------- Fichas ---------- */
+.ficha h3 { font-size: var(--texto-base); margin: 0 0 var(--esp-3); display: flex; align-items: center; gap: 6px; }
+.ficha h3 svg { width: 18px; height: 18px; color: #0d7a3c; }
+.ficha__subtitulo { margin-top: 0; }
+.ficha__datos { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--esp-3) var(--esp-5); margin: var(--esp-4) 0 var(--esp-3); }
+.ficha__datos .sub { display: block; }
+.ficha__datos dl { display: flex; flex-wrap: wrap; gap: var(--esp-2) var(--esp-5); margin: 0; }
+.ficha__datos dt { font-size: var(--texto-xs); color: var(--gris-500); font-weight: 600; }
+.ficha__datos dd { margin: 0; font-weight: 700; font-size: var(--texto-sm); overflow-wrap: anywhere; }
+.ficha__seguimiento { display: flex; align-items: center; gap: var(--esp-3); padding: var(--esp-3) var(--esp-4); border-radius: var(--radio); background: var(--celeste-100); color: var(--azul-800); margin-bottom: var(--esp-3); font-size: var(--texto-sm); }
+.ficha__seguimiento svg { width: 22px; height: 22px; flex: none; }
+.ficha__seguimiento small { display: block; font-size: var(--texto-xs); font-weight: 600; }
+.ficha__seguimiento--vencido { background: var(--error-fondo); color: #7f1d1d; }
+.ficha__seguimiento--ganado { background: var(--exito-fondo); color: #14532d; }
+.ficha__seguimiento--perdido { background: var(--gris-100); color: var(--gris-700); }
+.ficha > .fila-botones-izq, #dfc-datos .fila-botones-izq { margin-bottom: var(--esp-4); }
+.ficha__columnas { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--esp-5); margin-top: var(--esp-4); }
+@media (max-width: 760px) { .ficha__columnas { grid-template-columns: 1fr; } }
+.caja--plana { box-shadow: none; padding: var(--esp-4); }
+
+/* Pasos del embudo dentro de la ficha */
+.etapas { display: flex; flex-wrap: wrap; gap: 6px; }
+.etapa { flex: 1 1 auto; padding: 8px 10px; border: 1px solid var(--gris-200); border-radius: 8px; background: var(--blanco); font: 700 var(--texto-xs) var(--fuente-texto); color: var(--gris-700); cursor: pointer; transition: background var(--transicion), border-color var(--transicion); }
+.etapa:hover:not(:disabled) { border-color: var(--celeste-500); background: var(--celeste-100); }
+.etapa:disabled { cursor: default; }
+.etapa--hecha { background: var(--gris-100); color: var(--gris-500); }
+.etapa--actual { background: var(--azul-900); border-color: var(--azul-900); color: var(--blanco); }
+.etapa--ganado:not(:disabled) { border-color: #b7e4c7; color: var(--exito); }
+.etapa--perdido:not(:disabled) { border-color: #f5c2c2; color: var(--error); }
+.etapa--ganado.etapa--actual { background: var(--exito); border-color: var(--exito); color: var(--blanco); }
+.etapa--perdido.etapa--actual { background: var(--error); border-color: var(--error); color: var(--blanco); }
+
+.atajos { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 var(--esp-3); }
+.atajo { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--gris-200); background: var(--blanco); font: 600 var(--texto-xs) var(--fuente-texto); color: var(--azul-700); cursor: pointer; }
+.atajo:hover { background: var(--celeste-100); border-color: var(--celeste-500); }
+
+/* Línea de tiempo */
+.linea-tiempo { list-style: none; margin: 0; padding: 0; max-height: 440px; overflow-y: auto; }
+.linea-tiempo__item { display: grid; grid-template-columns: 32px 1fr; gap: var(--esp-3); padding-bottom: var(--esp-3); position: relative; }
+.linea-tiempo__item::before { content: ""; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: var(--gris-200); }
+.linea-tiempo__item:last-child::before { display: none; }
+.linea-tiempo__icono { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--celeste-100); color: var(--celeste-600); }
+.linea-tiempo__icono svg { width: 16px; height: 16px; }
+.linea-tiempo__item--auto .linea-tiempo__icono { background: var(--gris-100); color: var(--gris-500); }
+.linea-tiempo small { color: var(--gris-500); font-size: var(--texto-xs); font-weight: 600; }
+.linea-tiempo p { margin: 2px 0 0; font-size: var(--texto-sm); overflow-wrap: anywhere; }
+.linea-tiempo .vacio { margin: 0; }
+
+.lista-opps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--esp-2); }
+.lista-opps__item { display: flex; justify-content: space-between; gap: var(--esp-3); width: 100%; padding: var(--esp-3); border: 1px solid var(--gris-200); border-radius: var(--radio); background: var(--blanco); text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.lista-opps__item:hover { border-color: var(--celeste-500); }
+.lista-opps__item span { display: grid; gap: 3px; min-width: 0; }
+.lista-opps__item span:last-child { justify-items: end; text-align: right; flex: none; }
+.lista-opps__item small { color: var(--gris-500); font-size: var(--texto-xs); }
+
+/* Formulario de cliente: datos opcionales de la oportunidad */
+.cl-necesidad { border: 1px dashed var(--gris-300); border-radius: var(--radio); padding: var(--esp-3) var(--esp-4) 0; margin: var(--esp-2) 0 var(--esp-3); min-width: 0; }
+.cl-necesidad legend { padding: 0 6px; font-size: var(--texto-sm); font-weight: 700; color: var(--gris-700); }
+.cl-necesidad .form-mov__fila { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .cl-necesidad .form-mov__fila { grid-template-columns: 1fr; } }
+
+/* Celulares en la tabla: área táctil cómoda */
+#tabla-clientes a[href^="tel:"] { display: inline-block; padding: 8px 0; }
