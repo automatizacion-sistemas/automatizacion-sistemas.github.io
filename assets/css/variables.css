@@ -1,0 +1,98 @@
+/* ==========================================================================
+   variables.css — Identidad visual de la marca Jorge Luis
+   Todos los colores, tipografías, espacios y sombras se definen aquí.
+   Para cambiar la marca, basta con editar este archivo.
+   ========================================================================== */
+
+/* --- Tipografías alojadas en el propio sitio (sin depender de Google Fonts) --- */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../fonts/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* --- Color principal: azul oscuro --- */
+  --azul-950: #061530;
+  --azul-900: #0a1f44;   /* color de marca */
+  --azul-800: #0f2a5c;
+  --azul-700: #173a7a;
+  --azul-600: #224a97;
+
+  /* --- Color secundario: celeste eléctrico --- */
+  --celeste-500: #00b4ff; /* acento sobre fondos oscuros */
+  --celeste-400: #3cc8ff;
+  --celeste-100: #e0f5ff;
+  --celeste-600: #006cb5; /* versión accesible (contraste ≥ 4.5:1 sobre blanco y grises claros) */
+
+  /* --- Neutros: blanco y grises --- */
+  --blanco: #ffffff;
+  --gris-50: #f5f7fa;
+  --gris-100: #eef2f7;
+  --gris-200: #dde3ec;
+  --gris-300: #c3ccd9;
+  --gris-500: #5b6b80;   /* texto secundario con contraste ≥ 4.5:1 */
+  --gris-700: #334155;
+  --texto: #0f172a;
+
+  /* --- Estados (se usan en formularios y demostraciones) --- */
+  --exito: #15803d;
+  --exito-fondo: #dcfce7;
+  --alerta: #b45309;
+  --alerta-fondo: #fef3c7;
+  --error: #c62828;
+  --error-fondo: #fde8e8;
+  --whatsapp: #25d366;
+  --whatsapp-oscuro: #128c4b;
+
+  /* --- Tipografía --- */
+  --fuente-titulos: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fuente-texto: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Escala fluida: crece suavemente entre celular y escritorio */
+  --texto-xs: 0.78rem;
+  --texto-sm: 0.875rem;
+  --texto-base: 1rem;
+  --texto-lg: 1.125rem;
+  --texto-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --texto-2xl: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --texto-3xl: clamp(2.1rem, 1.6rem + 2.4vw, 3.5rem);
+
+  /* --- Espaciado (múltiplos de 4px) --- */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 0.75rem;
+  --esp-4: 1rem;
+  --esp-5: 1.5rem;
+  --esp-6: 2rem;
+  --esp-7: 3rem;
+  --esp-8: 4.5rem;
+  --esp-seccion: clamp(3.5rem, 2.5rem + 5vw, 6.5rem);
+
+  /* --- Bordes, sombras y radios --- */
+  --radio-sm: 8px;
+  --radio: 12px;
+  --radio-lg: 20px;
+  --radio-total: 999px;
+  --sombra-sm: 0 1px 2px rgb(10 31 68 / 0.06), 0 1px 3px rgb(10 31 68 / 0.08);
+  --sombra: 0 4px 12px rgb(10 31 68 / 0.08), 0 2px 4px rgb(10 31 68 / 0.05);
+  --sombra-lg: 0 18px 40px rgb(10 31 68 / 0.14);
+  --brillo-celeste: 0 0 0 4px rgb(0 180 255 / 0.25);
+
+  /* --- Movimiento --- */
+  --transicion: 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --transicion-lenta: 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* --- Contenedor --- */
+  --ancho-max: 1180px;
+  --alto-menu: 68px;
+}

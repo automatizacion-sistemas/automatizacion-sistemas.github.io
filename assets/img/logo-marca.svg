@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Logotipo: engranaje con circuito"><rect width="40" height="40" rx="11" fill="#0a1f44"/>
+<circle cx="16" cy="20" r="9.2" fill="none" stroke="#fff" stroke-width="3.6" stroke-dasharray="3.4 3.83" transform="rotate(-11 16 20)"/>
+<circle cx="16" cy="20" r="6.6" fill="#0a1f44" stroke="#fff" stroke-width="2.6"/>
+<circle cx="16" cy="20" r="2.4" fill="#00b4ff"/>
+<path d="M25 14.5h3.5l2.5-2.5M25 25.5h3.5l2.5 2.5M26.5 20h5" fill="none" stroke="#00b4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="32" cy="11" r="1.9" fill="#00b4ff"/><circle cx="32" cy="29" r="1.9" fill="#00b4ff"/><circle cx="33" cy="20" r="1.9" fill="#00b4ff"/></svg>

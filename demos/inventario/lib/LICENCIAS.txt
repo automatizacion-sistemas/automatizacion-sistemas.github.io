@@ -1,0 +1,4 @@
+Librerías de terceros incluidas en esta carpeta (todas de uso libre, incluso comercial):
+- sql.js 1.15.2 (SQLite compilado a WebAssembly) — Licencia MIT — https://github.com/sql-js/sql.js
+- Chart.js 4.6.1 (gráficos) — Licencia MIT — https://www.chartjs.org
+- SheetJS xlsx 0.18.5, versión "mini" (exportar a Excel) — Licencia Apache 2.0 — https://sheetjs.com

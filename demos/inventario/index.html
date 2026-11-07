@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo · Sistema de control de inventarios — Automatización &amp; Sistemas</title>
+  <meta name="description" content="Demostración funcional de un sistema de inventarios con kardex valorizado, alertas de stock mínimo y dashboard. Funciona en tu navegador con datos de ejemplo.">
+  <meta name="theme-color" content="#0a1f44">
+  <link rel="icon" href="../../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="css/inventario.css">
+  <!-- Descarga el motor SQLite en paralelo mientras se lee el resto de la página -->
+  <link rel="preload" href="lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+</head>
+<body>
+
+<!-- Pantalla de carga mientras se inicia SQLite -->
+<div class="cargando-app" id="cargando">
+  <img src="../../assets/img/logo-marca.svg" alt="" width="56" height="56">
+  <p>Preparando la base de datos…</p>
+</div>
+
+<div class="app" id="app" hidden>
+
+  <!-- ================= Barra lateral ================= -->
+  <aside class="lateral">
+    <a class="lateral__marca" href="../../index.html#portafolio" title="Volver al portafolio">
+      <img src="../../assets/img/logo-marca.svg" alt="" width="36" height="36">
+      <span><b>Inventarios</b><small>Ferretería El Tornillo · demo</small></span>
+    </a>
+    <nav class="lateral__nav" aria-label="Módulos">
+      <a href="#dashboard" data-vista="dashboard"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Dashboard</span></a>
+      <a href="#productos" data-vista="productos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /> </svg><span>Productos</span></a>
+      <a href="#movimientos" data-vista="movimientos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span>Movimientos</span></a>
+      <a href="#kardex" data-vista="kardex"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 12h-5" /> <path d="M15 8h-5" /> <path d="M19 17V5a2 2 0 0 0-2-2H4" /> <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /> </svg><span>Kardex</span></a>
+    </nav>
+    <div class="lateral__pie">
+      <a class="btn btn--acento btn--chico" href="../../index.html#contacto">Quiero un sistema así</a>
+      <a class="lateral__volver" href="../../index.html#portafolio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg> Volver al portafolio</a>
+    </div>
+  </aside>
+
+  <!-- ================= Contenido ================= -->
+  <div class="principal">
+    <header class="barra">
+      <h1 id="titulo-vista">Dashboard</h1>
+      <div class="barra__acciones">
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-descargar-db" title="Descarga la base de datos SQLite con tus cambios"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" /> </svg><span class="solo-escritorio">Descargar .sqlite</span></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-reiniciar" title="Vuelve a los datos de ejemplo originales"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> </svg><span class="solo-escritorio">Restablecer demo</span></button>
+      </div>
+    </header>
+
+    <main class="vistas">
+      <div class="aviso-demo" id="aviso-demo">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /> </svg>
+        <p><b>Demostración con datos de ejemplo.</b> Puedes crear productos y registrar movimientos: todo se guarda solo en este navegador y nadie más lo ve. <span id="estado-guardado"></span></p>
+      </div>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="vista" data-vista="dashboard" aria-labelledby="titulo-vista">
+        <div class="kpis" id="kpis"></div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Compras vs. salidas valorizadas</h2><small>Últimas 8 semanas, a costo (S/)</small></div>
+            <div class="grafico"><canvas id="graf-flujo" aria-label="Gráfico de compras y salidas por semana" role="img"></canvas></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Valor del inventario por categoría</h2><small>Costo promedio ponderado (S/)</small></div>
+            <div class="grafico"><canvas id="graf-categorias" aria-label="Gráfico del valor del inventario por categoría" role="img"></canvas></div>
+          </div>
+        </div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /> </svg> Productos para reponer</h2><small>Stock igual o menor al mínimo</small></div>
+            <div id="tabla-alertas"></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Últimos movimientos</h2><a href="#movimientos">Ver todos</a></div>
+            <div id="tabla-ultimos"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PRODUCTOS ===== -->
+      <section class="vista" data-vista="productos" hidden>
+        <div class="herramientas">
+          <div class="buscador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /> </svg><input type="search" id="buscar" placeholder="Buscar por código o nombre" aria-label="Buscar productos"></div>
+          <select id="filtro-categoria" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
+          <label class="interruptor"><input type="checkbox" id="filtro-bajo"><span>Solo stock bajo</span></label>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-productos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+            <button type="button" class="btn btn--primario btn--chico" id="btn-nuevo-producto"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="M12 5v14" /> </svg> Nuevo producto</button>
+          </div>
+        </div>
+        <div class="caja caja--tabla"><div id="tabla-productos"></div></div>
+        <p class="nota-tabla" id="resumen-productos"></p>
+      </section>
+
+      <!-- ===== MOVIMIENTOS ===== -->
+      <section class="vista" data-vista="movimientos" hidden>
+        <div class="rejilla-mov">
+          <form class="caja form-mov" id="form-movimiento" novalidate>
+            <div class="caja__cabecera"><h2>Registrar movimiento</h2></div>
+            <div class="segmentado" role="radiogroup" aria-label="Tipo de movimiento">
+              <label><input type="radio" name="tipo" value="ENTRADA" checked><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 17V3" /> <path d="m6 11 6 6 6-6" /> <path d="M19 21H5" /> </svg> Entrada</span></label>
+              <label><input type="radio" name="tipo" value="SALIDA"><span><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m18 9-6-6-6 6" /> <path d="M12 3v14" /> <path d="M5 21h14" /> </svg> Salida</span></label>
+            </div>
+            <div class="campo">
+              <label for="m-producto">Producto <span class="obligatorio">*</span></label>
+              <select id="m-producto" name="producto_id" required></select>
+              <span class="campo__ayuda" id="m-stock-info"></span>
+            </div>
+            <div class="form-mov__fila">
+              <div class="campo">
+                <label for="m-motivo">Motivo</label>
+                <select id="m-motivo" name="motivo"></select>
+              </div>
+              <div class="campo">
+                <label for="m-fecha">Fecha <span class="obligatorio">*</span></label>
+                <input type="date" id="m-fecha" name="fecha" required>
+              </div>
+            </div>
+            <div class="form-mov__fila">
+              <div class="campo">
+                <label for="m-cantidad">Cantidad <span class="obligatorio">*</span></label>
+                <input type="number" id="m-cantidad" name="cantidad" min="0.01" step="0.01" inputmode="decimal" required>
+              </div>
+              <div class="campo" id="campo-costo">
+                <label for="m-costo">Costo unitario S/ <span class="obligatorio">*</span></label>
+                <input type="number" id="m-costo" name="costo_unitario" min="0" step="0.01" inputmode="decimal">
+              </div>
+            </div>
+            <div class="campo">
+              <label for="m-referencia">N° de comprobante o referencia</label>
+              <input type="text" id="m-referencia" name="referencia" maxlength="40" placeholder="Ej.: F001-000123">
+            </div>
+            <div class="form-mov__error" id="m-error" role="alert"></div>
+            <button class="btn btn--primario" type="submit"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Registrar</button>
+          </form>
+
+          <div class="caja caja--tabla">
+            <div class="caja__cabecera">
+              <h2>Historial de movimientos</h2>
+              <select id="filtro-tipo" aria-label="Filtrar por tipo"><option value="">Todos</option><option value="ENTRADA">Entradas</option><option value="SALIDA">Salidas</option></select>
+            </div>
+            <div id="tabla-movimientos"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== KARDEX ===== -->
+      <section class="vista" data-vista="kardex" hidden>
+        <div class="herramientas">
+          <select id="k-producto" aria-label="Producto del kardex" class="select-ancho"></select>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-kardex"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+        </div>
+        <div class="kpis kpis--3" id="k-resumen"></div>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Kardex valorizado</h2><small>Método: costo promedio ponderado</small></div>
+          <div id="tabla-kardex"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Navegación inferior en celulares -->
+  <nav class="nav-movil" aria-label="Módulos">
+    <a href="#dashboard" data-vista="dashboard"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Inicio</span></a>
+    <a href="#productos" data-vista="productos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /> </svg><span>Productos</span></a>
+    <a href="#movimientos" data-vista="movimientos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span>Movimientos</span></a>
+    <a href="#kardex" data-vista="kardex"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 12h-5" /> <path d="M15 8h-5" /> <path d="M19 17V5a2 2 0 0 0-2-2H4" /> <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /> </svg><span>Kardex</span></a>
+  </nav>
+</div>
+
+<!-- Ventana para crear/editar productos -->
+<dialog class="dialogo" id="dialogo-producto" aria-labelledby="dp-titulo">
+  <form method="dialog" id="form-producto" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dp-titulo">Nuevo producto</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <input type="hidden" name="id">
+    <div class="form-mov__fila">
+      <div class="campo"><label for="p-codigo">Código <span class="obligatorio">*</span></label><input type="text" id="p-codigo" name="codigo" required maxlength="20" autocapitalize="characters"></div>
+      <div class="campo"><label for="p-unidad">Unidad</label>
+        <select id="p-unidad" name="unidad"><option>Unidad</option><option>Caja</option><option>Kilogramo</option><option>Metro</option><option>Litro</option><option>Galón</option><option>Paquete</option></select></div>
+    </div>
+    <div class="campo"><label for="p-nombre">Nombre <span class="obligatorio">*</span></label><input type="text" id="p-nombre" name="nombre" required maxlength="80"></div>
+    <div class="campo"><label for="p-categoria">Categoría <span class="obligatorio">*</span></label><input type="text" id="p-categoria" name="categoria" list="lista-categorias" required maxlength="40"><datalist id="lista-categorias"></datalist><span class="campo__ayuda">Elige una existente o escribe una nueva</span></div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="p-precio">Precio de venta S/</label><input id="p-precio" name="precio_venta" type="number" min="0" step="0.01" inputmode="decimal" value="0"></div>
+      <div class="campo"><label for="p-minimo">Stock mínimo</label><input id="p-minimo" name="stock_minimo" type="number" min="0" step="1" inputmode="decimal" value="0"></div>
+    </div>
+    <p class="campo__ayuda" id="p-nota">El stock inicial se registra después como una entrada en Movimientos.</p>
+    <div class="form-mov__error" id="p-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico" value="guardar">Guardar</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Ventana de confirmación -->
+<dialog class="dialogo dialogo--chico" id="dialogo-confirmar" aria-labelledby="dc-titulo">
+  <form method="dialog">
+    <h2 id="dc-titulo">¿Confirmar?</h2>
+    <p id="dc-texto"></p>
+    <footer class="dialogo__pie">
+      <button type="submit" class="btn btn--secundario btn--chico" value="no">Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico" value="si" id="dc-si">Confirmar</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Notificaciones -->
+<div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+
+<script src="lib/sql-wasm.js"></script>
+<script src="js/datos-ejemplo.js"></script>
+<script src="js/db.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/graficos.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

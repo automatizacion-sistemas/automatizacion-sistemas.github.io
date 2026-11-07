@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía de estilo · Automatización &amp; Sistemas</title>
+  <meta name="robots" content="noindex"><!-- página interna de referencia, no se indexa -->
+  <link rel="icon" href="../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/componentes.css">
+  <style>
+    /* Estilos exclusivos de esta guía (no forman parte del sitio final) */
+    .guia-top { position: sticky; top: 0; z-index: 10; background: rgb(255 255 255 / 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--gris-200); }
+    .guia-top .contenedor { display: flex; align-items: center; justify-content: space-between; height: var(--alto-menu); gap: 1rem; }
+    .guia-top small { color: var(--gris-500); font-weight: 600; }
+    @media (max-width: 480px) { .guia-top small { display: none; } }
+    .bloque { min-width: 0; padding-block: var(--esp-7); border-bottom: 1px solid var(--gris-200); }
+    .mapa code { overflow-wrap: anywhere; }
+    .bloque > h2 { font-size: var(--texto-xl); margin-bottom: var(--esp-2); }
+    .bloque > p.nota { color: var(--gris-500); max-width: 640px; }
+    .rejilla { display: grid; gap: var(--esp-4); align-items: start; }
+    @media (max-width: 640px) { .hero-red { opacity: .3; } }
+    .rejilla--colores { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .rejilla--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .rejilla--4 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .muestra { border-radius: var(--radio); overflow: hidden; border: 1px solid var(--gris-200); background: var(--blanco); }
+    .muestra__color { height: 84px; }
+    .muestra__info { padding: 10px 12px; font-size: var(--texto-xs); line-height: 1.4; }
+    .muestra__info b { display: block; font-size: var(--texto-sm); color: var(--texto); }
+    .muestra__info code { color: var(--gris-500); }
+    .fila-botones { display: flex; flex-wrap: wrap; gap: var(--esp-3); align-items: center; }
+    .lienzo-oscuro { background: var(--azul-900); border-radius: var(--radio-lg); padding: var(--esp-5); margin-top: var(--esp-4); }
+    .tipo-muestra { display: grid; gap: var(--esp-4); }
+    .tipo-muestra .meta { font-size: var(--texto-xs); color: var(--gris-500); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+    .mapa { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--esp-3); counter-reset: s; }
+    .mapa > li { counter-increment: s; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: var(--esp-3); padding: var(--esp-4); border: 1px solid var(--gris-200); border-radius: var(--radio); background: var(--blanco); }
+    .mapa > li::before { content: counter(s, upper-alpha); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--celeste-100); color: var(--celeste-600); font: 800 1.1rem var(--fuente-titulos); }
+    .mapa h3 { font-size: var(--texto-lg); margin: 0 0 4px; }
+    .mapa p { margin: 0; font-size: var(--texto-sm); }
+    .mapa .cta { display: inline-block; margin-top: 6px; font-size: var(--texto-xs); font-weight: 700; color: var(--azul-700); background: var(--gris-100); padding: 2px 8px; border-radius: 6px; }
+    pre.arbol { max-width: 100%; background: var(--azul-950); color: #cfe6ff; padding: var(--esp-5); border-radius: var(--radio-lg); overflow-x: auto; font-size: 0.8rem; line-height: 1.6; }
+    pre.arbol em { color: var(--celeste-400); font-style: normal; }
+
+    .pie { background: var(--azul-950); color: var(--gris-300); padding-block: var(--esp-7) var(--esp-5); margin-top: var(--esp-7); }
+    .pie__fila { display: flex; flex-wrap: wrap; gap: var(--esp-5); align-items: center; justify-content: space-between; }
+    .pie__autor span { white-space: nowrap; }
+    .pie__autor { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-2) var(--esp-3); font-size: var(--texto-sm); }
+    .pie__autor img { width: 150px; }
+    .pie__legal { margin-top: var(--esp-5); padding-top: var(--esp-4); border-top: 1px solid rgb(255 255 255 / .1); font-size: var(--texto-xs); color: var(--gris-300); }
+    /* --- Vista previa del Inicio con la animación tecnológica --- */
+    .hero-demo { position: relative; overflow: hidden; border-radius: var(--radio-lg); background: radial-gradient(120% 90% at 85% 10%, var(--azul-700) 0%, var(--azul-900) 55%, var(--azul-950) 100%); color: var(--gris-200); padding: clamp(2rem, 5vw, 4rem); isolation: isolate; }
+    .hero-demo h1 { color: var(--blanco); max-width: 15ch; }
+    .hero-demo h1 span { color: var(--celeste-400); }
+    .hero-demo p { max-width: 46ch; font-size: var(--texto-lg); color: var(--gris-300); }
+    .hero-demo .fila-botones { margin-top: var(--esp-5); }
+    .hero-red { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; opacity: .55; }
+    .hero-red .linea { fill: none; stroke: var(--celeste-500); stroke-width: 1.2; stroke-dasharray: 5 9; animation: flujo 6s linear infinite; opacity: .55; }
+    .hero-red .nodo { fill: var(--celeste-500); animation: latido 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .hero-red .nodo:nth-of-type(2n) { animation-delay: -1.6s; }
+    .hero-red .nodo:nth-of-type(3n) { animation-delay: -0.8s; }
+    @keyframes flujo { to { stroke-dashoffset: -140; } }
+    @keyframes latido { 0%, 100% { opacity: .35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.35); } }
+    .hero-demo .pildora { display: inline-flex; gap: 8px; align-items: center; padding: 6px 14px; border-radius: 999px; border: 1px solid rgb(0 180 255 / .35); background: rgb(0 180 255 / .08); color: var(--celeste-400); font-size: var(--texto-sm); font-weight: 600; margin-bottom: var(--esp-5); }
+    .hero-demo .pildora i { width: 8px; height: 8px; border-radius: 50%; background: var(--celeste-500); box-shadow: 0 0 0 4px rgb(0 180 255 / .2); }
+  </style>
+</head>
+<body>
+
+<header class="guia-top">
+  <div class="contenedor">
+    <a class="logo" href="#">
+      <img class="logo__marca" src="../assets/img/logo-marca.svg" alt="">
+      <span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span>
+    </a>
+    <small>Guía de estilo · Etapa 1 (v2)</small>
+  </div>
+</header>
+
+<main class="contenedor">
+
+  <!-- 1. Vista previa del Inicio -->
+  <section class="bloque">
+    <h2>1. Así se verá el Inicio</h2>
+    <p class="nota">Fondo azul oscuro con una red de nodos que fluye lentamente: la "animación tecnológica discreta". Se detiene sola si el visitante tiene activado "reducir movimiento".</p>
+    <div class="hero-demo">
+      <svg class="hero-red" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path class="linea" d="M440 80 L560 150 L700 90 M560 150 L620 280 L760 320 M620 280 L480 340 M560 150 L470 230 L620 280 M700 90 L780 190 L760 320"/>
+        <circle class="nodo" cx="440" cy="80" r="4"/><circle class="nodo" cx="560" cy="150" r="5"/><circle class="nodo" cx="700" cy="90" r="4"/>
+        <circle class="nodo" cx="620" cy="280" r="5"/><circle class="nodo" cx="760" cy="320" r="4"/><circle class="nodo" cx="480" cy="340" r="3.5"/>
+        <circle class="nodo" cx="470" cy="230" r="3.5"/><circle class="nodo" cx="780" cy="190" r="3.5"/>
+      </svg>
+      <span class="pildora"><i></i>Automatización para pymes</span>
+      <h1>Transformo procesos manuales en <span>soluciones digitales inteligentes</span></h1>
+      <p>Sistemas web, automatizaciones con Python y Excel, y reportes que se generan solos, hechos a la medida de tu negocio.</p>
+      <div class="fila-botones">
+        <a class="btn btn--acento" href="#">Conoce mis soluciones <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></a>
+        <a class="btn btn--secundario btn--sobre-oscuro" href="#">Solicita una demostración</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Logotipo -->
+  <section class="bloque">
+    <h2>2. Logotipo</h2>
+    <p class="nota">El engranaje representa el proceso y las líneas de circuito que salen de él son la parte digital: un proceso que se automatiza. El nombre de la marca dice directamente qué haces: <b>Automatización &amp; Sistemas</b>. Funciona sobre fondo claro y oscuro, y también como ícono de la pestaña del navegador.</p>
+    <div class="rejilla rejilla--3">
+      <div class="tarjeta"><a class="logo" href="#"><img class="logo__marca" src="../assets/img/logo-marca.svg" alt=""><span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span></a></div>
+      <div class="tarjeta" style="background:var(--azul-900);border-color:var(--azul-900)"><a class="logo logo--claro" href="#"><img class="logo__marca" src="../assets/img/logo-marca.svg" alt=""><span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span></a></div>
+      <div class="tarjeta" style="display:flex;gap:16px;align-items:center"><img src="../assets/img/logo-marca.svg" alt="" width="64" height="64"><img src="../assets/img/logo-marca.svg" alt="" width="32" height="32"><img src="../assets/img/logo-marca.svg" alt="" width="16" height="16"></div>
+    </div>
+    <p class="nota" style="margin-top:var(--esp-5)"><b>Alternativas</b>, por si prefieres otra idea:</p>
+    <div class="fila-botones">
+      <div class="tarjeta" style="display:flex;gap:14px;align-items:center"><img src="../assets/img/logo-alternativa-flujo.svg" alt="" width="56" height="56"><span><b style="color:var(--texto)">A · Flujo</b><br><small>Un paso que lleva a otro: flujo de trabajo</small></span></div>
+      <div class="tarjeta" style="display:flex;gap:14px;align-items:center"><img src="../assets/img/logo-alternativa-ciclo.svg" alt="" width="56" height="56"><span><b style="color:var(--texto)">C · Ciclo</b><br><small>Un chip dentro de un ciclo que se repite solo</small></span></div>
+    </div>
+  </section>
+
+  <!-- 2b. Firma -->
+  <section class="bloque">
+    <h2>3. Tu firma como autor</h2>
+    <p class="nota">Vectoricé tu firma para que se vea nítida en cualquier tamaño. No aparece en el encabezado: va al cierre de "Sobre mí" y en el pie de página de todo el sitio, como autor.</p>
+    <div class="rejilla rejilla--3">
+      <div class="tarjeta" style="display:grid;place-items:center;min-height:150px"><img src="../assets/img/firma-azul.svg" alt="Firma de Jorge Luis" style="width:240px"></div>
+      <div class="tarjeta" style="display:grid;place-items:center;min-height:150px;background:var(--azul-900);border-color:var(--azul-900)"><img src="../assets/img/firma-blanca.svg" alt="Firma de Jorge Luis" style="width:240px"></div>
+    </div>
+  </section>
+
+  <!-- 3. Paleta -->
+  <section class="bloque">
+    <h2>4. Paleta de colores</h2>
+    <p class="nota">El azul oscuro va en el menú, los títulos y los botones principales. El celeste eléctrico es solo de acento: se usa poco para que destaque. Sobre fondo blanco, los enlaces usan un celeste más oscuro para que se lean bien.</p>
+    <div class="rejilla rejilla--colores">
+      <div class="muestra"><div class="muestra__color" style="background:#0a1f44"></div><div class="muestra__info"><b>Azul marca</b><code>#0A1F44</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#173a7a"></div><div class="muestra__info"><b>Azul medio</b><code>#173A7A</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#00b4ff"></div><div class="muestra__info"><b>Celeste eléctrico</b><code>#00B4FF</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#006cb5"></div><div class="muestra__info"><b>Celeste texto</b><code>#006CB5</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#ffffff"></div><div class="muestra__info"><b>Blanco</b><code>#FFFFFF</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#f5f7fa"></div><div class="muestra__info"><b>Gris fondo</b><code>#F5F7FA</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#5b6b80"></div><div class="muestra__info"><b>Gris texto</b><code>#5B6B80</code></div></div>
+      <div class="muestra"><div class="muestra__color" style="background:#0f172a"></div><div class="muestra__info"><b>Texto títulos</b><code>#0F172A</code></div></div>
+    </div>
+    <p class="nota" style="margin-top:var(--esp-4)">Colores de estado, solo para formularios y demostraciones:
+      <span class="etiqueta etiqueta--disponible">Correcto</span>
+      <span class="etiqueta" style="background:var(--alerta-fondo);color:var(--alerta)">Stock bajo</span>
+      <span class="etiqueta" style="background:var(--error-fondo);color:var(--error)">Error</span></p>
+  </section>
+
+  <!-- 4. Tipografía -->
+  <section class="bloque">
+    <h2>5. Tipografía</h2>
+    <p class="nota"><b>Plus Jakarta Sans</b> para títulos (moderna y con carácter) e <b>Inter</b> para textos (muy legible en pantallas pequeñas). Las dos se alojan en el propio sitio, pesan menos de 80 KB en total y tienen licencia libre (SIL OFL).</p>
+    <div class="tipo-muestra">
+      <div><div class="meta">Título principal · Plus Jakarta Sans 750</div><h1 style="margin:0">Automatiza tu negocio</h1></div>
+      <div><div class="meta">Título de sección</div><h2 style="margin:0">¿Tu empresa todavía trabaja con procesos manuales?</h2></div>
+      <div><div class="meta">Subtítulo</div><h3 style="margin:0">Sistema de control de inventarios</h3></div>
+      <div><div class="meta">Texto · Inter 400</div><p style="margin:0;max-width:62ch">Cuéntame qué necesitas y desarrollaré una solución a tu medida. Analizo cómo trabaja hoy tu equipo, identifico las tareas repetitivas y las convierto en un sistema que ahorra horas cada semana.</p></div>
+    </div>
+  </section>
+
+  <!-- 5. Botones y etiquetas -->
+  <section class="bloque">
+    <h2>6. Botones y etiquetas</h2>
+    <p class="nota">Todos los botones miden al menos 48 px de alto para tocarlos cómodamente en el celular.</p>
+    <div class="fila-botones">
+      <a class="btn btn--primario" href="#">Solicita una demostración</a>
+      <a class="btn btn--acento" href="#">Conoce mis soluciones <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></a>
+      <a class="btn btn--secundario" href="#">Ver demostración <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /> </svg></a>
+      <a class="btn btn--whatsapp" href="#"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /> </svg> Escríbeme por WhatsApp</a>
+      <button type="button" class="btn btn--primario" disabled>Próximamente</button>
+    </div>
+    <div class="fila-botones" style="margin-top:var(--esp-4)">
+      <span class="etiqueta etiqueta--disponible">Demo disponible</span>
+      <span class="etiqueta etiqueta--proximamente">Próximamente</span>
+      <span class="etiqueta etiqueta--tech">JavaScript</span>
+      <span class="etiqueta etiqueta--tech">SQLite</span>
+      <span class="etiqueta etiqueta--tech">Python</span>
+    </div>
+  </section>
+
+  <!-- 6. Tarjetas -->
+  <section class="bloque">
+    <h2>7. Tarjetas de servicio y de proyecto</h2>
+    <p class="nota">Las de servicio son breves y van con ícono. Las de proyecto tienen todo lo que pide el brief: captura, problema que resuelve, funcionalidades y los dos botones. La captura de abajo es provisional: se reemplazará por una captura real de la demo cuando esté terminada.</p>
+    <div class="rejilla rejilla--3">
+      <article class="tarjeta">
+        <div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="8" x="3" y="3" rx="2" /> <path d="M7 11v4a2 2 0 0 0 2 2h4" /> <rect width="8" height="8" x="13" y="13" rx="2" /> </svg></div>
+        <h3>Automatización de procesos con Python</h3>
+        <p style="margin:0">Tareas repetitivas como consolidar archivos, cruzar datos o enviar reportes, convertidas en procesos que corren solos.</p>
+      </article>
+      <article class="tarjeta">
+        <div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg></div>
+        <h3>Automatización de Excel</h3>
+        <p style="margin:0">Planillas que se llenan, validan y consolidan sin copiar y pegar, con menos errores y en minutos en vez de horas.</p>
+      </article>
+      <article class="tarjeta proyecto">
+        <div class="proyecto__captura">
+          <svg viewBox="0 0 320 200" aria-label="Captura provisional del sistema de inventarios" role="img">
+            <rect width="320" height="200" fill="#f5f7fa"/><rect width="62" height="200" fill="#0a1f44"/>
+            <rect x="12" y="14" width="38" height="8" rx="4" fill="#00b4ff"/>
+            <g fill="#3a5487"><rect x="12" y="36" width="34" height="6" rx="3"/><rect x="12" y="50" width="28" height="6" rx="3"/><rect x="12" y="64" width="32" height="6" rx="3"/></g>
+            <g fill="#fff" stroke="#dde3ec"><rect x="74" y="14" width="74" height="40" rx="6"/><rect x="156" y="14" width="74" height="40" rx="6"/><rect x="238" y="14" width="72" height="40" rx="6"/></g>
+            <g fill="#0f172a"><rect x="82" y="34" width="30" height="10" rx="3"/><rect x="164" y="34" width="24" height="10" rx="3"/></g><rect x="246" y="34" width="20" height="10" rx="3" fill="#b45309"/>
+            <rect x="74" y="64" width="236" height="124" rx="6" fill="#fff" stroke="#dde3ec"/>
+            <g fill="#00b4ff"><rect x="92" y="140" width="16" height="34" rx="2"/><rect x="118" y="118" width="16" height="56" rx="2"/><rect x="144" y="128" width="16" height="46" rx="2"/><rect x="170" y="100" width="16" height="74" rx="2"/></g>
+            <g fill="#173a7a"><rect x="196" y="112" width="16" height="62" rx="2"/><rect x="222" y="90" width="16" height="84" rx="2"/><rect x="248" y="106" width="16" height="68" rx="2"/><rect x="274" y="84" width="16" height="90" rx="2"/></g>
+          </svg>
+        </div>
+        <div class="proyecto__cuerpo">
+          <span class="etiqueta etiqueta--disponible">Demo disponible</span>
+          <h3>Sistema de control de inventarios</h3>
+          <p class="proyecto__problema">Para negocios que controlan su stock en cuadernos o en planillas sueltas y se enteran tarde de los faltantes.</p>
+          <ul class="proyecto__lista">
+            <li>Entradas y salidas con kardex automático</li>
+            <li>Alertas de stock mínimo</li>
+            <li>Dashboard y exportación a Excel</li>
+          </ul>
+          <div class="proyecto__acciones">
+            <a class="btn btn--primario btn--chico" href="#">Ver demostración</a>
+            <a class="btn btn--secundario btn--chico" href="#">Solicitar un sistema similar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 7. Indicadores -->
+  <section class="bloque">
+    <h2>8. Indicadores para dashboards</h2>
+    <p class="nota">El mismo estilo se usa en el Inicio y dentro de las demostraciones. Las cifras de esta muestra son solo de ejemplo.</p>
+    <div class="rejilla rejilla--4">
+      <div class="indicador"><div class="indicador__valor">248</div><div class="indicador__nombre">Productos registrados</div></div>
+      <div class="indicador"><div class="indicador__valor">S/ 38,420</div><div class="indicador__nombre">Valor del inventario</div></div>
+      <div class="indicador"><div class="indicador__valor" style="color:var(--alerta)">12</div><div class="indicador__nombre">Con stock bajo</div></div>
+      <div class="indicador"><div class="indicador__valor">94</div><div class="indicador__nombre">Movimientos del mes</div></div>
+    </div>
+  </section>
+
+  <!-- 8. Formulario -->
+  <section class="bloque">
+    <h2>9. Campos de formulario</h2>
+    <p class="nota">Estados normal, con error y mensaje de resultado. La letra de los campos mide 16 px para que el iPhone no haga zoom al escribir.</p>
+    <div class="rejilla rejilla--3">
+      <div>
+        <div class="campo"><label for="g-nombre">Nombre <span class="obligatorio">*</span></label><input type="text" id="g-nombre" placeholder="Tu nombre completo"></div>
+        <div class="campo"><label for="g-tipo">Tipo de solución</label><select id="g-tipo"><option>Automatización de Excel</option></select></div>
+      </div>
+      <div>
+        <div class="campo campo--invalido"><label for="g-correo">Correo electrónico <span class="obligatorio">*</span></label><input type="text" id="g-correo" value="correo@empresa"><span class="campo__error">Ingresa un correo válido, por ejemplo nombre@empresa.com</span></div>
+      </div>
+      <div style="display:grid;gap:var(--esp-3)">
+        <div class="aviso aviso--exito"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="m9 14 2 2 4-4" /> </svg><span>Mensaje enviado. Te responderé en menos de 24 horas.</span></div>
+        <div class="aviso aviso--error"><span>No se pudo enviar. Revisa tu conexión o escríbeme por WhatsApp.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Estructura -->
+  <section class="bloque">
+    <h2>10. Estructura de la página principal</h2>
+    <p class="nota">Es una sola página con menú fijo. Cada sección termina con un llamado a la acción, y las demostraciones abren en páginas propias.</p>
+    <ul class="mapa">
+      <li><div><h3>Inicio</h3><p>Propuesta de valor, animación de red y 3 indicadores de confianza.</p><span class="cta">Conoce mis soluciones · Solicita una demostración</span></div></li>
+      <li><div><h3>¿Tu empresa todavía trabaja con procesos manuales?</h3><p>Franja de problemas comunes: copiar y pegar, reportes a mano, información dispersa.</p><span class="cta">Automatiza tu negocio</span></div></li>
+      <li><div><h3>Servicios</h3><p>Los 7 servicios del brief, en tarjetas con ícono.</p><span class="cta">Cuéntame qué necesitas</span></div></li>
+      <li><div><h3>Portafolio de demostraciones</h3><p>8 tarjetas generadas desde <code>data/proyectos.json</code>, con filtro por tipo. Las que aún no están construidas aparecen como "Próximamente".</p><span class="cta">Ver demostración · Solicitar un sistema similar</span></div></li>
+      <li><div><h3>Cómo trabajo</h3><p>4 pasos: diagnóstico, propuesta, desarrollo y acompañamiento.</p></div></li>
+      <li><div><h3>Sobre mí</h3><p>Foto, trayectoria en contabilidad, administración y RR. HH. con enfoque multisector, y algunos casos reales de automatización.</p></div></li>
+      <li><div><h3>Sobre mí → cierre</h3><p>El texto termina con tu firma, como una carta de presentación.</p></div></li>
+      <li><div><h3>Contacto</h3><p>Botón de WhatsApp y formulario con validaciones, enviado con Web3Forms.</p><span class="cta">Cuéntame qué necesitas y desarrollaré una solución a tu medida</span></div></li>
+      <li><div><h3>Pie de página</h3><p>Logotipo, enlaces y "Diseñado y desarrollado por" con tu firma.</p></div></li>
+    </ul>
+  </section>
+
+  <!-- 10. Archivos -->
+  <section class="bloque" style="border-bottom:0">
+    <h2>11. Arquitectura de archivos</h2>
+<pre class="arbol">jorgeluis-portafolio/
+├── index.html              <em># página principal (Etapa 2)</em>
+├── estilo/index.html       <em># esta guía (interna, no se indexa)</em>
+├── assets/
+│   ├── css/  variables.css · base.css · componentes.css · secciones.css
+│   ├── js/   main.js · portafolio.js · contacto.js · config.js
+│   ├── fonts/  Plus Jakarta Sans · Inter
+│   └── img/  logo-marca.svg · firma-*.svg · capturas/ · foto.webp
+├── data/proyectos.json     <em># las 8 tarjetas del portafolio</em>
+├── demos/inventario/       <em># Etapa 4 — SQLite en el navegador</em>
+├── python/                 <em># proyectos independientes (Excel, PDF)</em>
+└── README.md</pre>
+  </section>
+
+</main>
+
+<!-- Vista previa del pie de página del sitio -->
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <a class="logo logo--claro" href="#"><img class="logo__marca" src="../assets/img/logo-marca.svg" alt=""><span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span></a>
+    <div class="pie__autor"><span>Diseñado y desarrollado por</span><img src="../assets/img/firma-blanca.svg" alt="Jorge Luis"></div>
+  </div>
+  <div class="contenedor pie__legal">© 2026 · Lima, Perú</div>
+</footer>
+</body>
+</html>

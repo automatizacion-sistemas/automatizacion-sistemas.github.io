@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automatización &amp; Sistemas · Soluciones digitales para empresas</title>
+  <meta name="description" content="Transformo procesos manuales en soluciones digitales inteligentes: sistemas web a medida, automatización con Python y Excel, dashboards y documentos automáticos para pymes.">
+  <meta name="author" content="Jorge Luis Acaro Córdova">
+  <meta name="theme-color" content="#0a1f44">
+  <!-- Vista previa al compartir el enlace en WhatsApp, LinkedIn o Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Automatización & Sistemas · Soluciones digitales para empresas">
+  <meta property="og:description" content="Transformo procesos manuales en soluciones digitales inteligentes.">
+  <meta property="og:locale" content="es_PE">
+  <link rel="icon" href="assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/componentes.css">
+  <link rel="stylesheet" href="assets/css/secciones.css">
+</head>
+<body>
+
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<!-- ======================= MENÚ ======================= -->
+<header class="menu" id="menu">
+  <div class="contenedor menu__fila">
+    <a class="logo" href="#inicio" aria-label="Automatización & Sistemas, ir al inicio">
+      <img class="logo__marca" src="assets/img/logo-marca.svg" alt="" width="40" height="40">
+      <span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span>
+    </a>
+    <button type="button" class="menu__boton" id="menu-boton" aria-expanded="false" aria-controls="menu-enlaces" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu__enlaces" id="menu-enlaces" aria-label="Principal">
+      <a href="#servicios">Servicios</a>
+      <a href="#portafolio">Demostraciones</a>
+      <a href="#proceso">Cómo trabajo</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a class="btn btn--primario btn--chico" href="#contacto">Solicita una demostración</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+
+<!-- ======================= A. INICIO ======================= -->
+<section class="hero" id="inicio">
+  <svg class="hero__red" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path class="linea" d="M420 90 L560 170 L700 100 M560 170 L630 320 L770 370 M630 320 L470 400 M560 170 L460 270 L630 320 M700 100 L790 220 L770 370 M460 270 L470 400"/>
+    <circle class="nodo" cx="420" cy="90" r="4"/><circle class="nodo" cx="560" cy="170" r="5"/><circle class="nodo" cx="700" cy="100" r="4"/>
+    <circle class="nodo" cx="630" cy="320" r="5"/><circle class="nodo" cx="770" cy="370" r="4"/><circle class="nodo" cx="470" cy="400" r="3.5"/>
+    <circle class="nodo" cx="460" cy="270" r="3.5"/><circle class="nodo" cx="790" cy="220" r="3.5"/>
+  </svg>
+
+  <div class="contenedor hero__rejilla">
+    <div class="hero__texto">
+      <span class="pildora"><i></i>Automatización para pymes</span>
+      <h1>Transformo procesos manuales en <span>soluciones digitales inteligentes</span></h1>
+      <p>Sistemas web, automatizaciones con Python y Excel, y reportes que se generan solos, hechos a la medida de tu negocio.</p>
+      <div class="hero__botones">
+        <a class="btn btn--acento" href="#servicios">Conoce mis soluciones <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></a>
+        <a class="btn btn--secundario btn--sobre-oscuro" href="#contacto">Solicita una demostración</a>
+      </div>
+      <ul class="hero__garantias">
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Soluciones a medida, no plantillas</li>
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Demos funcionales que puedes probar</li>
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Trato directo, sin intermediarios</li>
+      </ul>
+    </div>
+
+    <!-- Tarjeta animada: un proceso manual que se automatiza paso a paso -->
+    <div class="hero__panel" aria-hidden="true">
+      <div class="panel">
+        <div class="panel__cabecera"><span class="panel__punto"></span>Proceso: reporte mensual de ventas</div>
+        <ol class="panel__pasos">
+          <li style="--i:0"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg><span>Leer 12 archivos de Excel</span><b><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg></b></li>
+          <li style="--i:1"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="m9 14 2 2 4-4" /> </svg><span>Validar y limpiar datos</span><b><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg></b></li>
+          <li style="--i:2"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /> </svg><span>Calcular indicadores</span><b><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg></b></li>
+          <li style="--i:3"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /> </svg><span>Generar reporte en PDF</span><b><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg></b></li>
+          <li style="--i:4"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /> <path d="m21.854 2.147-10.94 10.939" /> </svg><span>Enviar a gerencia</span><b><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg></b></li>
+        </ol>
+        <div class="panel__pie">
+          <div><small>Antes</small><strong>Horas de trabajo manual</strong></div>
+          <div class="panel__flecha"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></div>
+          <div><small>Después</small><strong class="celeste">Un clic</strong></div>
+        </div>
+      </div>
+      <p class="panel__nota">Ilustración de un flujo típico</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROBLEMA ======================= -->
+<section class="seccion seccion--gris" id="problema">
+  <div class="contenedor">
+    <div class="encabezado encabezado--centro revelar">
+      <span class="antetitulo">El problema</span>
+      <h2>¿Tu empresa todavía trabaja con procesos manuales?</h2>
+      <p>Si alguna de estas situaciones te suena conocida, tu equipo está perdiendo horas en tareas que una computadora puede hacer sola.</p>
+    </div>
+    <div class="rejilla-4">
+      <article class="problema revelar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /> </svg><h3>Copiar y pegar todo el día</h3><p>Los mismos datos se escriben en varios archivos y cada traspaso es una oportunidad de error.</p></article>
+      <article class="problema revelar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 14v2.2l1.6 1" /> <path d="M16 2v3" /> <path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338" /> <path d="M3 9h5.859" /> <path d="M8 2v3" /> <circle cx="16" cy="16" r="6" /> </svg><h3>Reportes que toman días</h3><p>Cada fin de mes alguien arma el mismo reporte a mano, desde cero.</p></article>
+      <article class="problema revelar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.7 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v4.1" /> <path d="m21 21-1.9-1.9" /> <circle cx="17" cy="17" r="3" /> </svg><h3>Información dispersa</h3><p>Cuadernos, chats de WhatsApp y Excel sueltos: nadie tiene la cifra correcta a la mano.</p></article>
+      <article class="problema revelar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /> </svg><h3>Decisiones a ciegas</h3><p>Sin indicadores claros, te enteras de los problemas cuando ya es tarde.</p></article>
+    </div>
+    <div class="centro revelar"><a class="btn btn--primario" href="#contacto">Automatiza tu negocio <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></a></div>
+  </div>
+</section>
+
+<!-- ======================= B. SERVICIOS ======================= -->
+<section class="seccion" id="servicios">
+  <div class="contenedor">
+    <div class="encabezado revelar">
+      <span class="antetitulo">Servicios</span>
+      <h2>Soluciones digitales para cada etapa de tu negocio</h2>
+      <p>Desde una macro que te ahorra una tarde hasta un sistema completo para tu equipo.</p>
+    </div>
+    <div class="rejilla-servicios">
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m18 16 4-4-4-4" /> <path d="m6 8-4 4 4 4" /> <path d="m14.5 4-5 16" /> </svg></div><h3>Sistemas web personalizados</h3><p>Aplicaciones a la medida de tu forma de trabajar, que se usan desde la computadora o el celular.</p></article>
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="8" x="3" y="3" rx="2" /> <path d="M7 11v4a2 2 0 0 0 2 2h4" /> <rect width="8" height="8" x="13" y="13" rx="2" /> </svg></div><h3>Automatización con Python</h3><p>Tareas repetitivas como consolidar, cruzar, renombrar o enviar, convertidas en procesos que corren solos.</p></article>
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg></div><h3>Automatización de Excel</h3><p>Planillas que se llenan, validan y consolidan sin copiar y pegar, con menos errores y en minutos.</p></article>
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /> </svg></div><h3>PDF y documentos automáticos</h3><p>Contratos, constancias, cartas y reportes generados en lote a partir de tus datos.</p></article>
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /> </svg></div><h3>Dashboards e indicadores</h3><p>Tus números clave en un solo tablero, actualizados y fáciles de entender.</p></article>
+      <article class="tarjeta revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="m9 14 2 2 4-4" /> </svg></div><h3>Control administrativo</h3><p>Inventarios, asistencia, personal, caja: control ordenado con alertas y reportes.</p></article>
+      <article class="tarjeta tarjeta--destacada revelar"><div class="icono-caja"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /> </svg></div><h3>Digitalización de procesos</h3><p>Analizo cómo trabaja hoy tu empresa y diseño el camino para pasar del papel a lo digital.</p><a class="enlace-flecha" href="#contacto">Cuéntame qué necesitas <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /> </svg></a></article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= C. PORTAFOLIO ======================= -->
+<section class="seccion seccion--gris" id="portafolio">
+  <div class="contenedor">
+    <div class="encabezado revelar">
+      <span class="antetitulo">Portafolio de demostraciones</span>
+      <h2>Sistemas que puedes probar tú mismo</h2>
+      <p>Cada demostración funciona de verdad en tu navegador, con datos de ejemplo. Las iré habilitando a medida que estén terminadas.</p>
+    </div>
+    <div class="filtros" role="group" aria-label="Filtrar proyectos">
+      <button type="button" class="filtro activo" data-filtro="todos" aria-pressed="true">Todos</button>
+      <button type="button" class="filtro" data-filtro="sistemas" aria-pressed="false">Sistemas</button>
+      <button type="button" class="filtro" data-filtro="automatizacion" aria-pressed="false">Automatizaciones</button>
+    </div>
+    <div class="rejilla-proyectos" id="lista-proyectos" aria-live="polite">
+      <!-- Las tarjetas se generan desde data/proyectos.js (ver assets/js/portafolio.js) -->
+      <noscript><p>Activa JavaScript para ver el portafolio.</p></noscript>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CÓMO TRABAJO ======================= -->
+<section class="seccion" id="proceso">
+  <div class="contenedor">
+    <div class="encabezado encabezado--centro revelar">
+      <span class="antetitulo">Cómo trabajo</span>
+      <h2>De tu problema a una solución funcionando</h2>
+    </div>
+    <ol class="pasos">
+      <li class="revelar"><span class="pasos__num">1</span><h3>Diagnóstico</h3><p>Conversamos sobre tu proceso actual y detecto qué se puede automatizar.</p></li>
+      <li class="revelar"><span class="pasos__num">2</span><h3>Propuesta</h3><p>Te presento la solución, el alcance, el plazo y la inversión, sin letra chica.</p></li>
+      <li class="revelar"><span class="pasos__num">3</span><h3>Desarrollo</h3><p>Construyo por módulos y te muestro avances para que valides cada parte.</p></li>
+      <li class="revelar"><span class="pasos__num">4</span><h3>Entrega y soporte</h3><p>Instalo, capacito a tu equipo y acompaño los primeros días de uso.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ======================= D. SOBRE MÍ ======================= -->
+<section class="seccion seccion--gris" id="sobre-mi">
+  <div class="contenedor sobre">
+    <div class="sobre__foto revelar">
+      <!-- FOTO PENDIENTE: reemplazar por <img src="assets/img/foto.webp" alt="Jorge Luis Acaro Córdova"> -->
+      <div class="foto-pendiente"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="8" r="5" /> <path d="M20 21a8 8 0 0 0-16 0" /> </svg><span>Foto pendiente</span></div>
+    </div>
+    <div class="sobre__texto revelar">
+      <span class="antetitulo">Sobre mí</span>
+      <h2>Entiendo cómo funciona una empresa por dentro</h2>
+      <p>Soy Contador Público, con experiencia en contabilidad, administración y gestión de recursos humanos. Conozco de primera mano las tareas repetitivas que consumen el día de un equipo administrativo, porque las he hecho.</p>
+      <p>Por eso combino ese conocimiento del negocio con la tecnología: antes de escribir una línea de código, entiendo el proceso. Trabajo con comercios, empresas de servicios, estudios contables y emprendedores de distintos rubros.</p>
+      <h3 class="sobre__subtitulo">Algunas automatizaciones que ya funcionan</h3>
+      <ul class="casos">
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /> <rect x="2" y="4" width="20" height="16" rx="2" /> </svg><div><b>Envío de documentos a firma</b><span>Borradores de correo generados automáticamente para decenas de destinatarios, cada uno con su documento adjunto.</span></div></li>
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="m9 15 2 2 4-4" /> </svg><div><b>Constancias tributarias a clientes</b><span>Envío mensual automático de las constancias de declaración en PDF a cada cliente de un estudio contable.</span></div></li>
+        <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16 11 2 2 4-4" /> <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> </svg><div><b>Revisión de fichas de postulación</b><span>Verificación automática de requisitos contra el perfil del puesto en procesos de selección.</span></div></li>
+      </ul>
+      <img class="sobre__firma" src="assets/img/firma-azul.svg" alt="Firma de Jorge Luis" width="200" height="87" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ======================= LLAMADO A LA ACCIÓN ======================= -->
+<section class="cta-banda">
+  <div class="contenedor cta-banda__fila revelar">
+    <div>
+      <h2>Cuéntame qué necesitas y desarrollaré una solución a tu medida</h2>
+      <p>La primera conversación no tiene costo ni compromiso.</p>
+    </div>
+    <div class="cta-banda__botones">
+      <a class="btn btn--acento" href="#contacto">Solicita una demostración</a>
+      <a class="btn btn--whatsapp js-whatsapp" href="https://wa.me/51901288798" target="_blank" rel="noopener"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /> </svg> WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= E. CONTACTO ======================= -->
+<section class="seccion" id="contacto">
+  <div class="contenedor contacto">
+    <div class="contacto__info revelar">
+      <span class="antetitulo">Contacto</span>
+      <h2>Hablemos de tu proyecto</h2>
+      <p>Describe el proceso que quieres mejorar y te respondo con una propuesta concreta. Si prefieres algo más rápido, escríbeme por WhatsApp.</p>
+      <a class="btn btn--whatsapp js-whatsapp" href="https://wa.me/51901288798" target="_blank" rel="noopener"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /> </svg> Escríbeme por WhatsApp</a>
+      <p class="contacto__numero"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /> </svg> <span class="js-whatsapp-visible">+51 901 288 798</span></p>
+    </div>
+
+    <form class="formulario revelar" id="formulario" novalidate>
+      <div class="formulario__fila">
+        <div class="campo">
+          <label for="f-nombre">Nombre <span class="obligatorio">*</span></label>
+          <input type="text" id="f-nombre" name="nombre" autocomplete="name" required minlength="3" maxlength="80">
+          <span class="campo__error">Escribe tu nombre (mínimo 3 letras).</span>
+        </div>
+        <div class="campo">
+          <label for="f-empresa">Empresa</label>
+          <input type="text" id="f-empresa" name="empresa" autocomplete="organization" maxlength="100">
+          <span class="campo__ayuda">Opcional</span>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="f-correo">Correo electrónico <span class="obligatorio">*</span></label>
+        <input id="f-correo" name="correo" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+        <span class="campo__error">Ingresa un correo válido, por ejemplo nombre@empresa.com</span>
+      </div>
+      <div class="campo">
+        <label for="f-tipo">Tipo de solución que necesitas <span class="obligatorio">*</span></label>
+        <select id="f-tipo" name="tipo" required>
+          <option value="">Selecciona una opción</option>
+          <option>Desarrollo de sistemas web personalizados</option>
+          <option>Automatización de procesos con Python</option>
+          <option>Automatización de Excel</option>
+          <option>Generación automática de PDF y documentos</option>
+          <option>Dashboards e indicadores empresariales</option>
+          <option>Sistemas de control administrativo</option>
+          <option>Digitalización de procesos empresariales</option>
+          <option>No estoy seguro, necesito orientación</option>
+        </select>
+        <span class="campo__error">Elige el tipo de solución.</span>
+      </div>
+      <div class="campo">
+        <label for="f-mensaje">Describe el problema <span class="obligatorio">*</span></label>
+        <textarea id="f-mensaje" name="mensaje" required minlength="20" maxlength="2000" placeholder="Ejemplo: cada mes consolidamos 15 Excel de sucursales a mano y nos toma dos días."></textarea>
+        <span class="campo__error">Cuéntame un poco más (mínimo 20 caracteres).</span>
+      </div>
+      <!-- Campo trampa contra spam: los robots lo llenan, las personas no lo ven -->
+      <input type="checkbox" name="botcheck" class="visualmente-oculto" tabindex="-1" aria-hidden="true">
+      <button class="btn btn--primario formulario__enviar" type="submit"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /> <path d="m21.854 2.147-10.94 10.939" /> </svg> <span>Enviar mensaje</span></button>
+      <div class="formulario__resultado" id="formulario-resultado" role="status" aria-live="polite"></div>
+      <p class="formulario__privacidad">Uso tus datos solo para responder a tu mensaje.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= PIE DE PÁGINA ======================= -->
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <div>
+      <a class="logo logo--claro" href="#inicio">
+        <img class="logo__marca" src="assets/img/logo-marca.svg" alt="" width="40" height="40">
+        <span class="logo__texto"><span class="logo__nombre">Automatización &amp; Sistemas</span><span class="logo__lema">Soluciones digitales para empresas</span></span>
+      </a>
+      <p class="pie__lema">Transformo procesos manuales en soluciones digitales inteligentes.</p>
+    </div>
+    <nav class="pie__enlaces" aria-label="Pie de página">
+      <a href="#servicios">Servicios</a><a href="#portafolio">Demostraciones</a><a href="#sobre-mi">Sobre mí</a><a href="#contacto">Contacto</a>
+    </nav>
+    <div class="pie__autor"><span>Diseñado y desarrollado por</span><img src="assets/img/firma-blanca.svg" alt="Jorge Luis" width="150" height="65" loading="lazy"></div>
+  </div>
+  <div class="contenedor pie__legal">© <span id="anio">2026</span> · Lima, Perú</div>
+</footer>
+
+<!-- Botón flotante de WhatsApp (visible en celulares) -->
+<a class="whatsapp-flotante js-whatsapp" href="https://wa.me/51901288798" target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /> </svg></a>
+
+<script src="assets/js/config.js"></script>
+<script src="data/proyectos.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/portafolio.js"></script>
+<script src="assets/js/contacto.js"></script>
+</body>
+</html>

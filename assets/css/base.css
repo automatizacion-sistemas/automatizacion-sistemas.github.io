@@ -1,0 +1,76 @@
+/* ==========================================================================
+   base.css — Reinicio de estilos, tipografía general y utilidades
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--alto-menu) + 12px); /* evita que el menú tape los títulos */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  line-height: 1.65;
+  color: var(--gris-700);
+  background: var(--blanco);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fuente-titulos);
+  color: var(--texto);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--esp-4);
+  font-weight: 750;
+}
+h1 { font-size: var(--texto-3xl); }
+h2 { font-size: var(--texto-2xl); }
+h3 { font-size: var(--texto-xl); font-weight: 700; }
+h4 { font-size: var(--texto-lg); font-weight: 700; }
+
+p { margin: 0 0 var(--esp-4); }
+img, svg { display: block; max-width: 100%; }
+a { color: var(--celeste-600); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--azul-700); }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Foco visible para quienes navegan con teclado */
+:focus-visible {
+  outline: 3px solid var(--celeste-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- Utilidades --- */
+.contenedor {
+  width: min(100% - 2.5rem, var(--ancho-max));
+  margin-inline: auto;
+}
+.seccion { padding-block: var(--esp-seccion); }
+.seccion--gris { background: var(--gris-50); }
+.seccion--oscura { background: var(--azul-900); color: var(--gris-200); }
+.seccion--oscura h2, .seccion--oscura h3 { color: var(--blanco); }
+
+.visualmente-oculto {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Animación de aparición al hacer scroll (la activa main.js) */
+.revelar { opacity: 0; transform: translateY(18px); transition: opacity var(--transicion-lenta), transform var(--transicion-lenta); }
+.revelar.visible { opacity: 1; transform: none; }
+
+/* Respeta a quienes desactivan las animaciones en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .revelar { opacity: 1; transform: none; }
+}
