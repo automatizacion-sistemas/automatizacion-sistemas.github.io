@@ -27,7 +27,8 @@ jorgeluis-portafolio/
 │   ├── inventario/            Demo: sistema de inventarios (ver su README)
 │   ├── ventas/                Demo: ventas y cobranzas (ver su README)
 │   ├── asistencia/            Demo: control de asistencia (ver su README)
-│   └── personal/              Demo: gestión de personal (ver su README)
+│   ├── personal/              Demo: gestión de personal (ver su README)
+│   └── finanzas/              Demo: control de ingresos y gastos (ver su README)
 └── README.md
 ```
 

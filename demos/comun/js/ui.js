@@ -36,7 +36,9 @@ window.UI = (function () {
   function tabla(columnas, filas, opciones) {
     opciones = opciones || {};
     if (!filas.length) return '<p class="vacio">' + esc(opciones.vacio || "No hay registros.") + "</p>";
-    let h = '<div class="tabla-envoltura"><table class="tabla ' + (opciones.clase || "") + '"><thead><tr>';
+    // Las tablas anchas se desplazan: se pueden enfocar con el teclado para recorrerlas
+    const ancha = /tabla--ancha/.test(opciones.clase || "");
+    let h = '<div class="tabla-envoltura"' + (ancha ? ' tabindex="0" role="region" aria-label="Tabla (se desplaza horizontalmente)"' : "") + '><table class="tabla ' + (opciones.clase || "") + '"><thead><tr>';
     columnas.forEach(function (c) {
       // Las columnas sin título visible (acciones) llevan un texto solo para lectores de pantalla
       const titulo = c.titulo || '<span class="visualmente-oculto">' + esc(c.etiqueta || "Acciones") + "</span>";

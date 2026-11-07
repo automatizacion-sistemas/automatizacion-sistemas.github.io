@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo · Control de ingresos y gastos — Automatización &amp; Sistemas</title>
+  <meta name="description" content="Demostración funcional de control de ingresos y gastos para emprendedores: utilidad real, retiros personales separados, estado de resultados, presupuesto e importación automática de extractos bancarios.">
+  <meta name="theme-color" content="#0a1f44">
+  <link rel="icon" href="../../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="../comun/css/demo.css">
+  <link rel="stylesheet" href="css/finanzas.css">
+  <link rel="preload" href="../comun/lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+</head>
+<body>
+
+<div class="cargando-app" id="cargando">
+  <img src="../../assets/img/logo-marca.svg" alt="" width="56" height="56">
+  <p>Preparando la base de datos…</p>
+</div>
+
+<div class="app" id="app" hidden>
+  <aside class="lateral">
+    <a class="lateral__marca" href="../../index.html#portafolio" title="Volver al portafolio">
+      <img src="../../assets/img/logo-marca.svg" alt="" width="36" height="36">
+      <span><b>Ingresos y gastos</b><small>Pastelería Dulce Hogar · demo</small></span>
+    </a>
+    <nav class="lateral__nav" aria-label="Módulos">
+      <a href="#resumen" data-vista="resumen"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Resumen</span></a>
+      <a href="#movimientos" data-vista="movimientos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span>Movimientos</span></a>
+      <a href="#resultados" data-vista="resultados"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /> </svg><span>Estado de resultados</span></a>
+      <a href="#presupuesto" data-vista="presupuesto"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /> </svg><span>Presupuesto</span></a>
+      <a href="#importar" data-vista="importar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M12 12v6" /> <path d="m15 15-3-3-3 3" /> </svg><span>Importar extracto</span></a>
+    </nav>
+    <div class="lateral__pie">
+      <a class="btn btn--acento btn--chico" href="../../index.html#contacto">Quiero un sistema así</a>
+      <a class="lateral__volver" href="../../index.html#portafolio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg> Volver al portafolio</a>
+    </div>
+  </aside>
+
+  <div class="principal">
+    <header class="barra">
+      <h1 id="titulo-vista">Resumen</h1>
+      <div class="barra__acciones">
+        <button type="button" class="btn btn--primario btn--chico" id="btn-nuevo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14" /> <path d="M12 5v14" /> </svg><span class="solo-escritorio">Registrar movimiento</span></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-descargar-db" title="Descarga la base de datos SQLite con tus cambios" aria-label="Descargar base de datos .sqlite"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" /> </svg></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-reiniciar" title="Vuelve a los datos de ejemplo originales" aria-label="Restablecer demo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> </svg></button>
+      </div>
+    </header>
+
+    <main class="vistas">
+      <div class="aviso-demo" id="aviso-demo">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /> </svg>
+        <p><b>Demostración con datos ficticios.</b> Registra movimientos o importa un extracto: todo se guarda solo en este navegador. <span id="estado-guardado"></span></p>
+      </div>
+
+      <!-- ===== RESUMEN ===== -->
+      <section class="vista" data-vista="resumen" aria-labelledby="titulo-vista">
+        <div class="herramientas"><select id="r-mes" aria-label="Mes"></select></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="mensaje-clave" id="mensaje-clave" role="note"></div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Ingresos, gastos y retiros</h2><small>Últimos 12 meses (S/)</small></div>
+            <div class="grafico"><canvas id="graf-meses" role="img" aria-label="Gráfico mensual de ingresos, gastos y retiros"></canvas></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>¿En qué se va el dinero?</h2><small id="g-cat-sub">Gastos del mes por categoría</small></div>
+            <div class="grafico"><canvas id="graf-categorias" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
+          </div>
+        </div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Saldos por cuenta</h2><small>Al día de hoy</small></div>
+            <div class="cuentas" id="cuentas"></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Últimos movimientos</h2><a href="#movimientos">Ver todos</a></div>
+            <div id="tabla-ultimos"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MOVIMIENTOS ===== -->
+      <section class="vista" data-vista="movimientos" hidden>
+        <div class="herramientas">
+          <div class="buscador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /> </svg><input type="search" id="m-buscar" placeholder="Descripción o categoría" aria-label="Buscar movimientos"></div>
+          <select id="m-tipo" aria-label="Tipo"><option value="">Todos los tipos</option><option value="INGRESO">Ingresos</option><option value="GASTO">Gastos</option><option value="RETIRO">Retiros</option><option value="TRANSFERENCIA">Transferencias</option></select>
+          <select id="m-cuenta" aria-label="Cuenta"><option value="">Todas las cuentas</option></select>
+          <select id="m-mes" aria-label="Mes"></select>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-mov"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+        </div>
+        <div class="totales-filtro" id="m-totales"></div>
+        <div class="caja caja--tabla"><div id="tabla-mov"></div></div>
+        <p class="nota-tabla" id="m-nota"></p>
+      </section>
+
+      <!-- ===== ESTADO DE RESULTADOS ===== -->
+      <section class="vista" data-vista="resultados" hidden>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Estado de resultados mensual</h2><small>Últimos 12 meses · los retiros personales van aparte</small>
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-er"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+          <div id="tabla-er"></div>
+        </div>
+      </section>
+
+      <!-- ===== PRESUPUESTO ===== -->
+      <section class="vista" data-vista="presupuesto" hidden>
+        <p class="fecha-hoy" id="p-sub"></p>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Presupuesto de gastos del mes</h2><small>Toca un presupuesto para editarlo</small></div>
+          <div id="tabla-presupuesto"></div>
+        </div>
+      </section>
+
+      <!-- ===== IMPORTAR ===== -->
+      <section class="vista" data-vista="importar" hidden>
+        <div class="rejilla-mov rejilla-importar">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>1. Carga el extracto</h2></div>
+            <p class="campo__ayuda">Formato: <b>fecha; descripción; monto</b>, una línea por movimiento (montos negativos = salidas). Sirve el CSV que descargas de la banca por internet.</p>
+            <div class="campo">
+              <label for="i-cuenta">Cuenta del extracto</label>
+              <select id="i-cuenta"></select>
+            </div>
+            <div class="campo">
+              <label for="i-texto">Contenido del extracto</label>
+              <textarea id="i-texto" rows="9" spellcheck="false" placeholder="06/11/2026;PAGO PUBLICIDAD REDES;-420,00"></textarea>
+            </div>
+            <div class="fila-botones-izq">
+              <button type="button" class="btn btn--secundario btn--chico" id="i-ejemplo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72" /> <path d="m14 7 3 3" /> <path d="M5 6v4" /> <path d="M19 14v4" /> <path d="M10 2v2" /> <path d="M7 8H3" /> <path d="M21 16h-4" /> <path d="M11 3H9" /> </svg> Cargar ejemplo</button>
+              <label class="btn btn--secundario btn--chico boton-archivo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M12 12v6" /> <path d="m15 15-3-3-3 3" /> </svg> Abrir archivo CSV<input type="file" id="i-archivo" accept=".csv,.txt,text/csv,text/plain"></label>
+              <button type="button" class="btn btn--primario btn--chico" id="i-analizar">Analizar</button>
+            </div>
+            <div class="form-mov__error" id="i-error" role="alert"></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Reglas de categorización</h2><small>Si la descripción contiene la palabra, se asigna la categoría</small></div>
+            <form class="regla-nueva" id="form-regla" novalidate>
+              <input type="text" id="re-palabra" maxlength="30" placeholder="Palabra clave" aria-label="Palabra clave">
+              <select id="re-categoria" aria-label="Categoría"></select>
+              <button type="submit" class="btn btn--secundario btn--chico">Agregar</button>
+            </form>
+            <div class="form-mov__error" id="re-error" role="alert"></div>
+            <div id="tabla-reglas"></div>
+          </div>
+        </div>
+        <div class="caja caja--tabla espacio-arriba" id="i-revision" hidden>
+          <div class="caja__cabecera"><h2>2. Revisa y confirma</h2><span id="i-resumen" class="i-resumen"></span></div>
+          <div id="tabla-importar"></div>
+          <div class="dialogo__pie"><button type="button" class="btn btn--primario" id="i-importar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5" /> </svg> Importar seleccionados</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="nav-movil" aria-label="Módulos">
+    <a href="#resumen" data-vista="resumen"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Resumen</span></a>
+    <a href="#movimientos" data-vista="movimientos"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /> </svg><span>Movim.</span></a>
+    <a href="#resultados" data-vista="resultados"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /> </svg><span>Resultados</span></a>
+    <a href="#presupuesto" data-vista="presupuesto"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /> </svg><span>Presup.</span></a>
+    <a href="#importar" data-vista="importar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M12 12v6" /> <path d="m15 15-3-3-3 3" /> </svg><span>Importar</span></a>
+  </nav>
+</div>
+
+<!-- Registrar movimiento -->
+<dialog class="dialogo" id="dialogo-mov" aria-labelledby="dm-titulo">
+  <form method="dialog" id="form-mov" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dm-titulo">Registrar movimiento</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <div class="segmentado segmentado--4" role="radiogroup" aria-label="Tipo de movimiento">
+      <label><input type="radio" name="tipo" value="INGRESO" checked><span>Ingreso</span></label>
+      <label><input type="radio" name="tipo" value="GASTO"><span>Gasto</span></label>
+      <label><input type="radio" name="tipo" value="RETIRO"><span>Retiro</span></label>
+      <label><input type="radio" name="tipo" value="TRANSFERENCIA"><span>Transferir</span></label>
+    </div>
+    <p class="campo__ayuda" id="dm-ayuda"></p>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="mv-monto">Monto S/ <span class="obligatorio">*</span></label><input type="number" id="mv-monto" name="monto" min="0.01" step="0.01" inputmode="decimal"></div>
+      <div class="campo"><label for="mv-fecha">Fecha <span class="obligatorio">*</span></label><input type="date" id="mv-fecha" name="fecha"></div>
+    </div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="mv-cuenta" id="mv-cuenta-label">Cuenta</label><select id="mv-cuenta" name="cuenta_id"></select><span class="campo__ayuda" id="mv-saldo"></span></div>
+      <div class="campo" id="campo-categoria"><label for="mv-categoria">Categoría <span class="obligatorio">*</span></label><select id="mv-categoria" name="categoria_id"></select></div>
+      <div class="campo" id="campo-destino" hidden><label for="mv-destino">Hacia la cuenta</label><select id="mv-destino" name="cuenta_destino_id"></select></div>
+    </div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="mv-desc">Descripción</label><input type="text" id="mv-desc" name="descripcion" maxlength="80"></div>
+      <div class="campo" id="campo-comprobante"><label for="mv-comp">Comprobante</label><select id="mv-comp" name="comprobante"><option>Boleta</option><option>Factura</option><option>Sin comprobante</option></select></div>
+    </div>
+    <div class="form-mov__error" id="mv-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico">Registrar</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="dialogo dialogo--chico" id="dialogo-confirmar" aria-labelledby="dc-titulo">
+  <form method="dialog">
+    <h2 id="dc-titulo">¿Confirmar?</h2>
+    <p id="dc-texto"></p>
+    <footer class="dialogo__pie">
+      <button type="submit" class="btn btn--secundario btn--chico" value="no">Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico" value="si" id="dc-si">Confirmar</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+
+<script src="../comun/lib/sql-wasm.js"></script>
+<script src="../comun/js/sqlite.js"></script>
+<script src="../comun/js/ui.js"></script>
+<script src="../comun/js/graficos.js"></script>
+<script src="js/datos-ejemplo.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

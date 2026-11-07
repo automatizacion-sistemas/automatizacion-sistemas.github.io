@@ -133,3 +133,20 @@ Mejora general: al cambiar de pantalla se cierra cualquier ventana que hubiera q
 | Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px |
 
 También se actualizó a S/ 1 230 el sueldo sugerido al registrar un trabajador en la demo de asistencia.
+
+---
+
+# Demo de control de ingresos y gastos
+
+| Verificación | Resultado |
+|---|---|
+| Cuadre contable | ✅ El estado de resultados coincide con los totales de la base de datos; utilidad = ingresos − gastos y "queda en el negocio" = utilidad − retiros, mes a mes |
+| Saldos | ✅ Recalculados en orden cronológico, ninguna cuenta queda en negativo en los 1 551 movimientos de ejemplo; los saldos calculados coinciden con los mostrados |
+| Lectura de extractos | ✅ 9 casos: montos "1.026,30", "-312,40", "1,234.56" y "S/ 50"; fechas dd/mm/aa y AAAA-MM-DD; rechazo de 31/02/2026 y de textos no numéricos; normalización de tildes |
+| Importación | ✅ De 11 líneas: 2 detectadas como ya registradas, 7 categorizadas automáticamente, 2 obligan a elegir categoría antes de importar; al volver a analizar el mismo extracto, las 11 aparecen como duplicadas; "RETIRO CAJERO" se clasifica como retiro personal y no como gasto |
+| Validaciones | ✅ Categoría obligatoria y del tipo correcto, saldo insuficiente, transferencia a la misma cuenta, fecha futura, eliminar un ingreso que dejaría la cuenta en negativo y regla duplicada |
+| Otros | ✅ Edición del presupuesto en la misma tabla, estados "dentro del presupuesto" y "podría excederse", mensaje cuando los retiros superan la utilidad, filtros, 2 exportaciones a Excel, guardado y restablecer |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 5 pantallas (las tablas anchas ahora se pueden recorrer con el teclado, mejora aplicada a todas las demos) |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (barra superior más compacta en celulares muy angostos, mejora aplicada a todas las demos) |
+
+Después de los cambios compartidos, las suites de las 5 demos volvieron a pasar completas.

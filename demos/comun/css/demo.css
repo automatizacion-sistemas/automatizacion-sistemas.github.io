@@ -252,3 +252,11 @@ body { background: var(--gris-50); }
 .btn--peligro { color: var(--error) !important; border-color: #f5c2c2 !important; }
 .btn--peligro:hover { background: var(--error-fondo) !important; }
 .espacio-arriba { margin-top: var(--esp-4); }
+
+/* Celulares muy angostos: título y botones de la barra superior más compactos */
+@media (max-width: 380px) {
+  .barra h1 { font-size: 1.3rem; }
+  .barra__acciones { gap: 4px; }
+  .barra__acciones .btn { min-width: 40px; padding: 0.4rem 0.55rem; }
+}
+.cuadricula-envoltura:focus-visible, .tabla-envoltura:focus-visible { outline: 3px solid var(--celeste-500); outline-offset: 2px; }

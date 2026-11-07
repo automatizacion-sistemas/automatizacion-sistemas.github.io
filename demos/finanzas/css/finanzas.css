@@ -1,0 +1,102 @@
+/* ==========================================================================
+   finanzas.css — Estilos propios de la demo de ingresos y gastos
+   Los estilos generales están en ../comun/css/demo.css
+   ========================================================================== */
+
+.fecha-hoy { margin: 0 0 var(--esp-3); color: var(--gris-500); font-weight: 600; font-size: var(--texto-sm); }
+
+/* Mensaje principal del resumen */
+.mensaje-clave { margin-bottom: var(--esp-4); padding: var(--esp-4) var(--esp-5); border-radius: var(--radio-lg); font-size: var(--texto-base); line-height: 1.6; border-left: 5px solid; }
+.mensaje-clave b { color: inherit; }
+.mensaje-clave--bien { background: var(--exito-fondo); color: #14532d; border-color: var(--exito); }
+.mensaje-clave--ojo { background: var(--alerta-fondo); color: #78350f; border-color: #f59e0b; }
+.mensaje-clave--mal { background: var(--error-fondo); color: #7f1d1d; border-color: var(--error); }
+
+/* Montos y tipos */
+.monto { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.monto--entra { color: var(--exito); }
+.monto--sale { color: var(--texto); }
+.monto--neutro { color: var(--gris-500); }
+.chip-fin { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-fin--ingreso { background: var(--exito-fondo); color: var(--exito); }
+.chip-fin--gasto { background: var(--gris-100); color: var(--gris-700); }
+.chip-fin--retiro { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-fin--transferencia { background: var(--celeste-100); color: var(--azul-700); }
+
+/* Saldos por cuenta */
+.cuentas { display: grid; gap: var(--esp-3); }
+.cuenta { display: flex; align-items: center; gap: var(--esp-3); padding: var(--esp-3) var(--esp-4); border: 1px solid var(--gris-200); border-radius: var(--radio); }
+.cuenta__icono { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--celeste-100); color: var(--celeste-600); flex: none; }
+.cuenta__icono svg { width: 22px; height: 22px; }
+.cuenta small { display: block; font-size: var(--texto-xs); color: var(--gris-500); font-weight: 600; }
+.cuenta b { font: 800 var(--texto-lg) var(--fuente-titulos); color: var(--texto); }
+.cuenta--total { background: var(--azul-900); border-color: var(--azul-900); }
+.cuenta--total small { color: var(--gris-300); }
+.cuenta--total b { color: var(--blanco); font-size: var(--texto-xl); }
+
+/* Totales del filtro de movimientos */
+.totales-filtro { display: flex; flex-wrap: wrap; gap: var(--esp-2) var(--esp-5); margin-bottom: var(--esp-3); font-size: var(--texto-sm); color: var(--gris-500); }
+.totales-filtro b { color: var(--texto); margin-left: 4px; }
+
+/* Estado de resultados */
+.er { font-size: 0.8rem; }
+.er th, .er td { padding: 7px 10px; white-space: nowrap; }
+.er .er__concepto { position: sticky; left: 0; z-index: 1; min-width: 210px; background: var(--blanco); text-align: left; font-weight: 600; color: var(--texto); box-shadow: 1px 0 0 var(--gris-200); }
+.er thead .er__concepto { z-index: 2; }
+.er .er__sangria { padding-left: 22px; font-weight: 400; color: var(--gris-700); }
+.er__seccion th { padding-top: 14px; background: var(--gris-50); text-align: left; font-size: var(--texto-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--azul-700); }
+.er__subtotal th, .er__subtotal td { font-weight: 700; border-top: 1.5px solid var(--gris-300); color: var(--texto); }
+.er__resultado th, .er__resultado td { font-weight: 800; background: var(--celeste-100); color: var(--azul-900); }
+.er__resultado .er__concepto { background: var(--celeste-100); }
+.er__margen td { color: var(--gris-500); }
+.er__final th, .er__final td { background: var(--azul-900); color: var(--blanco); }
+.er__final .er__concepto { background: var(--azul-900); color: var(--blanco); }
+.er td.total { font-weight: 700; background: var(--gris-50); }
+.er__resultado td.total, .er__final td.total { background: inherit; }
+.er .negativo { color: var(--error) !important; }
+.er__final .negativo { color: #fca5a5 !important; }
+
+/* Presupuesto */
+.barra-pres { position: relative; width: 140px; height: 10px; border-radius: 999px; background: var(--gris-100); overflow: visible; }
+.barra-pres span { display: block; height: 100%; border-radius: 999px; background: var(--exito); }
+.barra-pres--riesgo span { background: #f59e0b; }
+.barra-pres--excedido span { background: var(--error); }
+.barra-pres i { position: absolute; top: -3px; width: 2px; height: 16px; background: var(--azul-900); }
+.chip-pres { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-pres--ok { background: var(--exito-fondo); color: var(--exito); }
+.chip-pres--riesgo { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-pres--excedido { background: var(--error-fondo); color: var(--error); }
+.chip-pres--sin { background: var(--gris-100); color: var(--gris-500); }
+.editar-presupuesto { width: 110px; min-height: 36px; padding: 4px 8px; border: 2px solid var(--celeste-500); border-radius: 8px; font-size: 16px; text-align: right; }
+
+/* Importación */
+.rejilla-importar { grid-template-columns: 1.1fr 0.9fr; }
+@media (max-width: 1180px) { .rejilla-importar { grid-template-columns: 1fr; } }
+#i-texto { width: 100%; min-height: 180px; padding: 10px 12px; border: 1.5px solid var(--gris-300); border-radius: var(--radio); font: 0.8rem/1.5 ui-monospace, Consolas, monospace; resize: vertical; }
+#i-texto:focus { outline: none; border-color: var(--celeste-500); box-shadow: var(--brillo-celeste); }
+.fila-botones-izq { display: flex; flex-wrap: wrap; gap: var(--esp-2); margin-bottom: var(--esp-3); }
+.fila-botones-izq .btn svg { width: 16px; height: 16px; }
+.boton-archivo { position: relative; }
+.boton-archivo input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.boton-archivo:focus-within { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+.regla-nueva { display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--esp-2); margin-bottom: var(--esp-2); }
+.regla-nueva input, .regla-nueva select { min-height: 40px; padding: 6px 10px; border: 1.5px solid var(--gris-300); border-radius: 10px; font-size: 16px; min-width: 0; }
+@media (max-width: 520px) { .regla-nueva { grid-template-columns: 1fr; } }
+.i-resumen { font-size: var(--texto-sm); }
+.select-categoria { min-height: 36px; max-width: 240px; padding: 4px 8px; border: 1.5px solid var(--gris-300); border-radius: 8px; font-size: 0.85rem; background: var(--blanco); }
+.select-categoria--falta { border-color: var(--error); background: #fffafa; }
+.check-importar { width: 20px; height: 20px; accent-color: var(--azul-900); }
+.chip-imp { display: inline-block; padding: 2px 9px; border-radius: 6px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-imp--regla { background: var(--exito-fondo); color: var(--exito); }
+.chip-imp--manual { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-imp--dup { background: var(--gris-100); color: var(--gris-500); }
+.chip-imp--error { background: var(--error-fondo); color: var(--error); }
+.tabla--importar tr:has(.chip-imp--dup) { opacity: 0.6; }
+
+/* Selector de tipo con 4 opciones */
+.segmentado--4 { grid-template-columns: repeat(4, 1fr); }
+.segmentado--4 span { font-size: 0.8rem; padding: 0 4px; text-align: center; }
+
+/* Los conceptos de las filas no heredan el estilo de los encabezados de columna */
+.er tbody th { text-transform: none; letter-spacing: normal; font-size: 0.82rem; }
+.er tbody .er__seccion th { text-transform: uppercase; letter-spacing: 0.06em; font-size: var(--texto-xs); }

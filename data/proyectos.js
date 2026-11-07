@@ -66,11 +66,13 @@ window.PROYECTOS = [
     id: "finanzas",
     titulo: "Control de ingresos y gastos",
     categoria: "sistemas",
-    estado: "proximamente",
+    estado: "disponible",
+    demo: "demos/finanzas/",
+    captura: "assets/img/capturas/finanzas.webp",
     vista: "barras",
     problema: "Para emprendedores que mezclan el dinero del negocio con el personal y no saben cuánto ganan realmente.",
-    funciones: ["Registro por categorías", "Flujo de caja mensual", "Comparativo de ingresos y gastos", "Gráficos de rentabilidad"],
-    tecnologias: ["JavaScript", "Chart.js"],
+    funciones: ["Utilidad real con los retiros personales separados", "Estado de resultados mensual y presupuesto", "Importación de extractos con categorización automática", "Saldos de caja, banco y Yape"],
+    tecnologias: ["JavaScript", "SQLite"],
     servicio: "Dashboards e indicadores empresariales"
   },
   {
