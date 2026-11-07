@@ -227,10 +227,18 @@
           <span class="campo__ayuda">Opcional</span>
         </div>
       </div>
-      <div class="campo">
-        <label for="f-correo">Correo electrónico <span class="obligatorio">*</span></label>
-        <input id="f-correo" name="correo" type="email" autocomplete="email" inputmode="email" required maxlength="120">
-        <span class="campo__error">Ingresa un correo válido, por ejemplo nombre@empresa.com</span>
+      <div class="formulario__fila">
+        <div class="campo">
+          <label for="f-correo">Correo electrónico <span class="obligatorio">*</span></label>
+          <input id="f-correo" name="correo" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+          <span class="campo__error">Ingresa un correo válido, por ejemplo nombre@empresa.com</span>
+        </div>
+        <div class="campo">
+          <label for="f-celular">Celular (WhatsApp) <span class="obligatorio">*</span></label>
+          <input id="f-celular" name="celular" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" placeholder="987 654 321" aria-describedby="f-celular-ayuda">
+          <span class="campo__ayuda" id="f-celular-ayuda">Para escribirte por WhatsApp. Si no es de Perú, empieza con + y el código del país.</span>
+          <span class="campo__error">Ingresa un celular válido: 9 dígitos que empiecen con 9, o con + y el código del país.</span>
+        </div>
       </div>
       <div class="campo">
         <label for="f-tipo">Tipo de solución que necesitas <span class="obligatorio">*</span></label>

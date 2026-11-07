@@ -19,8 +19,29 @@
     nombre: function (v) { return v.trim().length >= 3; },
     correo: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
     tipo: function (v) { return v !== ""; },
-    mensaje: function (v) { return v.trim().length >= 20; }
+    mensaje: function (v) { return v.trim().length >= 20; },
+    celular: function (v) { return normalizarCelular(v) !== null; }
   };
+
+  /**
+   * Celular para WhatsApp. Devuelve los dígitos con código de país o null:
+   * "987 654 321" o "+51 987654321" → "51987654321"; "+1 (305) 555-1234" → "13055551234".
+   */
+  function normalizarCelular(v) {
+    const texto = String(v || "").trim();
+    let d = texto.replace(/\D/g, "");
+    if (/^\+/.test(texto) || texto.indexOf("00") === 0) {
+      if (texto.indexOf("00") === 0) d = d.slice(2);
+      if (d.indexOf("51") === 0) return /^519\d{8}$/.test(d) ? d : null;   // Perú: 9 dígitos que empiezan con 9
+      return /^\d{8,15}$/.test(d) ? d : null;                              // otros países
+    }
+    if (/^9\d{8}$/.test(d)) return "51" + d;
+    if (/^519\d{8}$/.test(d)) return d;
+    return null;
+  }
+  function celularLegible(d) {
+    return d.indexOf("51") === 0 && d.length === 11 ? "+51 " + d.slice(2, 5) + " " + d.slice(5, 8) + " " + d.slice(8) : "+" + d;
+  }
 
   function validarCampo(input) {
     const regla = reglas[input.name];
@@ -77,6 +98,8 @@
       from_name: "Web Automatización & Sistemas",
       name: form.nombre.value.trim(),
       email: form.correo.value.trim(),
+      celular: celularLegible(normalizarCelular(form.celular.value)),
+      whatsapp: "https://wa.me/" + normalizarCelular(form.celular.value),
       empresa: form.empresa.value.trim() || "(no indicó)",
       tipo_de_solucion: form.tipo.value,
       message: form.mensaje.value.trim(),
@@ -100,7 +123,7 @@
       const json = await resp.json().catch(function () { return {}; });
 
       if (resp.ok && json.success) {
-        mostrar("exito", "<b>¡Mensaje enviado!</b>&nbsp;Gracias, " + datos.name.split(" ")[0].replace(/[<>&"]/g, "") + ". Te responderé pronto a " + datos.email.replace(/[<>&"]/g, "") + ".");
+        mostrar("exito", "<b>¡Mensaje enviado!</b>&nbsp;Gracias, " + datos.name.split(" ")[0].replace(/[<>&"]/g, "") + ". Te escribiré pronto al WhatsApp " + datos.celular + " o a " + datos.email.replace(/[<>&"]/g, "") + ".");
         form.reset();
         form.querySelectorAll(".campo--invalido").forEach(function (c) { c.classList.remove("campo--invalido"); });
       } else {
