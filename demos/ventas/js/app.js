@@ -39,6 +39,7 @@
   }
   function leerHash() { const h = location.hash.replace("#", ""); return TITULOS[h] ? h : "dashboard"; }
   function irA(vista) {
+    document.querySelectorAll("dialog[open]").forEach(function (d) { d.close(); }); // al cambiar de vista se cierra cualquier ventana abierta
     estado.vista = vista;
     $$(".vista").forEach(function (v) { v.hidden = v.dataset.vista !== vista; });
     $$("a[data-vista]").forEach(function (a) {

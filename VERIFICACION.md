@@ -103,3 +103,17 @@ La demo ejecuta una base de datos SQLite completa dentro del navegador. En la pr
 Casos probados: validación de RUC/DNI, documento duplicado y celular; factura solo con RUC (en el formulario la opción se desactiva); desglose de IGV (800,00 = 677,97 + 122,03); bloqueo al superar la línea de crédito y su liberación después de un cobro; cobro mayor que el saldo; cobro con fecha anterior a la venta; cobro parcial; estado de cuenta; recordatorio por WhatsApp; bloqueo al eliminar un cliente con ventas; filtros; guardado al recargar; restablecer.
 
 También en esta etapa: las piezas que comparten las demos (motor SQLite, tablas, gráficos, estilos y librerías) se movieron a `demos/comun/`. La demo de inventarios volvió a pasar todas sus pruebas después del cambio.
+
+---
+
+# Demo de control de asistencia
+
+| Verificación | Resultado |
+|---|---|
+| Reglas de calificación | ✅ 11 casos controlados: tolerancia exacta = puntual; un minuto después = 11 min de tardanza; horas con refrigerio; horas extra; falta; descanso dominical; vacaciones sin descuento; licencia sin goce con descuento; día sin salida; "por llegar" hoy dentro de la tolerancia y falta pasada la tolerancia |
+| Integridad de los datos de ejemplo | ✅ 917 marcaciones sin salidas anteriores a la entrada, sin fechas futuras, sin marcaciones antes del ingreso y sin marcaciones en días con permiso |
+| Flujo completo | ✅ Marcación con DNI (entrada, salida, jornada completa, DNI inexistente, salida en el mismo minuto); corrección con validaciones y motivo obligatorio; permisos que se cruzan y fechas invertidas; DNI duplicado; baja que impide marcar; reporte y Excel (2 hojas); guardado al recargar y restablecer |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 5 pantallas |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (se corrigió el ancho del quiosco en celulares) |
+
+Mejora general: al cambiar de pantalla se cierra cualquier ventana que hubiera quedado abierta (se aplicó en las 3 demos). Después del cambio, las suites de inventarios, ventas y asistencia volvieron a pasar completas.

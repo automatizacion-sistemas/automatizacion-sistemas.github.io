@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo · Sistema de control de asistencia — Automatización &amp; Sistemas</title>
+  <meta name="description" content="Demostración funcional de control de asistencia: marcación con DNI, tardanzas y faltas, registro mensual, permisos y reporte para planillas.">
+  <meta name="theme-color" content="#0a1f44">
+  <link rel="icon" href="../../assets/img/logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/componentes.css">
+  <link rel="stylesheet" href="../comun/css/demo.css">
+  <link rel="stylesheet" href="css/asistencia.css">
+  <link rel="preload" href="../comun/lib/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+</head>
+<body>
+
+<div class="cargando-app" id="cargando">
+  <img src="../../assets/img/logo-marca.svg" alt="" width="56" height="56">
+  <p>Preparando la base de datos…</p>
+</div>
+
+<div class="app" id="app" hidden>
+  <aside class="lateral">
+    <a class="lateral__marca" href="../../index.html#portafolio" title="Volver al portafolio">
+      <img src="../../assets/img/logo-marca.svg" alt="" width="36" height="36">
+      <span><b>Control de asistencia</b><small>Servicios Integrales del Sur · demo</small></span>
+    </a>
+    <nav class="lateral__nav" aria-label="Módulos">
+      <a href="#hoy" data-vista="hoy"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Hoy</span></a>
+      <a href="#marcar" data-vista="marcar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" /> <path d="M14 13.12c0 2.38 0 6.38-1 8.88" /> <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02" /> <path d="M2 12a10 10 0 0 1 18-6" /> <path d="M2 16h.01" /> <path d="M21.8 16c.2-2 .131-5.354 0-6" /> <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" /> <path d="M8.65 22c.21-.66.45-1.32.57-2" /> <path d="M9 6.8a6 6 0 0 1 9 5.2v2" /> </svg><span>Marcar asistencia</span></a>
+      <a href="#mensual" data-vista="mensual"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="M8 13h.01" /> <path d="M12 13h.01" /> <path d="M16 13h.01" /> <path d="M8 17h.01" /> <path d="M12 17h.01" /> <path d="M16 17h.01" /> </svg><span>Registro mensual</span></a>
+      <a href="#reporte" data-vista="reporte"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M8 13h2" /> <path d="M14 13h2" /> <path d="M8 17h2" /> <path d="M14 17h2" /> </svg><span>Reporte para planillas</span></a>
+      <a href="#personal" data-vista="personal"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /> </svg><span>Personal y permisos</span></a>
+    </nav>
+    <div class="lateral__pie">
+      <a class="btn btn--acento btn--chico" href="../../index.html#contacto">Quiero un sistema así</a>
+      <a class="lateral__volver" href="../../index.html#portafolio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /> </svg> Volver al portafolio</a>
+    </div>
+  </aside>
+
+  <div class="principal">
+    <header class="barra">
+      <h1 id="titulo-vista">Hoy</h1>
+      <div class="barra__acciones">
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-descargar-db" title="Descarga la base de datos SQLite con tus cambios" aria-label="Descargar base de datos .sqlite"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" /> </svg></button>
+        <button type="button" class="btn btn--secundario btn--chico" id="btn-reiniciar" title="Vuelve a los datos de ejemplo originales" aria-label="Restablecer demo"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> </svg></button>
+      </div>
+    </header>
+
+    <main class="vistas">
+      <div class="aviso-demo" id="aviso-demo">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /> </svg>
+        <p><b>Demostración con datos ficticios.</b> Las marcaciones usan la hora real de tu dispositivo. Todo se guarda solo en este navegador. <span id="estado-guardado"></span></p>
+      </div>
+
+      <!-- ===== HOY ===== -->
+      <section class="vista" data-vista="hoy" aria-labelledby="titulo-vista">
+        <p class="fecha-hoy" id="fecha-hoy"></p>
+        <div class="kpis kpis--5" id="kpis"></div>
+        <div class="rejilla-graficos">
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Tardanzas y faltas</h2><small>Últimos 20 días laborables</small></div>
+            <div class="grafico"><canvas id="graf-tendencia" role="img" aria-label="Gráfico de tardanzas y faltas por día"></canvas></div>
+          </div>
+          <div class="caja">
+            <div class="caja__cabecera"><h2>Puntualidad por área</h2><small>Mes actual: % de asistencias sin tardanza</small></div>
+            <div class="grafico"><canvas id="graf-areas" role="img" aria-label="Gráfico de puntualidad por área"></canvas></div>
+          </div>
+        </div>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Asistencia de hoy</h2>
+            <select id="h-filtro" aria-label="Filtrar por estado"><option value="">Todos</option><option value="presentes">Presentes</option><option value="T">Tardanzas</option><option value="F">Faltas</option><option value="·">Por llegar</option><option value="permiso">Con permiso</option></select>
+          </div>
+          <div id="tabla-hoy"></div>
+        </div>
+      </section>
+
+      <!-- ===== MARCAR ===== -->
+      <section class="vista" data-vista="marcar" hidden>
+        <div class="quiosco">
+          <div class="quiosco__reloj">
+            <span class="quiosco__hora" id="reloj-hora">--:--</span>
+            <span class="quiosco__fecha" id="reloj-fecha"></span>
+          </div>
+          <form class="quiosco__form" id="form-marcar" novalidate>
+            <label for="m-dni">Ingresa tu DNI</label>
+            <input type="text" id="m-dni" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="8 dígitos" aria-describedby="m-ayuda">
+            <p class="quiosco__ayuda" id="m-ayuda">Prueba con <button type="button" class="enlace-tabla" data-dni-ejemplo>uno de los DNI de ejemplo</button>.</p>
+            <div class="quiosco__trabajador" id="m-trabajador" aria-live="polite"></div>
+            <button class="btn btn--primario quiosco__boton" type="submit" id="m-boton" disabled><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" /> <path d="M14 13.12c0 2.38 0 6.38-1 8.88" /> <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02" /> <path d="M2 12a10 10 0 0 1 18-6" /> <path d="M2 16h.01" /> <path d="M21.8 16c.2-2 .131-5.354 0-6" /> <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" /> <path d="M8.65 22c.21-.66.45-1.32.57-2" /> <path d="M9 6.8a6 6 0 0 1 9 5.2v2" /> </svg> <span>Marcar</span></button>
+          </form>
+          <div class="quiosco__resultado" id="m-resultado" role="status" aria-live="polite"></div>
+        </div>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Marcaciones de hoy</h2></div>
+          <div id="tabla-marcas-hoy"></div>
+        </div>
+      </section>
+
+      <!-- ===== MENSUAL ===== -->
+      <section class="vista" data-vista="mensual" hidden>
+        <div class="herramientas">
+          <select id="r-mes" aria-label="Mes"></select>
+          <select id="r-area" aria-label="Área"><option value="">Todas las áreas</option></select>
+          <div class="leyenda" role="note" aria-label="Leyenda de códigos">
+            <span class="cod cod--puntual">A</span>Asistió <span class="cod cod--tardanza">T</span>Tardanza <span class="cod cod--falta">F</span>Falta
+            <span class="cod cod--permiso">V</span>Vacaciones <span class="cod cod--permiso">M</span>Desc. médico <span class="cod cod--permiso">P</span>Permiso <span class="cod cod--permiso">L</span>Lic. sin goce <span class="cod cod--descanso">D</span>Descanso
+          </div>
+        </div>
+        <div class="caja caja--tabla"><div id="cuadricula"></div></div>
+        <p class="nota-tabla">Toca un día para ver el detalle, corregir la marcación o registrar un permiso.</p>
+      </section>
+
+      <!-- ===== REPORTE ===== -->
+      <section class="vista" data-vista="reporte" hidden>
+        <div class="herramientas">
+          <select id="p-mes" aria-label="Mes"></select>
+          <select id="p-area" aria-label="Área"><option value="">Todas las áreas</option></select>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-exportar-reporte"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <line x1="3" x2="21" y1="9" y2="9" /> <line x1="3" x2="21" y1="15" y2="15" /> <line x1="9" x2="9" y1="9" y2="21" /> <line x1="15" x2="15" y1="9" y2="21" /> </svg> Exportar a Excel</button>
+          </div>
+        </div>
+        <div class="kpis" id="p-kpis"></div>
+        <div class="caja caja--tabla">
+          <div class="caja__cabecera"><h2>Resumen por trabajador</h2><small>Descuentos referenciales: minuto = sueldo ÷ 30 ÷ 8 ÷ 60 · falta = sueldo ÷ 30</small></div>
+          <div id="tabla-reporte"></div>
+        </div>
+      </section>
+
+      <!-- ===== PERSONAL ===== -->
+      <section class="vista" data-vista="personal" hidden>
+        <div class="herramientas">
+          <div class="buscador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /> </svg><input type="search" id="t-buscar" placeholder="Nombre, DNI o cargo" aria-label="Buscar trabajadores"></div>
+          <div class="herramientas__fin">
+            <button type="button" class="btn btn--secundario btn--chico" id="btn-nuevo-permiso"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 18h6" /> <path d="M16 2v3" /> <path d="M19 15v6" /> <path d="M21 11.5V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h8.3" /> <path d="M3 9h18" /> <path d="M8 2v3" /> </svg> Registrar permiso</button>
+            <button type="button" class="btn btn--primario btn--chico" id="btn-nuevo-trabajador"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <line x1="19" x2="19" y1="8" y2="14" /> <line x1="22" x2="16" y1="11" y2="11" /> </svg> Nuevo trabajador</button>
+          </div>
+        </div>
+        <div class="caja caja--tabla"><div id="tabla-personal"></div></div>
+        <div class="caja caja--tabla espacio-arriba">
+          <div class="caja__cabecera"><h2>Permisos y vacaciones registrados</h2></div>
+          <div id="tabla-permisos"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="nav-movil" aria-label="Módulos">
+    <a href="#hoy" data-vista="hoy"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /> </svg><span>Hoy</span></a>
+    <a href="#marcar" data-vista="marcar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" /> <path d="M14 13.12c0 2.38 0 6.38-1 8.88" /> <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02" /> <path d="M2 12a10 10 0 0 1 18-6" /> <path d="M2 16h.01" /> <path d="M21.8 16c.2-2 .131-5.354 0-6" /> <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" /> <path d="M8.65 22c.21-.66.45-1.32.57-2" /> <path d="M9 6.8a6 6 0 0 1 9 5.2v2" /> </svg><span>Marcar</span></a>
+    <a href="#mensual" data-vista="mensual"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="M8 13h.01" /> <path d="M12 13h.01" /> <path d="M16 13h.01" /> <path d="M8 17h.01" /> <path d="M12 17h.01" /> <path d="M16 17h.01" /> </svg><span>Mensual</span></a>
+    <a href="#reporte" data-vista="reporte"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M8 13h2" /> <path d="M14 13h2" /> <path d="M8 17h2" /> <path d="M14 17h2" /> </svg><span>Reporte</span></a>
+    <a href="#personal" data-vista="personal"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /> </svg><span>Personal</span></a>
+  </nav>
+</div>
+
+<!-- Detalle / corrección de un día -->
+<dialog class="dialogo" id="dialogo-dia" aria-labelledby="dd-titulo">
+  <form method="dialog" id="form-dia" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dd-titulo">Detalle del día</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <div id="dd-resumen"></div>
+    <input type="hidden" name="trabajador_id"><input type="hidden" name="fecha">
+    <h3 class="dialogo__sub">Corregir marcación</h3>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="dd-entrada">Entrada</label><input type="time" id="dd-entrada" name="entrada"></div>
+      <div class="campo"><label for="dd-salida">Salida</label><input type="time" id="dd-salida" name="salida"></div>
+    </div>
+    <div class="campo"><label for="dd-obs">Motivo de la corrección <span class="obligatorio">*</span></label><input type="text" id="dd-obs" name="observacion" maxlength="120" placeholder="Ej.: olvidó marcar; validado por su jefe"></div>
+    <div class="form-mov__error" id="dd-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" id="dd-permiso">Registrar permiso</button>
+      <button type="button" class="btn btn--secundario btn--chico btn--peligro" id="dd-eliminar">Borrar marcación</button>
+      <button type="submit" class="btn btn--primario btn--chico">Guardar corrección</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Trabajador -->
+<dialog class="dialogo" id="dialogo-trabajador" aria-labelledby="dt-titulo">
+  <form method="dialog" id="form-trabajador" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dt-titulo">Nuevo trabajador</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <input type="hidden" name="id">
+    <div class="form-mov__fila">
+      <div class="campo"><label for="t-dni">DNI <span class="obligatorio">*</span></label><input type="text" id="t-dni" name="dni" inputmode="numeric" maxlength="8" required></div>
+      <div class="campo"><label for="t-ingreso">Fecha de ingreso <span class="obligatorio">*</span></label><input type="date" id="t-ingreso" name="ingreso" required></div>
+    </div>
+    <div class="campo"><label for="t-nombre">Nombres y apellidos <span class="obligatorio">*</span></label><input type="text" id="t-nombre" name="nombre" maxlength="80" required></div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="t-area">Área <span class="obligatorio">*</span></label><input type="text" id="t-area" name="area" list="lista-areas" maxlength="40" required><datalist id="lista-areas"></datalist></div>
+      <div class="campo"><label for="t-cargo">Cargo</label><input type="text" id="t-cargo" name="cargo" maxlength="50"></div>
+    </div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="t-horario">Horario <span class="obligatorio">*</span></label><select id="t-horario" name="horario_id"></select></div>
+      <div class="campo"><label for="t-sueldo">Sueldo mensual S/</label><input type="number" id="t-sueldo" name="sueldo" min="0" step="10" inputmode="decimal" value="1130"></div>
+    </div>
+    <div class="form-mov__error" id="t-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico">Guardar</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- Permiso -->
+<dialog class="dialogo" id="dialogo-permiso" aria-labelledby="dp-titulo">
+  <form method="dialog" id="form-permiso" novalidate>
+    <header class="dialogo__cabecera"><h2 id="dp-titulo">Registrar permiso o vacaciones</h2><button type="button" class="dialogo__cerrar" data-cerrar aria-label="Cerrar"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></header>
+    <div class="campo"><label for="pe-trabajador">Trabajador <span class="obligatorio">*</span></label><select id="pe-trabajador" name="trabajador_id"></select></div>
+    <div class="campo"><label for="pe-tipo">Tipo</label>
+      <select id="pe-tipo" name="tipo"><option>Vacaciones</option><option>Descanso médico</option><option>Permiso con goce</option><option>Licencia sin goce</option></select></div>
+    <div class="form-mov__fila">
+      <div class="campo"><label for="pe-desde">Desde <span class="obligatorio">*</span></label><input type="date" id="pe-desde" name="desde" required></div>
+      <div class="campo"><label for="pe-hasta">Hasta <span class="obligatorio">*</span></label><input type="date" id="pe-hasta" name="hasta" required></div>
+    </div>
+    <div class="campo"><label for="pe-obs">Observación</label><input type="text" id="pe-obs" name="observacion" maxlength="120"></div>
+    <div class="form-mov__error" id="pe-error" role="alert"></div>
+    <footer class="dialogo__pie">
+      <button type="button" class="btn btn--secundario btn--chico" data-cerrar>Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico">Registrar</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="dialogo dialogo--chico" id="dialogo-confirmar" aria-labelledby="dc-titulo">
+  <form method="dialog">
+    <h2 id="dc-titulo">¿Confirmar?</h2>
+    <p id="dc-texto"></p>
+    <footer class="dialogo__pie">
+      <button type="submit" class="btn btn--secundario btn--chico" value="no">Cancelar</button>
+      <button type="submit" class="btn btn--primario btn--chico" value="si" id="dc-si">Confirmar</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="notificaciones" id="notificaciones" aria-live="polite"></div>
+
+<script src="../comun/lib/sql-wasm.js"></script>
+<script src="../comun/js/sqlite.js"></script>
+<script src="../comun/js/ui.js"></script>
+<script src="../comun/js/graficos.js"></script>
+<script src="js/datos-ejemplo.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

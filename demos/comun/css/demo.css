@@ -154,12 +154,12 @@ body { background: var(--gris-50); }
   .tabla:not(.tabla--ancha) tr { display: flex; flex-direction: column; padding: 10px 2px; border-bottom: 1px solid var(--gris-200); }
   .tabla:not(.tabla--ancha) td { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 4px 4px; border: 0; text-align: right; }
   .tabla:not(.tabla--ancha) td::before { content: attr(data-label); font-size: var(--texto-xs); font-weight: 600; color: var(--gris-500); text-align: left; }
-  .tabla:not(.tabla--ancha) td[data-label="Producto"], .tabla:not(.tabla--ancha) td[data-label="Cliente"] { order: -1; }
-  .tabla--productos td:first-child::before, .tabla:not(.tabla--ancha) td[data-label="Producto"]::before, .tabla:not(.tabla--ancha) td[data-label="Cliente"]::before { display: none; }
-  .tabla:not(.tabla--ancha) td[data-label="Producto"], .tabla:not(.tabla--ancha) td[data-label="Cliente"] { display: block; text-align: left; font-size: var(--texto-base); }
+  .tabla:not(.tabla--ancha) td[data-label="Producto"], .tabla:not(.tabla--ancha) td[data-label="Cliente"], .tabla:not(.tabla--ancha) td.celda-titular { order: -1; }
+  .tabla--productos td:first-child::before, .tabla:not(.tabla--ancha) td[data-label="Producto"]::before, .tabla:not(.tabla--ancha) td[data-label="Cliente"]::before, .tabla:not(.tabla--ancha) td.celda-titular::before { display: none; }
+  .tabla:not(.tabla--ancha) td[data-label="Producto"], .tabla:not(.tabla--ancha) td[data-label="Cliente"], .tabla:not(.tabla--ancha) td.celda-titular { display: block; text-align: left; font-size: var(--texto-base); }
   .tabla:not(.tabla--ancha) td.acciones { justify-content: flex-end; }
   .tabla:not(.tabla--ancha) td .celda { min-width: 0; text-align: right; }
-  .tabla:not(.tabla--ancha) td[data-label="Producto"] .celda, .tabla:not(.tabla--ancha) td[data-label="Cliente"] .celda { text-align: left; }
+  .tabla:not(.tabla--ancha) td[data-label="Producto"] .celda, .tabla:not(.tabla--ancha) td[data-label="Cliente"] .celda, .tabla:not(.tabla--ancha) td.celda-titular .celda { text-align: left; }
   .tabla:not(.tabla--ancha) td.acciones .celda { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
   .tabla:not(.tabla--ancha) td.acciones::before { display: none; }
 }
@@ -248,3 +248,7 @@ body { background: var(--gris-50); }
   .indicador__valor, .kpis--5 .indicador__valor { font-size: 1.15rem; overflow-wrap: anywhere; }
   .indicador { padding: var(--esp-3); }
 }
+
+.btn--peligro { color: var(--error) !important; border-color: #f5c2c2 !important; }
+.btn--peligro:hover { background: var(--error-fondo) !important; }
+.espacio-arriba { margin-top: var(--esp-4); }

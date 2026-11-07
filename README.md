@@ -25,7 +25,8 @@ jorgeluis-portafolio/
 ├── demos/
 │   ├── comun/                 Piezas compartidas: motor SQLite, tablas, gráficos, estilos y librerías
 │   ├── inventario/            Demo: sistema de inventarios (ver su README)
-│   └── ventas/                Demo: ventas y cobranzas (ver su README)
+│   ├── ventas/                Demo: ventas y cobranzas (ver su README)
+│   └── asistencia/            Demo: control de asistencia (ver su README)
 └── README.md
 ```
 

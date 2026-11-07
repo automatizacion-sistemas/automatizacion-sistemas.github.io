@@ -1,0 +1,81 @@
+/* ==========================================================================
+   asistencia.css — Estilos propios de la demo de control de asistencia
+   Los estilos generales están en ../comun/css/demo.css
+   ========================================================================== */
+
+.fecha-hoy { margin: 0 0 var(--esp-3); font-weight: 600; color: var(--gris-500); }
+
+/* Estado de asistencia */
+.chip-asis { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-asis--puntual { background: var(--exito-fondo); color: var(--exito); }
+.chip-asis--tardanza { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-asis--falta { background: var(--error-fondo); color: var(--error); }
+.chip-asis--permiso { background: #ede9fe; color: #5b21b6; }
+.chip-asis--descanso, .chip-asis--vacio { background: var(--gris-100); color: var(--gris-500); }
+.chip-asis--pendiente { background: var(--celeste-100); color: var(--azul-700); }
+
+/* ---------- Quiosco de marcación ---------- */
+.quiosco { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-5); align-items: stretch; margin-bottom: var(--esp-4); padding: var(--esp-6); border-radius: var(--radio-lg); background: radial-gradient(110% 90% at 85% 0%, var(--azul-700), var(--azul-900) 60%, var(--azul-950)); color: var(--gris-200); }
+.quiosco__reloj { display: grid; align-content: center; justify-items: center; text-align: center; gap: 4px; }
+.quiosco__hora { font: 800 clamp(2.8rem, 2rem + 4vw, 4.6rem)/1 var(--fuente-titulos); color: var(--blanco); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.quiosco__fecha { color: var(--celeste-400); font-weight: 600; }
+.quiosco__form { display: grid; gap: var(--esp-3); padding: var(--esp-5); border-radius: var(--radio-lg); background: var(--blanco); color: var(--gris-700); }
+.quiosco__form label { font-weight: 700; color: var(--texto); }
+.quiosco__form input { width: 100%; min-width: 0; min-height: 58px; padding: 0 16px; border: 2px solid var(--gris-300); border-radius: 14px; font: 700 1.6rem var(--fuente-titulos); letter-spacing: 0.18em; text-align: center; color: var(--texto); }
+.quiosco__form input:focus { outline: none; border-color: var(--celeste-500); box-shadow: var(--brillo-celeste); }
+.quiosco__ayuda { margin: 0; font-size: var(--texto-xs); color: var(--gris-500); }
+.quiosco__trabajador { display: grid; gap: 2px; min-height: 44px; font-size: var(--texto-sm); }
+.quiosco__trabajador b { color: var(--texto); font-size: var(--texto-base); }
+.quiosco__trabajador p { margin: 0; }
+.quiosco__boton { min-height: 56px; font-size: 1.05rem; }
+.quiosco__resultado { grid-column: 1 / -1; }
+.quiosco__resultado:empty { display: none; }
+.marca-ok { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 14px; animation: aparecer 300ms ease; }
+.marca-ok svg { width: 30px; height: 30px; flex: none; }
+.marca-ok b { display: block; font-family: var(--fuente-titulos); font-size: 1.1rem; }
+.marca-ok--bien { background: var(--exito-fondo); color: var(--exito); }
+.marca-ok--tarde { background: var(--alerta-fondo); color: var(--alerta); }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } }
+@media (max-width: 760px) { .quiosco { grid-template-columns: minmax(0, 1fr); padding: var(--esp-4); } .quiosco__form { padding: var(--esp-4); } }
+.quiosco > * { min-width: 0; }
+
+/* ---------- Cuadrícula mensual ---------- */
+.leyenda { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: var(--texto-xs); color: var(--gris-500); }
+.leyenda .cod { margin-left: 6px; }
+.cuadricula-envoltura { max-height: 70vh; overflow: auto; }
+.cuadricula { border-collapse: separate; border-spacing: 0; font-size: var(--texto-xs); }
+.cuadricula th, .cuadricula td { padding: 3px 2px; text-align: center; border-bottom: 1px solid var(--gris-100); background: var(--blanco); }
+.cuadricula thead th { position: sticky; top: 0; z-index: 2; font-weight: 700; color: var(--gris-500); min-width: 30px; }
+.cuadricula thead th span { display: block; color: var(--texto); font-size: 0.8rem; }
+.cuadricula thead th small { display: block; font-size: 0.65rem; }
+.cuadricula thead th.dom small, .cuadricula thead th.dom span { color: var(--error); }
+.cuadricula thead th.hoy { background: var(--celeste-100); border-radius: 8px 8px 0 0; }
+.cuadricula__nombre { position: sticky; left: 0; z-index: 1; min-width: 190px; max-width: 220px; padding: 6px 10px !important; text-align: left !important; font-weight: 600; color: var(--texto); box-shadow: 1px 0 0 var(--gris-200); }
+thead .cuadricula__nombre { z-index: 3; }
+.cuadricula__nombre small { display: block; font-weight: 400; color: var(--gris-500); }
+.cuadricula .tot { min-width: 30px; font-weight: 700; color: var(--gris-500); }
+.cuadricula .tot--t { color: var(--alerta); } .cuadricula .tot--f { color: var(--error); }
+.cod { display: inline-grid; place-items: center; width: 26px; height: 26px; border: 0; border-radius: 6px; font: 700 0.72rem var(--fuente-texto); cursor: pointer; transition: transform var(--transicion); }
+button.cod:hover { transform: scale(1.15); }
+.cod--puntual { background: var(--exito-fondo); color: var(--exito); }
+.cod--tardanza { background: #fde68a; color: #7c3a03; }
+.cod--falta { background: #fecaca; color: #991b1b; }
+.cod--permiso { background: #ede9fe; color: #5b21b6; }
+.cod--descanso { background: var(--gris-100); color: var(--gris-500); }
+.cod--pendiente { background: var(--celeste-100); color: var(--azul-700); }
+.cod--incompleto { box-shadow: inset 0 -3px 0 #f59e0b; }
+.cuadricula td.vacia { background: repeating-linear-gradient(45deg, var(--blanco) 0 4px, var(--gris-50) 4px 8px); }
+
+/* ---------- Detalle del día ---------- */
+.dia-resumen { display: flex; justify-content: space-between; align-items: center; gap: var(--esp-3); padding: var(--esp-3) var(--esp-4); margin-bottom: var(--esp-3); border-radius: var(--radio); background: var(--gris-50); }
+.dia-resumen b { color: var(--texto); }
+.ficha { display: grid; grid-template-columns: 100px 1fr; gap: 6px 12px; margin: 0; font-size: var(--texto-sm); }
+.ficha dt { color: var(--gris-500); font-weight: 600; }
+.ficha dd { margin: 0; }
+#dialogo-dia .dialogo__pie { flex-wrap: wrap; }
+
+/* Celulares: columna de nombres más angosta para ver más días */
+@media (max-width: 640px) {
+  .cuadricula__nombre { min-width: 118px; max-width: 128px; padding: 4px 6px !important; font-size: 0.7rem; line-height: 1.25; }
+  .cuadricula__nombre small { font-size: 0.62rem; }
+}
