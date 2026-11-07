@@ -170,8 +170,16 @@
 <section class="seccion seccion--gris" id="sobre-mi">
   <div class="contenedor sobre">
     <div class="sobre__foto revelar">
-      <!-- FOTO PENDIENTE: reemplazar por <img src="assets/img/foto.webp" alt="Jorge Luis Acaro Córdova"> -->
-      <div class="foto-pendiente"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="8" r="5" /> <path d="M20 21a8 8 0 0 0-16 0" /> </svg><span>Foto pendiente</span></div>
+      <figure class="fotocheck">
+        <span class="fotocheck__ranura" aria-hidden="true"></span>
+        <figcaption class="fotocheck__nombre">Jorge Luis Acaro Córdova</figcaption>
+        <!-- FOTO PENDIENTE: reemplazar el div por <img class="fotocheck__foto" src="assets/img/foto.webp" alt="Foto de Jorge Luis Acaro Córdova" width="400" height="500"> -->
+        <div class="fotocheck__foto foto-pendiente"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="8" r="5" /> <path d="M20 21a8 8 0 0 0-16 0" /> </svg><span>Foto pendiente</span></div>
+        <div class="fotocheck__pie">
+          <b>Contador Público</b>
+          <span><img src="assets/img/logo-marca.svg" alt="" width="18" height="18"> Automatización &amp; Sistemas</span>
+        </div>
+      </figure>
     </div>
     <div class="sobre__texto revelar">
       <span class="antetitulo">Sobre mí</span>
@@ -184,7 +192,6 @@
         <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="m9 15 2 2 4-4" /> </svg><div><b>Constancias tributarias a clientes</b><span>Envío mensual automático de las constancias de declaración en PDF a cada cliente de un estudio contable.</span></div></li>
         <li><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16 11 2 2 4-4" /> <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> </svg><div><b>Revisión de fichas de postulación</b><span>Verificación automática de requisitos contra el perfil del puesto en procesos de selección.</span></div></li>
       </ul>
-      <img class="sobre__firma" src="assets/img/firma-azul.svg" alt="Firma de Jorge Luis" width="200" height="87" loading="lazy">
     </div>
   </div>
 </section>
@@ -281,10 +288,13 @@
       </a>
       <p class="pie__lema">Transformo procesos manuales en soluciones digitales inteligentes.</p>
     </div>
-    <nav class="pie__enlaces" aria-label="Pie de página">
-      <a href="#servicios">Servicios</a><a href="#portafolio">Demostraciones</a><a href="#sobre-mi">Sobre mí</a><a href="#contacto">Contacto</a>
-    </nav>
-    <div class="pie__autor"><span>Diseñado y desarrollado por</span><img src="assets/img/firma-blanca.svg" alt="Jorge Luis" width="150" height="65" loading="lazy"></div>
+    <div class="pie__centro">
+      <nav class="pie__enlaces" aria-label="Pie de página">
+        <a href="#servicios">Servicios</a><a href="#portafolio">Demostraciones</a><a href="#sobre-mi">Sobre mí</a><a href="#contacto">Contacto</a>
+      </nav>
+      <img class="pie__firma" src="assets/img/firma-blanca.svg" alt="Firma de Jorge Luis Acaro Córdova" width="170" height="74" loading="lazy">
+    </div>
+    <p class="pie__autor">Diseñado y desarrollado por <b>Jorge Luis Acaro Córdova</b></p>
   </div>
   <div class="contenedor pie__legal">© <span id="anio">2026</span> · Lima, Perú</div>
 </footer>
