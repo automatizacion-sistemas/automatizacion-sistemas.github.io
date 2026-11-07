@@ -117,3 +117,19 @@ También en esta etapa: las piezas que comparten las demos (motor SQLite, tablas
 | Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px (se corrigió el ancho del quiosco en celulares) |
 
 Mejora general: al cambiar de pantalla se cierra cualquier ventana que hubiera quedado abierta (se aplicó en las 3 demos). Después del cambio, las suites de inventarios, ventas y asistencia volvieron a pasar completas.
+
+---
+
+# Demo de gestión de personal
+
+| Verificación | Resultado |
+|---|---|
+| Cálculos verificados a mano | ✅ 11 casos: récord vacacional (3 periodos, saldo de 90 días, 2 periodos vencidos, fecha límite de goce), vacaciones truncas (2,5 días por mes), antigüedad, fin de mes (31/01 + 1 mes = 28/02) y RMV por fecha (S/ 1 130 hasta el 30/09/2026 y S/ 1 230 desde el 01/10/2026, D.S. 015-2026-TR) |
+| Integridad de los datos de ejemplo | ✅ 72 contratos sin cruces ni huecos entre renovaciones; vacaciones sin cruces y con los días bien calculados |
+| Alertas | ✅ Se generan los 9 tipos: contrato vencido, por vencer, superó 5 años a plazo fijo, cerca del límite, sueldo bajo la RMV, vacaciones vencidas, vacaciones por vencer, fin del periodo de prueba y legajo incompleto |
+| Validaciones | ✅ Más de 5 años a plazo fijo, monto menor a la RMV, cruce de contratos, edad mínima (18 años, o 16 para modalidad formativa), DNI duplicado, vacaciones mayores al saldo, bloque de menos de 7 días (pide confirmar el acuerdo escrito) y vacaciones que se cruzan |
+| Flujo completo | ✅ Renovación desde la alerta (propone el día siguiente al vencimiento y plazo indeterminado si se acerca a 5 años), alta con contrato y lista de documentos, documentos marcados como entregados, cese (recorta el contrato), filtros, 3 exportaciones a Excel, guardado y restablecer |
+| Accesibilidad (axe-core) | ✅ 0 problemas en las 4 pantallas |
+| Adaptación a pantallas | ✅ Sin desbordes de 320 a 1440 px |
+
+También se actualizó a S/ 1 230 el sueldo sugerido al registrar un trabajador en la demo de asistencia.

@@ -1,0 +1,78 @@
+/* ==========================================================================
+   personal.css — Estilos propios de la demo de gestión de personal
+   Los estilos generales están en ../comun/css/demo.css
+   ========================================================================== */
+
+/* Estado del contrato */
+.chip-rh { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-rh--vigente { background: var(--exito-fondo); color: var(--exito); }
+.chip-rh--indeterminado { background: var(--celeste-100); color: var(--azul-700); }
+.chip-rh--por_vencer { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-rh--vencido { background: var(--error-fondo); color: var(--error); }
+.chip-rh--sin, .chip-rh--cesado { background: var(--gris-100); color: var(--gris-500); }
+.chip-rh--prueba { background: #ede9fe; color: #5b21b6; }
+
+/* Prioridad de las alertas */
+.chip-nivel { display: inline-block; padding: 2px 9px; border-radius: 6px; font-size: var(--texto-xs); font-weight: 700; white-space: nowrap; }
+.chip-nivel--critica { background: var(--error-fondo); color: var(--error); }
+.chip-nivel--importante { background: var(--alerta-fondo); color: var(--alerta); }
+.chip-nivel--seguimiento { background: var(--gris-100); color: var(--gris-700); }
+.tabla--alertas td.celda-titular .sub { white-space: normal; max-width: 520px; }
+
+/* Avatares con iniciales */
+.avatar { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; font: 700 0.95rem var(--fuente-titulos); color: var(--blanco); }
+.avatar--grande { width: 64px; height: 64px; font-size: 1.3rem; }
+.avatar--0 { background: #173a7a; } .avatar--1 { background: #0e7490; } .avatar--2 { background: #6d28d9; } .avatar--3 { background: #b45309; } .avatar--4 { background: #15803d; }
+
+/* Directorio de personal en tarjetas */
+.rejilla-fichas { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--esp-3); }
+.ficha-tarjeta { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: center; padding: var(--esp-4); border: 1px solid var(--gris-200); border-radius: var(--radio-lg); background: var(--blanco); text-align: left; cursor: pointer; font: inherit; color: inherit; transition: transform var(--transicion), box-shadow var(--transicion), border-color var(--transicion); }
+.ficha-tarjeta:hover { transform: translateY(-2px); box-shadow: var(--sombra); border-color: var(--celeste-100); }
+.ficha-tarjeta__datos { display: grid; min-width: 0; line-height: 1.35; }
+.ficha-tarjeta__datos b { color: var(--texto); font-family: var(--fuente-titulos); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ficha-tarjeta__datos span { font-size: var(--texto-sm); }
+.ficha-tarjeta__datos small { font-size: var(--texto-xs); color: var(--gris-500); }
+.ficha-tarjeta__estado { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; padding-top: 6px; border-top: 1px dashed var(--gris-200); }
+.punto-alerta { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-left: auto; border-radius: 50%; font-size: 0.75rem; font-weight: 800; }
+.punto-alerta--critica { background: var(--error); color: var(--blanco); }
+.punto-alerta--importante { background: #f59e0b; color: var(--blanco); }
+.punto-alerta--seguimiento { background: var(--gris-200); color: var(--gris-700); }
+
+/* Legajo */
+.legajo-cabecera { display: flex; gap: var(--esp-4); align-items: center; margin-bottom: var(--esp-4); }
+.legajo-cabecera > div { display: grid; gap: 2px; }
+.legajo-cabecera b { font: 700 var(--texto-xl) var(--fuente-titulos); color: var(--texto); }
+.legajo-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.legajo-alertas { list-style: none; margin: 0 0 var(--esp-4); padding: 0; display: grid; gap: 6px; font-size: var(--texto-sm); }
+.legajo-alertas li { padding: 8px 12px; border-radius: 10px; }
+.legajo-alertas .chip-nivel--critica { background: var(--error-fondo); color: #7f1d1d; }
+.legajo-alertas .chip-nivel--importante { background: var(--alerta-fondo); color: #78350f; }
+.legajo-alertas .chip-nivel--seguimiento { background: var(--gris-50); color: var(--gris-700); }
+.legajo-rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-4); }
+.legajo-rejilla section, .legajo-seccion { padding: var(--esp-4); border: 1px solid var(--gris-200); border-radius: var(--radio); }
+.legajo-seccion { margin-top: var(--esp-4); }
+.legajo-rejilla h3, .legajo-seccion h3 { font-size: var(--texto-base); margin: 0 0 var(--esp-3); }
+.legajo-seccion h3 small { font-weight: 500; color: var(--gris-500); }
+.legajo-seccion__cab { display: flex; justify-content: space-between; align-items: center; gap: var(--esp-3); flex-wrap: wrap; margin-bottom: var(--esp-2); }
+.legajo-seccion__cab h3 { margin: 0; }
+.legajo-seccion__cab .btn svg { width: 16px; height: 16px; }
+.legajo-resumen { margin: 0 0 var(--esp-2); font-size: var(--texto-sm); }
+.ficha { display: grid; grid-template-columns: 96px 1fr; gap: 6px 12px; margin: 0; font-size: var(--texto-sm); }
+.ficha dt { color: var(--gris-500); font-weight: 600; }
+.ficha dd { margin: 0; min-width: 0; }
+.ficha dd.corta { overflow-wrap: anywhere; }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+.checklist label { display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: var(--texto-sm); cursor: pointer; }
+.checklist input { width: 20px; height: 20px; accent-color: var(--azul-900); flex: none; }
+.checklist small { margin-left: auto; font-size: var(--texto-xs); color: var(--gris-500); }
+@media (max-width: 640px) {
+  .legajo-rejilla, .checklist { grid-template-columns: 1fr; }
+  .legajo-cabecera b { font-size: var(--texto-lg); }
+}
+
+/* Formularios */
+.grupo { margin: var(--esp-2) 0 var(--esp-3); padding: var(--esp-3) var(--esp-4) 0; border: 1px solid var(--gris-200); border-radius: var(--radio); }
+.grupo legend { padding: 0 6px; font-weight: 700; font-size: var(--texto-sm); color: var(--texto); }
+.dialogo__contexto { margin: 0 0 var(--esp-4); padding: var(--esp-3); border-radius: 10px; background: var(--gris-50); font-size: var(--texto-sm); }
+.atajos { font-size: var(--texto-xs); color: var(--gris-500); }
+.atajos .enlace-tabla { font-size: var(--texto-xs); }
