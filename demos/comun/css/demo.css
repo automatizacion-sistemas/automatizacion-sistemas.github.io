@@ -260,3 +260,19 @@ body { background: var(--gris-50); }
   .barra__acciones .btn { min-width: 40px; padding: 0.4rem 0.55rem; }
 }
 .cuadricula-envoltura:focus-visible, .tabla-envoltura:focus-visible { outline: 3px solid var(--celeste-500); outline-offset: 2px; }
+
+/* ---------- Botón de WhatsApp en celulares (lo crea ui.js) ---------- */
+.demo-wa { display: none; }
+@media (max-width: 900px) {
+  .demo-wa {
+    position: fixed; right: 14px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 35;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px 0 14px;
+    border-radius: 999px; background: var(--whatsapp); color: #06361c; text-decoration: none;
+    font-weight: 700; font-size: 0.9rem; box-shadow: 0 10px 24px rgb(0 0 0 / 0.22);
+  }
+  .demo-wa svg { width: 22px; height: 22px; flex: none; }
+  .demo-wa--sobre-nav { bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .app { padding-bottom: 140px; } /* espacio para que el botón no tape el último contenido */
+  .demo-wa:focus-visible { outline: 3px solid var(--azul-900); outline-offset: 2px; }
+}
+@media print { .demo-wa { display: none !important; } }

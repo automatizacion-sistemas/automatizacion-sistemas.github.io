@@ -129,3 +129,29 @@ window.UI = (function () {
 
   return { ICONOS: ICONOS, soles: soles, num: num, fecha: fecha, esc: esc, tabla: tabla, avisar: avisar, confirmar: confirmar, descargar: descargar, exportarExcel: exportarExcel };
 })();
+
+/* ---------- Botón de WhatsApp en celulares ----------
+   En pantallas angostas el menú lateral (con "Quiero un sistema así") se oculta.
+   Este botón lleva directo a WhatsApp con un mensaje que dice qué demo se vio. */
+(function () {
+  var NUMERO = "51901288798"; // mismo número que assets/js/config.js
+  function iniciar() {
+    if (document.querySelector(".demo-wa")) return;
+    var NOMBRES = { inventario: "inventarios", ventas: "ventas y cobranzas", asistencia: "control de asistencia",
+      personal: "gestión de personal", finanzas: "ingresos y gastos", clientes: "seguimiento de clientes",
+      excel: "Excel con Python", pdf: "documentos PDF" };
+    var m = location.pathname.match(/demos\/([^\/]+)/);
+    var demo = (m && NOMBRES[m[1]]) || "su web";
+    var texto = "Hola Jorge Luis, probé la demo de " + demo + " y me interesa un sistema así para mi negocio.";
+    var a = document.createElement("a");
+    a.className = "demo-wa" + (document.querySelector(".nav-movil") ? " demo-wa--sobre-nav" : "");
+    a.href = "https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(texto);
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.innerHTML = '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg><span>Quiero uno así</span>';
+    a.setAttribute("aria-label", "Escribir por WhatsApp: quiero un sistema como esta demo (se abre en una pestaña nueva)");
+    document.body.appendChild(a);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
+  else iniciar();
+})();
