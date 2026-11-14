@@ -82,6 +82,15 @@ export class ApiError extends Error {
   }
 }
 
+/** Aviso para mostrar la pantalla del PIN (acceso desde el celular). */
+export const pinRequired = { notify: () => {} };
+
+export async function sendPin(pin: string): Promise<void> {
+  const res = await fetch('/api/acceso', json('POST', { pin }));
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiError(data?.error ?? `Error ${res.status}`, res.status);
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
@@ -90,6 +99,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError('No hay conexión con el servidor local.', 0);
   }
   const data = res.headers.get('content-type')?.includes('application/json') ? await res.json() : null;
+  if (res.status === 401 && data?.code === 'pin_requerido') pinRequired.notify();
   if (!res.ok) throw new ApiError(data?.error ?? `Error ${res.status}`, res.status);
   return data as T;
 }

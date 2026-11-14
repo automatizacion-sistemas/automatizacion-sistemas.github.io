@@ -14,7 +14,8 @@
     "dev": "concurrently -k -n server,web -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w web\"",
     "build": "npm run build -w server && npm run build -w web",
     "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
-    "start": "npm run start -w server"
+    "start": "npm run start -w server",
+    "celular": "concurrently -k -n server,web -c magenta,cyan \"npm run dev -w server -- --lan\" \"npm run dev -w web -- --host\""
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

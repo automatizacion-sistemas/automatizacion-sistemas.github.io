@@ -48,6 +48,18 @@ npm install-scripts approve ffmpeg-static
 npm rebuild ffmpeg-static
 ```
 
+## Ver la oficina desde el celular (misma red Wi-Fi)
+
+1. En la laptop, en lugar de `npm run dev`, ejecuta:
+   ```bash
+   npm run celular
+   ```
+2. La ventana negra muestra una dirección como `http://192.168.1.25:5173` y un **PIN de acceso**.
+3. Si Windows pregunta por el **Firewall**, marca **Redes privadas** y pulsa **Permitir acceso**.
+4. En el celular, conectado al **mismo Wi-Fi**, abre esa dirección en Chrome o Safari y escribe el PIN.
+
+Solo funciona dentro de tu red de casa u oficina. Desde datos móviles o fuera de casa no se puede todavía (eso requiere publicar la app en internet). La laptop debe estar encendida con la app abierta.
+
 ## (Opcional, de pago) Cómo activar el chat con IA
 
 1. Entra a **https://console.anthropic.com** y crea una cuenta (no es la misma que claude.ai).

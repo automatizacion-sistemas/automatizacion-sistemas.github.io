@@ -26,16 +26,19 @@ import { registerCrm } from './crm.js';
 import { registerCalendar } from './calendar.js';
 import { registerTasks } from './tasks.js';
 import { registerVideo } from './video.js';
+import { lanBanner, originAllowed, registerLan } from './lan.js';
 
 const app = Fastify({ logger: { level: 'warn' } });
 await app.register(multipart, { limits: { fileSize: 2 * 1024 * 1024, files: 1 } });
 
-// Solo se aceptan cambios desde la propia computadora (protege contra páginas web ajenas).
-const LOCAL_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
+// Accesos desde otros dispositivos: solo en modo celular y con PIN.
+registerLan(app);
+
+// Solo se aceptan cambios desde esta computadora o, en modo celular, desde la red local (protege contra páginas web ajenas).
 app.addHook('onRequest', async (req, reply) => {
   if (req.method === 'GET' || req.method === 'HEAD') return;
   const origin = req.headers.origin;
-  if (origin && !LOCAL_ORIGIN.test(origin)) return reply.code(403).send({ error: 'Origen no permitido.' });
+  if (origin && !originAllowed(origin, req.headers.host)) return reply.code(403).send({ error: 'Origen no permitido.' });
 });
 
 const notFound = (reply: FastifyReply, what = 'Recurso') => reply.code(404).send({ error: `${what} no encontrado.` });
@@ -333,6 +336,8 @@ try {
       config.anthropicKeyPresent ? `clave configurada (${config.model})` : 'SIN clave (agrega ANTHROPIC_API_KEY en .env)'
     }`,
   );
+  const lan = lanBanner();
+  if (lan) console.log(lan);
 } catch (err) {
   app.log.error(err);
   process.exit(1);

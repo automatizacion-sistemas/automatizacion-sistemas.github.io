@@ -54,7 +54,8 @@ export function useServerEvents() {
         if (businessId === useOfficeStore.getState().activeBusinessId) void store.refreshTasks();
       });
       es.addEventListener('error', () => {
-        store.setServerOnline(false);
+        // Si el servidor responde pero pide PIN, health() lo detecta y muestra la pantalla de acceso.
+        health().catch(() => store.setServerOnline(false));
         es?.close();
         if (!closed) retry = setTimeout(connect, 3000);
       });

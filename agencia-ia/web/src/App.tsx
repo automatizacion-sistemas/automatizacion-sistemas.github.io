@@ -12,6 +12,7 @@ import { VideoStudio } from './ui/VideoStudio';
 import { useOfficeStore } from './store/useOfficeStore';
 import { useServerEvents } from './lib/useServerEvents';
 import { playSound } from './lib/sound';
+import { pinRequired, sendPin } from './lib/api';
 
 function SoundIcon({ on }: { on: boolean }) {
   return (
@@ -66,7 +67,52 @@ function BusinessSwitcher() {
   );
 }
 
+/** Acceso desde el celular: la oficina pide el PIN que muestra la ventana negra de la laptop. */
+function PinScreen() {
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-900/70 p-4 backdrop-blur">
+      <form
+        className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-panel"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setBusy(true);
+          setError(null);
+          try {
+            await sendPin(pin);
+            window.location.reload();
+          } catch (err) {
+            setError((err as Error).message);
+            setBusy(false);
+          }
+        }}
+      >
+        <span className="grid h-11 w-11 place-items-center rounded-xl bg-slate-900 text-sm font-extrabold text-white">IA</span>
+        <h1 className="mt-3 text-lg font-bold text-slate-900">Mi Agencia IA</h1>
+        <p className="mt-1 text-sm text-slate-600">Escribe el PIN que aparece en la ventana negra de tu laptop.</p>
+        <input
+          className="mt-4 w-full rounded-xl border border-slate-300 px-3 py-3 text-center text-2xl tracking-[0.4em] focus:border-indigo-500 focus:outline-none"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          autoFocus
+          value={pin}
+          onChange={(e) => setPin(e.target.value.trim())}
+          aria-label="PIN de acceso"
+        />
+        {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
+        <button type="submit" disabled={!pin || busy} className="mt-4 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white disabled:opacity-40">
+          {busy ? 'Verificando…' : 'Entrar'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 export default function App() {
+  const [needPin, setNeedPin] = useState(false);
+  pinRequired.notify = () => setNeedPin(true);
   useServerEvents();
   const soundOn = useOfficeStore((s) => s.soundOn);
   const toggleSound = useOfficeStore((s) => s.toggleSound);
@@ -235,6 +281,7 @@ export default function App() {
         <AgentDock />
       </div>
 
+      {needPin && <PinScreen />}
       <AgentPanel />
       {modal === 'negocios' && <BusinessManager />}
       {modal === 'integraciones' && <IntegrationsModal />}
