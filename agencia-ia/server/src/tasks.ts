@@ -285,6 +285,51 @@ export function registerTasks(app: FastifyInstance) {
     },
   );
 
+  /** Importación en bloque (por ejemplo, un plan preparado en el chat de Claude). Opcionalmente encadenadas en orden. */
+  app.post<{ Body: { businessId?: string; name?: string; chain?: boolean; tasks?: unknown } }>('/api/tasks/import', async (req, reply) => {
+    const b = req.body?.businessId ? getBusiness(req.body.businessId) : null;
+    if (!b) return reply.code(404).send({ error: 'Negocio no encontrado.' });
+    const list = Array.isArray(req.body.tasks) ? (req.body.tasks as Record<string, unknown>[]).slice(0, 200) : [];
+    const clean = list
+      .map((t) => ({
+        title: text(t?.title, 200),
+        description: text(t?.description, 6000),
+        agent: oneOf(t?.agentId, ASSIGNEES),
+        priority: oneOf(t?.priority, PRIORITIES) ?? 'normal',
+        due: typeof t?.dueDate === 'string' && DATE.test(t.dueDate) ? t.dueDate : null,
+      }))
+      .filter((t) => t.title && t.agent);
+    if (!clean.length) return reply.code(400).send({ error: 'No hay tareas válidas para importar.' });
+    const chain = Boolean(req.body.chain);
+    const name = text(req.body.name, 200);
+    const flowId = chain ? newId() : null;
+    const ids: string[] = [];
+    db.exec('BEGIN');
+    try {
+      clean.forEach((t, i) => {
+        const id = newId();
+        const ts = now();
+        db.prepare(
+          `INSERT INTO tasks (id, business_id, flow_id, flow_name, step, title, description, agent_id, priority, due_date, depends_on, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ).run(id, b.id, flowId, chain ? name || 'Plan importado' : '', chain ? i + 1 : 0, t.title, t.description, t.agent, t.priority, t.due, chain && i > 0 ? ids[i - 1] : null, ts, ts);
+        addEvent(id, 'creada', `Importada${chain ? ` (paso ${i + 1})` : ''}. Asignada a ${NAME[t.agent!]}.`);
+        ids.push(id);
+      });
+      db.exec('COMMIT');
+    } catch (err) {
+      db.exec('ROLLBACK');
+      throw err;
+    }
+    logActivity({
+      businessId: b.id,
+      kind: 'tareas_importadas',
+      summary: `Se importaron ${clean.length} tareas${name ? ` de "${name}"` : ''}${chain ? ' encadenadas en orden' : ''}.`,
+    });
+    changed(b.id);
+    return reply.code(201).send({ tasks: ids.map((id) => getTask(id)) });
+  });
+
   app.put<{ Params: { id: string }; Body: Record<string, unknown> }>('/api/tasks/:id', async (req, reply) => {
     const task = getTask(req.params.id);
     if (!task) return reply.code(404).send({ error: 'Tarea no encontrada.' });

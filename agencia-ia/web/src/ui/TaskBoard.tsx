@@ -14,6 +14,7 @@ import {
 } from '../lib/api';
 import { AgentAvatar } from './AgentAvatar';
 import { Modal } from './Modal';
+import { ImportButton, ImportFromClaude } from './ImportFromClaude';
 
 const inputCls =
   'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20';
@@ -584,6 +585,7 @@ export function TaskBoard() {
   );
   const [agentFilter, setAgentFilter] = useState<Assignee | ''>('');
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     if (!business) return;
@@ -621,6 +623,9 @@ export function TaskBoard() {
       wide
     >
       {error && <p className="m-5 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
+      {importing && (
+        <ImportFromClaude kind="tareas" business={business} onClose={() => setImporting(false)} onImported={() => void refreshTasks()} />
+      )}
 
       {view.kind === 'nueva' && (
         <NewTask
@@ -669,9 +674,12 @@ export function TaskBoard() {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={() => setView({ kind: 'nueva' })} className={`${btnPrimary} ml-auto`}>
-              + Asignar nueva tarea
-            </button>
+            <span className="ml-auto flex flex-wrap gap-2">
+              <ImportButton onClick={() => setImporting(true)} label="Importar plan desde Claude" />
+              <button type="button" onClick={() => setView({ kind: 'nueva' })} className={btnPrimary}>
+                + Asignar nueva tarea
+              </button>
+            </span>
           </div>
 
           {tasks === null && !error && <p className="mt-6 text-sm text-slate-500">Cargando…</p>}

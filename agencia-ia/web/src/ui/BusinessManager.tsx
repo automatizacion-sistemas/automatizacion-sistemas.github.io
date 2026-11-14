@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useOfficeStore } from '../store/useOfficeStore';
 import { api, type Business, type BusinessInput, type Socials } from '../lib/api';
 import { Modal } from './Modal';
+import { ImportButton, ImportFromClaude } from './ImportFromClaude';
 
 const EMPTY: BusinessInput = {
   name: '',
@@ -89,6 +90,8 @@ function BusinessForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [filled, setFilled] = useState(false);
   const logoPreview = useMemo(() => (logo ? URL.createObjectURL(logo) : null), [logo]);
   useEffect(() => () => {
     if (logoPreview) URL.revokeObjectURL(logoPreview);
@@ -126,6 +129,35 @@ function BusinessForm({
 
   return (
     <form onSubmit={submit} className="space-y-4 p-5 sm:p-6">
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-indigo-50/60 p-3 text-sm text-slate-700">
+        <span className="flex-1">¿Ya describiste tu negocio en un chat o proyecto de Claude? Trae esa información aquí.</span>
+        <ImportButton onClick={() => setImporting(true)} label="Completar con Claude" />
+      </div>
+      {filled && (
+        <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          Datos de Claude cargados en el formulario. Revísalos y pulsa {initial ? '"Guardar cambios"' : '"Crear negocio"'}.
+        </p>
+      )}
+      {importing && (
+        <ImportFromClaude
+          kind="ficha"
+          business={{ ...(initial ?? ({} as Business)), name: form.name || 'mi negocio' }}
+          onClose={() => setImporting(false)}
+          onFicha={(d) => {
+            const x = d as Partial<BusinessInput>;
+            setForm((f) => ({
+              name: x.name || f.name,
+              description: x.description || f.description,
+              products: x.products || f.products,
+              audience: x.audience || f.audience,
+              goals: x.goals || f.goals,
+              colors: x.colors?.length ? x.colors : f.colors,
+              socials: { ...f.socials, ...(x.socials ?? {}) },
+            }));
+            setFilled(true);
+          }}
+        />
+      )}
       <div className="flex items-center gap-4">
         {logoPreview ? (
           <img src={logoPreview} alt="" className="h-16 w-16 rounded-xl border border-slate-200 object-contain" />

@@ -149,6 +149,7 @@ function Subtitles({ project, onSaved }: { project: VideoProject; onSaved: (p: V
   const [rows, setRows] = useState<Subtitle[]>(project.subtitles);
   const [script, setScript] = useState('');
   const [showScript, setShowScript] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -232,7 +233,23 @@ function Subtitles({ project, onSaved }: { project: VideoProject; onSaved: (p: V
             onChange={(e) => setScript(e.target.value)}
             placeholder={'Una frase por línea. Ej.:\n¿Tus planillas te quitan tiempo?\nNosotros las preparamos cada mes\nEscríbenos por WhatsApp'}
           />
-          <p className="text-xs text-slate-500">Se reparten a lo largo de los {secs(project.totalDuration)} del video. Luego puedes ajustar los tiempos.</p>
+          <p className="text-xs text-slate-500">
+            Se reparten a lo largo de los {secs(project.totalDuration)} del video. Luego puedes ajustar los tiempos.{' '}
+            <button
+              type="button"
+              className="font-medium text-indigo-600 hover:underline"
+              onClick={() =>
+                navigator.clipboard
+                  ?.writeText(
+                    `Del guion del video "${project.name}" que trabajamos, dame solo el texto para SUBTÍTULOS: frases cortas de máximo 8 palabras, una por línea, en el orden en que se dicen, sin numerar, sin comillas y sin indicaciones de escena. El video dura unos ${Math.round(project.totalDuration)} segundos.`,
+                  )
+                  .then(() => setCopiedPrompt(true))
+                  .catch(() => undefined)
+              }
+            >
+              {copiedPrompt ? 'Instrucción copiada ✓ (pégala en Claude)' : 'Copiar instrucción para pedírselo a Claude'}
+            </button>
+          </p>
           <button type="button" onClick={distribute} disabled={!script.trim() || project.totalDuration <= 0} className={btnSecondary}>
             Repartir en el video
           </button>

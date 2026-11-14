@@ -472,6 +472,10 @@ export const tasksApi = {
   action: (id: string, action: TaskAction, extra: { note?: string; result?: string } = {}) =>
     request<Task>(`/api/tasks/${id}/action`, json('POST', { action, ...extra })),
   remove: (id: string) => request<{ ok: true }>(`/api/tasks/${id}`, { method: 'DELETE' }),
+  importMany: (
+    businessId: string,
+    body: { name: string; chain: boolean; tasks: { title: string; description: string; agentId: Assignee; priority: string; dueDate: string | null }[] },
+  ) => request<{ tasks: Task[] }>('/api/tasks/import', json('POST', { ...body, businessId })),
   events: (id: string) => request<{ events: TaskEvent[] }>(`/api/tasks/${id}/events`),
   summary: (businessId: string) => request<TasksSummary>(`/api/tasks/summary?businessId=${businessId}`),
 };

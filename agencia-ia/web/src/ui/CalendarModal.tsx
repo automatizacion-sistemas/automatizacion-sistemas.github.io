@@ -14,6 +14,7 @@ import {
   type PostStatus,
 } from '../lib/api';
 import { Modal } from './Modal';
+import { ImportButton, ImportFromClaude } from './ImportFromClaude';
 
 const inputCls =
   'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20';
@@ -453,6 +454,7 @@ export function CalendarModal() {
   const [netFilter, setNetFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const days = useMemo(() => monthGrid(cursor.y, cursor.m), [cursor]);
   const from = iso(days[0]);
@@ -506,6 +508,17 @@ export function CalendarModal() {
       wide
     >
       {error && <p className="m-5 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
+      {importing && (
+        <ImportFromClaude
+          kind="calendario"
+          business={business}
+          onClose={() => setImporting(false)}
+          onImported={() => {
+            load();
+            void refreshSummary();
+          }}
+        />
+      )}
 
       {view.kind !== 'calendario' && (view.kind === 'nuevo' || editing) ? (
         <PostEditor
@@ -587,9 +600,12 @@ export function CalendarModal() {
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => setView({ kind: 'nuevo', date: t })} className={`${btnPrimary} ml-auto`}>
-              + Nueva publicación
-            </button>
+            <span className="ml-auto flex flex-wrap gap-2">
+              <ImportButton onClick={() => setImporting(true)} />
+              <button type="button" onClick={() => setView({ kind: 'nuevo', date: t })} className={btnPrimary}>
+                + Nueva publicación
+              </button>
+            </span>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-500">

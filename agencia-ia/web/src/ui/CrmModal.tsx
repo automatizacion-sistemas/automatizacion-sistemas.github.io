@@ -15,6 +15,7 @@ import {
   type Template,
 } from '../lib/api';
 import { Modal } from './Modal';
+import { ImportButton, ImportFromClaude } from './ImportFromClaude';
 
 const inputCls =
   'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20';
@@ -445,6 +446,7 @@ function Templates({
   const [editing, setEditing] = useState<Template | 'nuevo' | null>(null);
   const [form, setForm] = useState({ name: '', body: '' });
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const start = (t: Template | 'nuevo') => {
     setEditing(t);
@@ -500,9 +502,20 @@ function Templates({
           </div>
         </form>
       ) : (
-        <button type="button" onClick={() => start('nuevo')} className={btnPrimary}>
-          + Nueva plantilla
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => start('nuevo')} className={btnPrimary}>
+            + Nueva plantilla
+          </button>
+          <ImportButton onClick={() => setImporting(true)} />
+        </div>
+      )}
+      {importing && (
+        <ImportFromClaude
+          kind="plantillas"
+          business={business}
+          onClose={() => setImporting(false)}
+          onImported={() => crm.templates(business.id).then((r) => onChange(r.templates)).catch(() => undefined)}
+        />
       )}
       <ul className="space-y-2">
         {templates.length === 0 && !editing && <li className="text-sm text-slate-500">Aún no hay plantillas.</li>}
@@ -624,6 +637,7 @@ export function CrmModal() {
   const [stage, setStage] = useState<string>('');
   const [onlyDue, setOnlyDue] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     if (!business) return;
@@ -697,6 +711,17 @@ export function CrmModal() {
       </div>
 
       {error && <p className="m-5 rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
+      {importing && (
+        <ImportFromClaude
+          kind="prospectos"
+          business={business}
+          onClose={() => setImporting(false)}
+          onImported={() => {
+            crm.prospects(business.id).then((r) => setProspects(r.prospects)).catch(() => undefined);
+            void refreshSummary();
+          }}
+        />
+      )}
 
       {tab === 'plantillas' && <Templates business={business} templates={templates} onChange={setTemplates} />}
       {tab === 'informe' && <Report business={business} prospects={prospects ?? []} />}
@@ -747,9 +772,12 @@ export function CrmModal() {
               <input type="checkbox" checked={onlyDue} onChange={(e) => setOnlyDue(e.target.checked)} className="rounded" />
               Seguimientos para hoy o vencidos
             </label>
-            <button type="button" onClick={() => setView({ kind: 'nuevo' })} className={`${btnPrimary} ml-auto`}>
-              + Nuevo prospecto
-            </button>
+            <span className="ml-auto flex flex-wrap gap-2">
+              <ImportButton onClick={() => setImporting(true)} />
+              <button type="button" onClick={() => setView({ kind: 'nuevo' })} className={btnPrimary}>
+                + Nuevo prospecto
+              </button>
+            </span>
           </div>
 
           {prospects === null && !error && <p className="mt-6 text-sm text-slate-500">Cargando…</p>}
