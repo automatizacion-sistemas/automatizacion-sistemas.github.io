@@ -132,6 +132,59 @@ const MIGRATIONS: string[] = [
      created_at TEXT NOT NULL
    );
    CREATE INDEX task_events_task ON task_events (task_id, created_at);`,
+  // 5 · Estudio de video (montaje local con FFmpeg)
+  `CREATE TABLE video_projects (
+     id TEXT PRIMARY KEY,
+     business_id TEXT NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+     name TEXT NOT NULL,
+     fit TEXT NOT NULL DEFAULT 'difuminado',
+     bg_color TEXT NOT NULL DEFAULT '#000000',
+     clip_volume REAL NOT NULL DEFAULT 1,
+     music_volume REAL NOT NULL DEFAULT 0.35,
+     music_file TEXT,
+     music_name TEXT,
+     fades INTEGER NOT NULL DEFAULT 1,
+     subtitle_position TEXT NOT NULL DEFAULT 'abajo',
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );
+   CREATE TABLE video_clips (
+     id TEXT PRIMARY KEY,
+     project_id TEXT NOT NULL REFERENCES video_projects(id) ON DELETE CASCADE,
+     kind TEXT NOT NULL,
+     file TEXT NOT NULL,
+     original_name TEXT NOT NULL,
+     duration REAL NOT NULL DEFAULT 0,
+     width INTEGER NOT NULL DEFAULT 0,
+     height INTEGER NOT NULL DEFAULT 0,
+     has_audio INTEGER NOT NULL DEFAULT 0,
+     position INTEGER NOT NULL DEFAULT 0,
+     trim_start REAL NOT NULL DEFAULT 0,
+     trim_end REAL,
+     image_duration REAL NOT NULL DEFAULT 3,
+     created_at TEXT NOT NULL
+   );
+   CREATE TABLE video_subtitles (
+     id TEXT PRIMARY KEY,
+     project_id TEXT NOT NULL REFERENCES video_projects(id) ON DELETE CASCADE,
+     start REAL NOT NULL,
+     end REAL NOT NULL,
+     text TEXT NOT NULL
+   );
+   CREATE TABLE video_renders (
+     id TEXT PRIMARY KEY,
+     project_id TEXT NOT NULL REFERENCES video_projects(id) ON DELETE CASCADE,
+     format TEXT NOT NULL,
+     quality TEXT NOT NULL,
+     status TEXT NOT NULL,
+     progress REAL NOT NULL DEFAULT 0,
+     file TEXT,
+     size INTEGER,
+     duration REAL,
+     error TEXT,
+     created_at TEXT NOT NULL,
+     finished_at TEXT
+   );`,
 ];
 
 function migrate() {

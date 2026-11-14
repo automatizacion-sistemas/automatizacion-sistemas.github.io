@@ -475,3 +475,121 @@ export const tasksApi = {
   events: (id: string) => request<{ events: TaskEvent[] }>(`/api/tasks/${id}/events`),
   summary: (businessId: string) => request<TasksSummary>(`/api/tasks/summary?businessId=${businessId}`),
 };
+
+// ---------------- Estudio de video (montaje local con FFmpeg) ----------------
+
+export type VideoFormat = 'vertical' | 'horizontal' | 'cuadrado';
+export const VIDEO_FORMATS: { id: VideoFormat; label: string; hint: string }[] = [
+  { id: 'vertical', label: 'Vertical 9:16', hint: 'TikTok, Reels, Shorts, historias' },
+  { id: 'horizontal', label: 'Horizontal 16:9', hint: 'YouTube, Facebook' },
+  { id: 'cuadrado', label: 'Cuadrado 1:1', hint: 'Feed de Instagram y Facebook' },
+];
+
+export interface VideoClip {
+  id: string;
+  kind: 'video' | 'imagen';
+  name: string;
+  url: string;
+  duration: number;
+  width: number;
+  height: number;
+  hasAudio: boolean;
+  trimStart: number;
+  trimEnd: number | null;
+  imageDuration: number;
+  length: number;
+}
+
+export interface VideoRender {
+  id: string;
+  format: VideoFormat;
+  formatLabel: string;
+  quality: string;
+  status: 'en_cola' | 'procesando' | 'listo' | 'error' | 'cancelado';
+  progress: number;
+  url: string | null;
+  size: number | null;
+  duration: number | null;
+  error: string | null;
+  createdAt: string;
+  finishedAt: string | null;
+}
+
+export interface Subtitle {
+  id?: string;
+  start: number;
+  end: number;
+  text: string;
+}
+
+export interface VideoProject {
+  id: string;
+  businessId: string;
+  name: string;
+  fit: 'difuminado' | 'rellenar' | 'ajustar';
+  bgColor: string;
+  clipVolume: number;
+  musicVolume: number;
+  music: { name: string; url: string } | null;
+  fades: boolean;
+  subtitlePosition: 'abajo' | 'centro' | 'arriba';
+  totalDuration: number;
+  clips: VideoClip[];
+  subtitles: Subtitle[];
+  renders: VideoRender[];
+}
+
+export interface VideoProjectSummary {
+  id: string;
+  name: string;
+  updatedAt: string;
+  clips: number;
+  exports: number;
+}
+
+export type ProjectSettings = Pick<VideoProject, 'name' | 'fit' | 'bgColor' | 'clipVolume' | 'musicVolume' | 'fades' | 'subtitlePosition'>;
+
+/** Subida con barra de progreso (los videos pueden pesar cientos de MB). */
+function upload<T>(url: string, file: File, onProgress: (p: number) => void): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+    xhr.onerror = () => reject(new ApiError('No hay conexión con el servidor local.', 0));
+    xhr.onload = () => {
+      let data: { error?: string } | null = null;
+      try {
+        data = JSON.parse(xhr.responseText);
+      } catch {
+        /* respuesta no JSON */
+      }
+      if (xhr.status >= 200 && xhr.status < 300) resolve(data as T);
+      else reject(new ApiError(data?.error ?? `Error ${xhr.status}`, xhr.status));
+    };
+    const fd = new FormData();
+    fd.append('file', file);
+    xhr.send(fd);
+  });
+}
+
+export const video = {
+  status: () => request<{ ffmpeg: { ok: boolean; version: string | null; detail: string } }>('/api/video/status'),
+  projects: (businessId: string) => request<{ projects: VideoProjectSummary[] }>(`/api/video/projects?businessId=${businessId}`),
+  create: (businessId: string, name: string) => request<VideoProject>('/api/video/projects', json('POST', { businessId, name })),
+  get: (id: string) => request<VideoProject>(`/api/video/projects/${id}`),
+  update: (id: string, s: Partial<ProjectSettings>) => request<VideoProject>(`/api/video/projects/${id}`, json('PUT', s)),
+  remove: (id: string) => request<{ ok: true }>(`/api/video/projects/${id}`, { method: 'DELETE' }),
+  addClip: (id: string, file: File, onProgress: (p: number) => void) => upload<VideoProject>(`/api/video/projects/${id}/clips`, file, onProgress),
+  updateClip: (clipId: string, c: { trimStart?: number; trimEnd?: number | null; imageDuration?: number }) =>
+    request<VideoProject>(`/api/video/clips/${clipId}`, json('PUT', c)),
+  order: (id: string, ids: string[]) => request<VideoProject>(`/api/video/projects/${id}/order`, json('POST', { ids })),
+  removeClip: (clipId: string) => request<VideoProject>(`/api/video/clips/${clipId}`, { method: 'DELETE' }),
+  setMusic: (id: string, file: File, onProgress: (p: number) => void) => upload<VideoProject>(`/api/video/projects/${id}/music`, file, onProgress),
+  removeMusic: (id: string) => request<VideoProject>(`/api/video/projects/${id}/music`, { method: 'DELETE' }),
+  saveSubtitles: (id: string, subtitles: Subtitle[]) => request<VideoProject>(`/api/video/projects/${id}/subtitles`, json('PUT', { subtitles })),
+  srtUrl: (id: string) => `/api/video/projects/${id}/subtitles.srt`,
+  render: (id: string, formats: VideoFormat[], quality: 'borrador' | 'final') =>
+    request<VideoProject>(`/api/video/projects/${id}/render`, json('POST', { formats, quality })),
+  cancelRender: (renderId: string) => request<{ ok: true }>(`/api/video/renders/${renderId}/cancel`, { method: 'POST' }),
+  removeRender: (renderId: string) => request<VideoProject>(`/api/video/renders/${renderId}`, { method: 'DELETE' }),
+};

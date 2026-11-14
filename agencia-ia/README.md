@@ -16,13 +16,13 @@ Todo lo siguiente funciona **sin pagar nada** y los datos se guardan en tu compu
 - **Bitácora de actividad** por agente, sonidos opcionales y diseño adaptable a celular.
 
 - **Tablero de tareas y coordinación** (botón **ASIGNAR NUEVA TAREA**): escribe lo que necesitas (por ejemplo, "un video para promocionar mis servicios contables") y elige un flujo. El trabajo se reparte en pasos encadenados: Sofía define la oferta → Valeria produce el video → Diego prepara las publicaciones → tú apruebas → Diego publica, y Sofía prepara el seguimiento. Cada paso se habilita cuando el anterior entrega su trabajo y tú lo apruebas; la entrega pasa al siguiente. También hay tareas individuales, un tablero con columnas (Pendiente, En curso, En revisión, Terminada) y el historial de cada tarea.
+- **Estudio de video (Valeria)**: une clips e imágenes en orden, recorta cada clip, ajusta el encuadre (fondo difuminado, rellenar o barras de color), agrega música con volumen y fundido, y subtítulos (uno por uno o pegando el guion, que se reparte solo). Exporta en **vertical 9:16, horizontal 16:9 y cuadrado 1:1** (1080p o borrador 720p) con barra de progreso, y descarga los subtítulos en .srt. Todo se procesa en tu computadora con FFmpeg, que se instala solo con `npm install`. No genera video con IA: usa el material que subas.
 - **Centro de control**: tareas pendientes, en curso, por revisar y terminadas; publicaciones por aprobar y programadas; prospectos y seguimientos del día. Cada cifra abre su sección, y las etiquetas de los agentes muestran su bandeja real.
 
 En modo gratuito el trabajo de cada paso lo haces tú (o tu equipo): el tablero ordena quién hace qué, en qué orden y qué se entregó. Los personajes no ejecutan nada por sí solos.
 
 **Opcional y de pago:** el chat con IA de los agentes necesita una clave de la API de Claude con saldo (ver más abajo). Sin ella, la app funciona igual y lo indica claramente.
 
-**Próxima etapa gratuita:** montaje de video con FFmpeg (Valeria).
 
 ## Instalación (Windows, Mac o Linux)
 
@@ -67,7 +67,7 @@ Con `claude-opus-5-5` (US$ 4 por millón de tokens de entrada y US$ 20 por mill�
 ```
 web/        Interfaz (React + TypeScript + Vite + Tailwind + React Three Fiber)
 server/     Servidor local (Node + Fastify + SQLite integrado + SDK de Anthropic)
-data/       Base de datos y logotipos (se crea sola; no se sube a GitHub)
+data/       Base de datos, logotipos, clips y videos exportados (se crea sola; no se sube a GitHub)
 .env        Tus claves (lo creas tú a partir de .env.example)
 ```
 

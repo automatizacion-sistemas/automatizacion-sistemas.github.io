@@ -14,7 +14,7 @@ const PHASE_NAME: Record<number, string> = {
   6: 'Fase 6 · CRM comercial',
 };
 
-type Tab = 'crm' | 'calendario' | 'chat' | 'ficha' | 'actividad';
+type Tab = 'crm' | 'calendario' | 'video' | 'chat' | 'ficha' | 'actividad';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -163,6 +163,29 @@ function CalendarTab() {
   );
 }
 
+function VideoTab() {
+  const hasBusiness = useOfficeStore((s) => Boolean(s.activeBusinessId));
+  const openModal = useOfficeStore((s) => s.openModal);
+  return (
+    <div className="flex-1 overflow-y-auto p-5">
+      <p className="text-sm text-slate-600">
+        Valeria monta tus videos con el material que subas: une clips e imágenes, recorta, agrega música y subtítulos, y exporta en vertical
+        (9:16), horizontal (16:9) y cuadrado (1:1).
+      </p>
+      <p className="mt-2 text-xs text-slate-500">
+        Se procesa en tu computadora con FFmpeg, sin costo. Generar video o imágenes con IA (Runway, Adobe) es opcional y de pago.
+      </p>
+      <button
+        type="button"
+        onClick={() => openModal(hasBusiness ? 'video' : 'negocios')}
+        className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+      >
+        {hasBusiness ? 'Abrir estudio de video' : 'Registrar un negocio'}
+      </button>
+    </div>
+  );
+}
+
 function AiOff({ agent }: { agent: AgentDefinition }) {
   const openModal = useOfficeStore((s) => s.openModal);
   return (
@@ -226,7 +249,7 @@ export function AgentPanel() {
   const aiEnabled = useOfficeStore((s) => s.aiEnabled);
   const [tab, setTab] = useState<Tab>('ficha');
   useEffect(() => {
-    if (selectedId) setTab(selectedId === 'sofia' ? 'crm' : selectedId === 'diego' ? 'calendario' : aiEnabled ? 'chat' : 'ficha');
+    if (selectedId) setTab(selectedId === 'sofia' ? 'crm' : selectedId === 'diego' ? 'calendario' : 'video');
   }, [selectedId, aiEnabled]);
 
   const close = () => {
@@ -282,6 +305,7 @@ export function AgentPanel() {
           [
             ...(agent.id === 'sofia' ? [['crm', 'CRM']] : []),
             ...(agent.id === 'diego' ? [['calendario', 'Calendario']] : []),
+            ...(agent.id === 'valeria' ? [['video', 'Video']] : []),
             ['ficha', 'Ficha'],
             ['actividad', 'Actividad'],
             ['chat', aiEnabled ? 'Chat IA' : 'IA (opcional)'],
@@ -304,6 +328,7 @@ export function AgentPanel() {
 
       {tab === 'crm' && <CrmTab />}
       {tab === 'calendario' && <CalendarTab />}
+      {tab === 'video' && <VideoTab />}
       {tab === 'chat' && !aiEnabled && <AiOff agent={agent} />}
       {tab === 'chat' &&
         aiEnabled &&

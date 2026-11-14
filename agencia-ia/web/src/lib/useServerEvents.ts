@@ -43,6 +43,12 @@ export function useServerEvents() {
         if (a.agentId === 'sofia') void store.refreshCrmSummary();
         if (a.agentId === 'diego') void store.refreshCalendarSummary();
       });
+      es.addEventListener('render', (e) => {
+        const ev = JSON.parse((e as MessageEvent).data);
+        const prev = useOfficeStore.getState().lastRender;
+        store.pushRender(ev);
+        if (ev.render.status === 'listo' && !(prev?.render.id === ev.render.id && prev?.render.status === 'listo')) playSound('listo');
+      });
       es.addEventListener('tasks_changed', (e) => {
         const { businessId } = JSON.parse((e as MessageEvent).data) as { businessId: string };
         if (businessId === useOfficeStore.getState().activeBusinessId) void store.refreshTasks();

@@ -8,6 +8,7 @@ import { CrmModal } from './ui/CrmModal';
 import { CalendarModal } from './ui/CalendarModal';
 import { TaskBoard } from './ui/TaskBoard';
 import { ControlCenter } from './ui/ControlCenter';
+import { VideoStudio } from './ui/VideoStudio';
 import { useOfficeStore } from './store/useOfficeStore';
 import { useServerEvents } from './lib/useServerEvents';
 import { playSound } from './lib/sound';
@@ -126,6 +127,12 @@ export default function App() {
               <rect x="14" y="3" width="7" height="11" rx="1.5" />
             </svg>
           </button>
+          <button type="button" className="icon-btn" onClick={() => openModal('video')} aria-label="Estudio de video" title="Estudio de video">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="2" y="6" width="14" height="12" rx="2" />
+              <path d="M16 10l6-3v10l-6-3z" />
+            </svg>
+          </button>
           <button type="button" className="icon-btn" onClick={() => openModal('calendario')} aria-label="Calendario editorial" title="Calendario editorial">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -234,6 +241,7 @@ export default function App() {
       {modal === 'crm' && <CrmModal />}
       {modal === 'calendario' && <CalendarModal />}
       {(modal === 'tareas' || modal === 'nueva_tarea') && <TaskBoard key={modal} />}
+      {modal === 'video' && <VideoStudio />}
     </div>
   );
 }

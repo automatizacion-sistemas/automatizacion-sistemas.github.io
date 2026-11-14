@@ -311,7 +311,9 @@ function TaskDetail({
   };
 
   const shortcut: { label: string; modal: ModalId } | null =
-    task.agentId === 'diego' || /calendario/i.test(task.description)
+    task.agentId === 'valeria' || /video/i.test(task.title)
+      ? { label: 'Abrir estudio de video', modal: 'video' }
+      : task.agentId === 'diego' || /calendario/i.test(task.description)
       ? { label: 'Abrir calendario editorial', modal: 'calendario' }
       : task.agentId === 'sofia' || /crm/i.test(task.description)
         ? { label: 'Abrir CRM', modal: 'crm' }

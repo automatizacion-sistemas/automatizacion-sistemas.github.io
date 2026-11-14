@@ -34,6 +34,8 @@ export function Workstation({ agent, index }: Props) {
       const n = s.crmSummary.overdue + s.crmSummary.dueToday;
       if (n) parts.push(`${n} seguimiento${n === 1 ? '' : 's'} hoy`);
     }
+    if (agent.id === 'valeria' && s.lastRender && (s.lastRender.render.status === 'procesando' || s.lastRender.render.status === 'en_cola'))
+      parts.push(`exportando ${Math.round(s.lastRender.render.progress * 100)} %`);
     if (agent.id === 'diego' && s.calendarSummary?.byStatus.pendiente) parts.push(`${s.calendarSummary.byStatus.pendiente} publ. por aprobar`);
     return parts.length ? parts.join(' · ') : null;
   });

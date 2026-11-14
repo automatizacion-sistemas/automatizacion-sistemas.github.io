@@ -11,6 +11,7 @@ import {
   type CalendarSummary,
   type CrmSummary,
   type TasksSummary,
+  type VideoRender,
 } from '../lib/api';
 
 /** Estado REAL de cada agente, tal como lo informa el servidor. */
@@ -37,7 +38,7 @@ function writeSoundPref(on: boolean) {
   }
 }
 
-export type Modal = 'negocios' | 'integraciones' | 'crm' | 'calendario' | 'tareas' | 'nueva_tarea' | null;
+export type Modal = 'negocios' | 'integraciones' | 'crm' | 'calendario' | 'tareas' | 'nueva_tarea' | 'video' | null;
 
 interface OfficeState {
   runtime: Record<AgentId, AgentRuntime>;
@@ -58,6 +59,9 @@ interface OfficeState {
   calendarSummary: CalendarSummary | null;
   refreshCalendarSummary: () => Promise<void>;
   tasksSummary: TasksSummary | null;
+  /** Último avance de exportación recibido del servidor. */
+  lastRender: { projectId: string; render: VideoRender } | null;
+  pushRender: (e: { projectId: string; render: VideoRender }) => void;
   /** Se incrementa cuando el servidor avisa que cambió el tablero. */
   tasksVersion: number;
   refreshTasks: () => Promise<void>;
@@ -99,6 +103,8 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
   crmSummary: null,
   calendarSummary: null,
   tasksSummary: null,
+  lastRender: null,
+  pushRender: (e) => set({ lastRender: e }),
   tasksVersion: 0,
   refreshTasks: async () => {
     const id = get().activeBusinessId;
