@@ -37,7 +37,7 @@ function tone(freq: number, start: number, duration: number, gain = 0.05, type: 
   osc.stop(t0 + duration + 0.02);
 }
 
-export type SoundName = 'abrir' | 'cerrar' | 'activar';
+export type SoundName = 'abrir' | 'cerrar' | 'activar' | 'listo' | 'error';
 
 export function playSound(name: SoundName, force = false) {
   if (!force && !useOfficeStore.getState().soundOn) return;
@@ -48,6 +48,14 @@ export function playSound(name: SoundName, force = false) {
       break;
     case 'cerrar':
       tone(520, 0, 0.12, 0.04);
+      break;
+    case 'listo':
+      tone(784, 0, 0.12);
+      tone(1047, 0.1, 0.22);
+      break;
+    case 'error':
+      tone(330, 0, 0.18, 0.05, 'triangle');
+      tone(262, 0.15, 0.26, 0.05, 'triangle');
       break;
     case 'activar':
       tone(523, 0, 0.1);

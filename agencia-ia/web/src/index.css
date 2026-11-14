@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body { overscroll-behavior: none; }
+
+@layer components {
+  .glass { @apply bg-white/85 backdrop-blur-md border border-white/60; }
+  .icon-btn {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition
+      hover:bg-slate-900/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500;
+  }
+}
+
+/* Etiquetas flotantes sobre los personajes */
+.agent-tag { transform: translate3d(-50%, -100%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* Texto con formato de las respuestas de los agentes */
+.md > * + * { margin-top: 0.6em; }
+.md h1, .md h2, .md h3, .md h4 { font-weight: 700; color: #0f172a; line-height: 1.3; }
+.md h1 { font-size: 1.05rem; }
+.md h2 { font-size: 1rem; }
+.md h3, .md h4 { font-size: 0.925rem; }
+.md ul { list-style: disc; padding-left: 1.25rem; }
+.md ol { list-style: decimal; padding-left: 1.25rem; }
+.md li + li { margin-top: 0.2em; }
+.md strong { font-weight: 600; color: #0f172a; }
+.md a { color: #4f46e5; text-decoration: underline; }
+.md code { background: #e2e8f0; border-radius: 4px; padding: 0 4px; font-size: 0.85em; }
+.md pre { background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 10px 12px; overflow-x: auto; }
+.md pre code { background: transparent; padding: 0; }
+.md blockquote { border-left: 3px solid #cbd5e1; padding-left: 10px; color: #475569; }
+.md table { width: 100%; border-collapse: collapse; font-size: 0.85em; display: block; overflow-x: auto; }
+.md th, .md td { border: 1px solid #e2e8f0; padding: 4px 8px; text-align: left; vertical-align: top; }
+.md th { background: #f1f5f9; font-weight: 600; }
+.md hr { border-color: #e2e8f0; }

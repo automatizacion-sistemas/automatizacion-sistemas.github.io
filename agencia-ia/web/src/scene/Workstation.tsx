@@ -25,7 +25,14 @@ export function Workstation({ agent, index }: Props) {
   const hover = useOfficeStore((s) => s.hover);
   const ring = useRef<THREE.Mesh>(null);
 
-  const statusLine = runtime.status === 'disponible' ? 'Sin tareas asignadas' : STATUS_LABEL[runtime.status];
+  const statusLine =
+    runtime.status === 'disponible'
+      ? 'Disponible'
+      : runtime.status === 'trabajando'
+        ? 'Respondiendo en el chat…'
+        : runtime.status === 'error'
+          ? 'Error · ver panel'
+          : STATUS_LABEL[runtime.status];
   const screen = useMemo(
     () => screenTexture(agent.look.accent, agent.role.toUpperCase(), statusLine),
     [agent.look.accent, agent.role, statusLine],
@@ -185,7 +192,7 @@ export function Workstation({ agent, index }: Props) {
 
         {/* Personaje */}
         <group position={[0, 0, -0.1]}>
-          <Character look={agent.look} phase={index * 3.7} highlighted={hovered || selected} />
+          <Character look={agent.look} phase={index * 3.7} highlighted={hovered || selected} working={runtime.status === 'trabajando'} />
         </group>
       </group>
 

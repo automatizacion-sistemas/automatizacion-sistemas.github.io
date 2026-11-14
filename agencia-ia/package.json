@@ -1,31 +1,27 @@
 {
   "name": "mi-agencia-ia",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc -b"
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "engines": {
+    "node": ">=22.13"
   },
-  "dependencies": {
-    "@react-three/drei": "^9.117.3",
-    "@react-three/fiber": "^8.17.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "three": "^0.169.0",
-    "zustand": "^4.5.5"
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w server && npm run build -w web",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
+    "start": "npm run start -w server"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@types/three": "^0.169.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.11"
+    "concurrently": "^9.1.0"
+  },
+  "overrides": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@types/three": "0.169.0"
   }
 }

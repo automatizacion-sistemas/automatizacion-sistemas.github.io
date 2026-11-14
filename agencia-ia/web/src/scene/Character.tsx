@@ -8,13 +8,15 @@ interface Props {
   /** Desfase para que los tres personajes no se muevan sincronizados. */
   phase: number;
   highlighted: boolean;
+  /** El servidor informa que el agente está ejecutando algo real: escribe sin pausas. */
+  working: boolean;
 }
 
 /**
  * Personaje sentado, de estilo "bloque", mirando hacia +Z (hacia su teclado).
  * Las animaciones son ilustrativas: no representan la ejecución real de tareas.
  */
-export function Character({ look, phase, highlighted }: Props) {
+export function Character({ look, phase, highlighted, working }: Props) {
   const torso = useRef<THREE.Group>(null);
   const head = useRef<THREE.Group>(null);
   const armL = useRef<THREE.Group>(null);
@@ -30,7 +32,7 @@ export function Character({ look, phase, highlighted }: Props) {
 
     // Ciclo de 12 s: escribe, hace una pausa para estirarse y mirar alrededor, vuelve a escribir.
     const cycle = t % 12;
-    const pausing = !reduced.current && cycle > 8 && cycle < 10.6;
+    const pausing = !reduced.current && !working && cycle > 8 && cycle < 10.6;
     const typing = !reduced.current && !pausing;
 
     // Respiración
@@ -39,8 +41,8 @@ export function Character({ look, phase, highlighted }: Props) {
 
     // Brazos
     const baseArm = pausing ? -0.35 : -1.12;
-    const tapL = typing ? Math.sin(t * 15) * 0.07 : 0;
-    const tapR = typing ? Math.sin(t * 15 + Math.PI) * 0.07 : 0;
+    const tapL = typing ? Math.sin(t * (working ? 22 : 15)) * 0.07 : 0;
+    const tapR = typing ? Math.sin(t * (working ? 22 : 15) + Math.PI) * 0.07 : 0;
     armL.current.rotation.x = THREE.MathUtils.lerp(armL.current.rotation.x, baseArm + tapL, k);
     armR.current.rotation.x = THREE.MathUtils.lerp(armR.current.rotation.x, baseArm + tapR, k);
     armL.current.rotation.z = THREE.MathUtils.lerp(armL.current.rotation.z, pausing ? 0.25 : 0.06, k);
@@ -49,7 +51,7 @@ export function Character({ look, phase, highlighted }: Props) {
     // Cabeza: mira la pantalla, en la pausa gira hacia los compañeros; si está resaltado mira a la cámara.
     let yaw = typing ? Math.sin(t * 0.7) * 0.06 : Math.sin((cycle - 8) * 2.2) * 0.6;
     let pitch = typing ? -0.12 + Math.sin(t * 2.3) * 0.02 : 0.05;
-    if (highlighted) {
+    if (highlighted && !working) {
       yaw = -0.45;
       pitch = 0.02;
     }
