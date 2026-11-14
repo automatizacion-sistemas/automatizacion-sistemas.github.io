@@ -54,7 +54,7 @@ export async function ffmpegStatus(force = false): Promise<FfmpegStatus> {
     path: null,
     version: null,
     detail:
-      'No se encontró FFmpeg. Vuelve a ejecutar "npm install" (lo descarga solo) o instala FFmpeg y escribe su ruta en FFMPEG_PATH dentro del archivo .env.',
+      'No se encontró FFmpeg. Detén la app y, en la carpeta agencia-ia, ejecuta "npm install-scripts approve ffmpeg-static" y luego "npm rebuild ffmpeg-static" (si tu npm no reconoce el primer comando, basta con el segundo). Otra opción: instala FFmpeg y escribe su ruta en FFMPEG_PATH dentro del archivo .env.',
   };
   return cached;
 }

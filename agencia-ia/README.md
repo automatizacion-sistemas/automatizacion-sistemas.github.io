@@ -41,6 +41,12 @@ En modo gratuito el trabajo de cada paso lo haces tú (o tu equipo): el tablero 
 
 Para detenerla: `Ctrl + C` en la terminal.
 
+**Si `npm install` muestra `npm warn install-scripts`:** las versiones nuevas de npm bloquean la descarga automática de FFmpeg (necesario para el estudio de video). Ejecuta una sola vez:
+```bash
+npm install-scripts approve ffmpeg-static
+npm rebuild ffmpeg-static
+```
+
 ## (Opcional, de pago) Cómo activar el chat con IA
 
 1. Entra a **https://console.anthropic.com** y crea una cuenta (no es la misma que claude.ai).
