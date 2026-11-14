@@ -15,9 +15,14 @@ Todo lo siguiente funciona **sin pagar nada** y los datos se guardan en tu compu
 - **Aprobación obligatoria**: Borrador → Pendiente de aprobación → Aprobado → Programado → Publicado (o Error). Si se modifica algo ya aprobado o programado, vuelve a pedir aprobación. La publicación la haces tú con las herramientas gratuitas de cada red (Meta Business Suite, TikTok Studio, YouTube Studio); la app copia el texto, abre la herramienta y registra el enlace.
 - **Bitácora de actividad** por agente, sonidos opcionales y diseño adaptable a celular.
 
+- **Tablero de tareas y coordinación** (botón **ASIGNAR NUEVA TAREA**): escribe lo que necesitas (por ejemplo, "un video para promocionar mis servicios contables") y elige un flujo. El trabajo se reparte en pasos encadenados: Sofía define la oferta → Valeria produce el video → Diego prepara las publicaciones → tú apruebas → Diego publica, y Sofía prepara el seguimiento. Cada paso se habilita cuando el anterior entrega su trabajo y tú lo apruebas; la entrega pasa al siguiente. También hay tareas individuales, un tablero con columnas (Pendiente, En curso, En revisión, Terminada) y el historial de cada tarea.
+- **Centro de control**: tareas pendientes, en curso, por revisar y terminadas; publicaciones por aprobar y programadas; prospectos y seguimientos del día. Cada cifra abre su sección, y las etiquetas de los agentes muestran su bandeja real.
+
+En modo gratuito el trabajo de cada paso lo haces tú (o tu equipo): el tablero ordena quién hace qué, en qué orden y qué se entregó. Los personajes no ejecutan nada por sí solos.
+
 **Opcional y de pago:** el chat con IA de los agentes necesita una clave de la API de Claude con saldo (ver más abajo). Sin ella, la app funciona igual y lo indica claramente.
 
-**Próximas etapas gratuitas:** tablero de tareas entre agentes y montaje de video con FFmpeg (Valeria).
+**Próxima etapa gratuita:** montaje de video con FFmpeg (Valeria).
 
 ## Instalación (Windows, Mac o Linux)
 

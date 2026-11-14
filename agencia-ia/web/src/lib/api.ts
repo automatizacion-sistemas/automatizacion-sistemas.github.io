@@ -396,3 +396,82 @@ export const calendar = {
 /** Texto final para pegar en la red: cuerpo + hashtags. */
 export const composePost = (p: Pick<Post, 'body' | 'hashtags'>) => [p.body.trim(), p.hashtags.trim()].filter(Boolean).join('\n\n');
 export const countHashtags = (s: string) => (s.match(/#[\p{L}\p{N}_]+/gu) ?? []).length;
+
+// ---------------- Tablero de tareas y coordinación ----------------
+
+export type Assignee = 'sofia' | 'valeria' | 'diego' | 'usuario';
+export type TaskStatus = 'pendiente' | 'en_curso' | 'en_revision' | 'terminada';
+
+export const TASK_COLUMNS: { id: TaskStatus; label: string; hint: string }[] = [
+  { id: 'pendiente', label: 'Pendiente', hint: 'Por empezar o esperando una entrega' },
+  { id: 'en_curso', label: 'En curso', hint: 'Se está trabajando' },
+  { id: 'en_revision', label: 'En revisión', hint: 'Entregada: espera tu aprobación' },
+  { id: 'terminada', label: 'Terminada', hint: 'Aprobada y entregada al siguiente' },
+];
+
+export const TASK_PRIORITIES = [
+  { id: 'alta', label: 'Alta', dot: 'bg-rose-500' },
+  { id: 'normal', label: 'Normal', dot: 'bg-slate-400' },
+  { id: 'baja', label: 'Baja', dot: 'bg-sky-400' },
+] as const;
+
+export interface Task {
+  id: string;
+  businessId: string;
+  flowId: string | null;
+  flowName: string;
+  step: number;
+  title: string;
+  description: string;
+  agentId: Assignee;
+  status: TaskStatus;
+  priority: string;
+  dueDate: string | null;
+  dependsOn: string | null;
+  blocked: boolean;
+  input: { taskId: string; title: string; agentId: Assignee | null; status: TaskStatus | null; result: string } | null;
+  result: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TaskEvent {
+  id: string;
+  kind: string;
+  note: string;
+  createdAt: string;
+}
+
+export interface Flow {
+  id: string;
+  name: string;
+  description: string;
+  steps: { agentId: Assignee; title: string }[];
+}
+
+type Bucket = { pendiente: number; bloqueada: number; en_curso: number; en_revision: number; terminada: number };
+export interface TasksSummary {
+  byAgent: Record<Assignee, Bucket>;
+  total: Bucket;
+  overdue: number;
+}
+
+export type TaskAction = 'start' | 'deliver' | 'approve' | 'request_changes' | 'reopen';
+
+export const tasksApi = {
+  flows: () => request<{ flows: Flow[] }>('/api/tasks/flows'),
+  list: (businessId: string) => request<{ tasks: Task[] }>(`/api/tasks?businessId=${businessId}`),
+  create: (
+    businessId: string,
+    t: { title: string; description: string; agentId: Assignee; priority: string; dueDate: string | null },
+  ) => request<Task>('/api/tasks', json('POST', { ...t, businessId })),
+  createFlow: (businessId: string, f: { flowId: string; objective: string; dueDate: string | null; priority: string }) =>
+    request<{ tasks: Task[] }>('/api/tasks/flow', json('POST', { ...f, businessId })),
+  update: (id: string, t: { title: string; description: string; agentId: Assignee; priority: string; dueDate: string | null }) =>
+    request<Task>(`/api/tasks/${id}`, json('PUT', t)),
+  action: (id: string, action: TaskAction, extra: { note?: string; result?: string } = {}) =>
+    request<Task>(`/api/tasks/${id}/action`, json('POST', { action, ...extra })),
+  remove: (id: string) => request<{ ok: true }>(`/api/tasks/${id}`, { method: 'DELETE' }),
+  events: (id: string) => request<{ events: TaskEvent[] }>(`/api/tasks/${id}/events`),
+  summary: (businessId: string) => request<TasksSummary>(`/api/tasks/summary?businessId=${businessId}`),
+};

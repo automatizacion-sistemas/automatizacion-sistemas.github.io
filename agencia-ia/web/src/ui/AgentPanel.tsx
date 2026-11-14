@@ -26,15 +26,16 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Profile({ agent }: { agent: AgentDefinition }) {
-  const runtime = useOfficeStore((s) => s.runtime[agent.id]);
+  const bucket = useOfficeStore((s) => s.tasksSummary?.byAgent[agent.id] ?? null);
+  const openModal = useOfficeStore((s) => s.openModal);
   return (
     <div className="flex-1 overflow-y-auto pb-4">
       <Section title="Bandeja de tareas">
         <dl className="grid grid-cols-3 gap-2 text-center">
           {[
-            ['Pendientes', runtime.pendingTasks],
-            ['En ejecución', runtime.runningTasks],
-            ['Terminadas', runtime.doneTasks],
+            ['Pendientes', (bucket?.pendiente ?? 0) + (bucket?.bloqueada ?? 0)],
+            ['En curso', (bucket?.en_curso ?? 0) + (bucket?.en_revision ?? 0)],
+            ['Terminadas', bucket?.terminada ?? 0],
           ].map(([label, n]) => (
             <div key={label} className="rounded-xl bg-slate-50 px-2 py-2.5">
               <dt className="text-[11px] text-slate-500">{label}</dt>
@@ -42,9 +43,17 @@ function Profile({ agent }: { agent: AgentDefinition }) {
             </div>
           ))}
         </dl>
-        <p className="mt-3 text-sm text-slate-600">
-          El tablero de tareas y la coordinación entre agentes se construyen en una próxima etapa (gratuita).
-        </p>
+        {!!bucket?.bloqueada && (
+          <p className="mt-2 text-xs text-slate-500">{bucket.bloqueada} esperando la entrega de otro agente.</p>
+        )}
+        {!!bucket?.en_revision && <p className="mt-1 text-xs text-amber-700">{bucket.en_revision} entregada(s), esperan tu revisión.</p>}
+        <button
+          type="button"
+          onClick={() => openModal('tareas')}
+          className="mt-3 rounded-xl border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Ver tablero de tareas
+        </button>
       </Section>
       <Section title="Especialidad">
         <p className="text-sm text-slate-700">{agent.specialty}</p>

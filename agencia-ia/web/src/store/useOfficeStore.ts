@@ -1,15 +1,22 @@
 import { create } from 'zustand';
 import type { AgentId, AgentStatus } from '../data/agents';
-import { api, calendar, crm, type ActivityEntry, type AgentStatusPayload, type Business, type CalendarSummary, type CrmSummary } from '../lib/api';
+import {
+  api,
+  calendar,
+  crm,
+  tasksApi,
+  type ActivityEntry,
+  type AgentStatusPayload,
+  type Business,
+  type CalendarSummary,
+  type CrmSummary,
+  type TasksSummary,
+} from '../lib/api';
 
 /** Estado REAL de cada agente, tal como lo informa el servidor. */
 export interface AgentRuntime {
   status: AgentStatus;
   lastError: string | null;
-  /** Bandeja de tareas: se llena a partir de la Fase 3. */
-  pendingTasks: number;
-  runningTasks: number;
-  doneTasks: number;
 }
 
 const SOUND_KEY = 'mi-agencia-ia:sonido';
@@ -30,7 +37,7 @@ function writeSoundPref(on: boolean) {
   }
 }
 
-export type Modal = 'negocios' | 'integraciones' | 'crm' | 'calendario' | null;
+export type Modal = 'negocios' | 'integraciones' | 'crm' | 'calendario' | 'tareas' | 'nueva_tarea' | null;
 
 interface OfficeState {
   runtime: Record<AgentId, AgentRuntime>;
@@ -50,6 +57,10 @@ interface OfficeState {
   crmSummary: CrmSummary | null;
   calendarSummary: CalendarSummary | null;
   refreshCalendarSummary: () => Promise<void>;
+  tasksSummary: TasksSummary | null;
+  /** Se incrementa cuando el servidor avisa que cambió el tablero. */
+  tasksVersion: number;
+  refreshTasks: () => Promise<void>;
 
   setAiEnabled: (on: boolean) => void;
   refreshCrmSummary: () => Promise<void>;
@@ -70,9 +81,6 @@ interface OfficeState {
 const idle = (): AgentRuntime => ({
   status: 'disponible',
   lastError: null,
-  pendingTasks: 0,
-  runningTasks: 0,
-  doneTasks: 0,
 });
 
 export const useOfficeStore = create<OfficeState>((set, get) => ({
@@ -90,6 +98,19 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
   aiEnabled: null,
   crmSummary: null,
   calendarSummary: null,
+  tasksSummary: null,
+  tasksVersion: 0,
+  refreshTasks: async () => {
+    const id = get().activeBusinessId;
+    set((st) => ({ tasksVersion: st.tasksVersion + 1 }));
+    if (!id) return set({ tasksSummary: null });
+    try {
+      const summary = await tasksApi.summary(id);
+      if (get().activeBusinessId === id) set({ tasksSummary: summary });
+    } catch {
+      /* servidor no disponible */
+    }
+  },
   refreshCalendarSummary: async () => {
     const id = get().activeBusinessId;
     if (!id) return set({ calendarSummary: null });

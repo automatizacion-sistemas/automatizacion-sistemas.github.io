@@ -105,6 +105,33 @@ const MIGRATIONS: string[] = [
      updated_at TEXT NOT NULL
    );
    CREATE INDEX posts_business_date ON posts (business_id, date);`,
+  // 4 · Tablero de tareas y coordinación entre agentes
+  `CREATE TABLE tasks (
+     id TEXT PRIMARY KEY,
+     business_id TEXT NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+     flow_id TEXT,
+     flow_name TEXT NOT NULL DEFAULT '',
+     step INTEGER NOT NULL DEFAULT 0,
+     title TEXT NOT NULL,
+     description TEXT NOT NULL DEFAULT '',
+     agent_id TEXT NOT NULL,
+     status TEXT NOT NULL DEFAULT 'pendiente',
+     priority TEXT NOT NULL DEFAULT 'normal',
+     due_date TEXT,
+     depends_on TEXT REFERENCES tasks(id) ON DELETE SET NULL,
+     result TEXT NOT NULL DEFAULT '',
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );
+   CREATE INDEX tasks_business ON tasks (business_id, status);
+   CREATE TABLE task_events (
+     id TEXT PRIMARY KEY,
+     task_id TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+     kind TEXT NOT NULL,
+     note TEXT NOT NULL DEFAULT '',
+     created_at TEXT NOT NULL
+   );
+   CREATE INDEX task_events_task ON task_events (task_id, created_at);`,
 ];
 
 function migrate() {

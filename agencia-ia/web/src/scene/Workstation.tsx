@@ -26,15 +26,16 @@ export function Workstation({ agent, index }: Props) {
   const ring = useRef<THREE.Mesh>(null);
   // Pendientes reales de cada agente (datos del servidor, no de la animación).
   const badge = useOfficeStore((s) => {
+    const parts: string[] = [];
+    const t = s.tasksSummary?.byAgent[agent.id];
+    if (t?.en_revision) parts.push(`${t.en_revision} por revisar`);
+    else if (t && t.en_curso + t.pendiente) parts.push(`${t.en_curso + t.pendiente} tarea${t.en_curso + t.pendiente === 1 ? '' : 's'}`);
     if (agent.id === 'sofia' && s.crmSummary) {
       const n = s.crmSummary.overdue + s.crmSummary.dueToday;
-      return n ? `${n} seguimiento${n === 1 ? '' : 's'} hoy` : null;
+      if (n) parts.push(`${n} seguimiento${n === 1 ? '' : 's'} hoy`);
     }
-    if (agent.id === 'diego' && s.calendarSummary) {
-      const n = s.calendarSummary.byStatus.pendiente;
-      return n ? `${n} por aprobar` : null;
-    }
-    return null;
+    if (agent.id === 'diego' && s.calendarSummary?.byStatus.pendiente) parts.push(`${s.calendarSummary.byStatus.pendiente} publ. por aprobar`);
+    return parts.length ? parts.join(' · ') : null;
   });
 
   const statusLine =

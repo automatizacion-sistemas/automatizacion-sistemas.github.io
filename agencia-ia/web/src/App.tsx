@@ -6,6 +6,8 @@ import { BusinessLogo, BusinessManager } from './ui/BusinessManager';
 import { IntegrationsModal } from './ui/IntegrationsModal';
 import { CrmModal } from './ui/CrmModal';
 import { CalendarModal } from './ui/CalendarModal';
+import { TaskBoard } from './ui/TaskBoard';
+import { ControlCenter } from './ui/ControlCenter';
 import { useOfficeStore } from './store/useOfficeStore';
 import { useServerEvents } from './lib/useServerEvents';
 import { playSound } from './lib/sound';
@@ -78,10 +80,12 @@ export default function App() {
   const activeBusinessId = useOfficeStore((s) => s.activeBusinessId);
   const refreshCrmSummary = useOfficeStore((s) => s.refreshCrmSummary);
   const refreshCalendarSummary = useOfficeStore((s) => s.refreshCalendarSummary);
+  const refreshTasks = useOfficeStore((s) => s.refreshTasks);
   useEffect(() => {
     void refreshCrmSummary();
     void refreshCalendarSummary();
-  }, [activeBusinessId, refreshCrmSummary, refreshCalendarSummary]);
+    void refreshTasks();
+  }, [activeBusinessId, refreshCrmSummary, refreshCalendarSummary, refreshTasks]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -99,11 +103,27 @@ export default function App() {
           </div>
           <span className="hidden h-8 w-px bg-slate-200 sm:block" aria-hidden />
           <BusinessSwitcher />
+          {hasBusinesses && (
+            <button
+              type="button"
+              onClick={() => openModal('nueva_tarea')}
+              className="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-sm hover:bg-indigo-700 sm:text-sm"
+            >
+              <span className="sm:hidden">+ Tarea</span>
+              <span className="hidden sm:inline">Asignar nueva tarea</span>
+            </button>
+          )}
         </div>
         <div className="glass pointer-events-auto flex items-center gap-1 rounded-2xl p-1 shadow-panel">
           <button type="button" className="icon-btn" onClick={() => openModal('negocios')} aria-label="Negocios y clientes" title="Negocios y clientes">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M10 21v-4h4v4" />
+            </svg>
+          </button>
+          <button type="button" className="icon-btn" onClick={() => openModal('tareas')} aria-label="Tablero de tareas" title="Tablero de tareas">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="3" y="3" width="7" height="18" rx="1.5" />
+              <rect x="14" y="3" width="7" height="11" rx="1.5" />
             </svg>
           </button>
           <button type="button" className="icon-btn" onClick={() => openModal('calendario')} aria-label="Calendario editorial" title="Calendario editorial">
@@ -155,7 +175,7 @@ export default function App() {
 
       {/* Avisos */}
       {!selectedId && (
-        <div className="pointer-events-none absolute left-3 top-20 z-30 w-[min(320px,calc(100vw-1.5rem))] space-y-2 sm:left-4">
+        <div className="pointer-events-none absolute left-3 top-[8.25rem] z-30 sm:top-20 w-[min(320px,calc(100vw-1.5rem))] space-y-2 sm:left-4">
           {serverOnline === false && (
             <div className="pointer-events-auto rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 shadow-panel">
               <strong className="font-semibold">El servidor local no responde.</strong> Abre una terminal en la carpeta del proyecto y
@@ -175,6 +195,7 @@ export default function App() {
               </button>
             </div>
           )}
+          {serverOnline && hasBusinesses && <ControlCenter />}
           {noteOpen && (
             <div className="glass pointer-events-auto rounded-2xl p-3.5 text-xs text-slate-600 shadow-panel">
               <div className="flex items-start justify-between gap-2">
@@ -212,6 +233,7 @@ export default function App() {
       {modal === 'integraciones' && <IntegrationsModal />}
       {modal === 'crm' && <CrmModal />}
       {modal === 'calendario' && <CalendarModal />}
+      {(modal === 'tareas' || modal === 'nueva_tarea') && <TaskBoard key={modal} />}
     </div>
   );
 }
