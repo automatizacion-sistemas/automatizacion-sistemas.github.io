@@ -86,6 +86,25 @@ const MIGRATIONS: string[] = [
      created_at TEXT NOT NULL,
      updated_at TEXT NOT NULL
    );`,
+  // 3 · Calendario editorial (gratuito, publicación manual)
+  `CREATE TABLE posts (
+     id TEXT PRIMARY KEY,
+     business_id TEXT NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+     date TEXT NOT NULL,
+     time TEXT NOT NULL DEFAULT '',
+     network TEXT NOT NULL,
+     title TEXT NOT NULL DEFAULT '',
+     body TEXT NOT NULL DEFAULT '',
+     hashtags TEXT NOT NULL DEFAULT '',
+     media TEXT NOT NULL DEFAULT '',
+     status TEXT NOT NULL DEFAULT 'borrador',
+     owner TEXT NOT NULL DEFAULT 'diego',
+     post_url TEXT NOT NULL DEFAULT '',
+     review_note TEXT NOT NULL DEFAULT '',
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );
+   CREATE INDEX posts_business_date ON posts (business_id, date);`,
 ];
 
 function migrate() {

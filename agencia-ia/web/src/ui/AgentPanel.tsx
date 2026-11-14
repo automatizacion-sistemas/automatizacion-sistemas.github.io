@@ -14,7 +14,7 @@ const PHASE_NAME: Record<number, string> = {
   6: 'Fase 6 · CRM comercial',
 };
 
-type Tab = 'crm' | 'chat' | 'ficha' | 'actividad';
+type Tab = 'crm' | 'calendario' | 'chat' | 'ficha' | 'actividad';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -113,6 +113,47 @@ function CrmTab() {
   );
 }
 
+function CalendarTab() {
+  const summary = useOfficeStore((s) => s.calendarSummary);
+  const hasBusiness = useOfficeStore((s) => Boolean(s.activeBusinessId));
+  const openModal = useOfficeStore((s) => s.openModal);
+  return (
+    <div className="flex-1 overflow-y-auto p-5">
+      <p className="text-sm text-slate-600">
+        Diego organiza el calendario editorial de Facebook, Instagram, TikTok y YouTube. Nada sale sin tu aprobación, y la publicación la
+        haces tú con las herramientas gratuitas de cada red.
+      </p>
+      {hasBusiness && summary && (
+        <dl className="mt-4 grid grid-cols-2 gap-2">
+          {[
+            ['Por aprobar', summary.byStatus.pendiente, summary.byStatus.pendiente ? 'text-amber-700' : 'text-slate-900'],
+            ['Para hoy', summary.dueToday, summary.dueToday ? 'text-sky-700' : 'text-slate-900'],
+            ['Atrasadas', summary.overdue, summary.overdue ? 'text-rose-700' : 'text-slate-900'],
+            ['Publicadas', summary.byStatus.publicado, 'text-emerald-700'],
+          ].map(([label, n, cls]) => (
+            <div key={label as string} className="rounded-xl bg-slate-50 px-3 py-2.5">
+              <dt className="text-[11px] text-slate-500">{label}</dt>
+              <dd className={`text-xl font-bold ${cls}`}>{n}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {hasBusiness && summary && summary.overdue > 0 && (
+        <p className="mt-3 text-xs text-rose-700">
+          Hay publicaciones aprobadas o programadas con fecha pasada que no se marcaron como publicadas.
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={() => openModal(hasBusiness ? 'calendario' : 'negocios')}
+        className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+      >
+        {hasBusiness ? 'Abrir calendario' : 'Registrar un negocio'}
+      </button>
+    </div>
+  );
+}
+
 function AiOff({ agent }: { agent: AgentDefinition }) {
   const openModal = useOfficeStore((s) => s.openModal);
   return (
@@ -176,7 +217,7 @@ export function AgentPanel() {
   const aiEnabled = useOfficeStore((s) => s.aiEnabled);
   const [tab, setTab] = useState<Tab>('ficha');
   useEffect(() => {
-    if (selectedId) setTab(selectedId === 'sofia' ? 'crm' : aiEnabled ? 'chat' : 'ficha');
+    if (selectedId) setTab(selectedId === 'sofia' ? 'crm' : selectedId === 'diego' ? 'calendario' : aiEnabled ? 'chat' : 'ficha');
   }, [selectedId, aiEnabled]);
 
   const close = () => {
@@ -231,6 +272,7 @@ export function AgentPanel() {
         {(
           [
             ...(agent.id === 'sofia' ? [['crm', 'CRM']] : []),
+            ...(agent.id === 'diego' ? [['calendario', 'Calendario']] : []),
             ['ficha', 'Ficha'],
             ['actividad', 'Actividad'],
             ['chat', aiEnabled ? 'Chat IA' : 'IA (opcional)'],
@@ -252,6 +294,7 @@ export function AgentPanel() {
       </div>
 
       {tab === 'crm' && <CrmTab />}
+      {tab === 'calendario' && <CalendarTab />}
       {tab === 'chat' && !aiEnabled && <AiOff agent={agent} />}
       {tab === 'chat' &&
         aiEnabled &&

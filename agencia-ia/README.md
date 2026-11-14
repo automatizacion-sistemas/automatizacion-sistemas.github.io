@@ -11,11 +11,13 @@ Todo lo siguiente funciona **sin pagar nada** y los datos se guardan en tu compu
 - **CRM comercial (Sofía)**: prospectos con todos sus datos, clasificación (caliente/tibio/frío), 7 estados comerciales, próximos seguimientos con alertas de vencidos y de "hoy", historial de seguimientos por canal y plantillas de mensajes con variables (`{nombre}`, `{empresa}`, `{servicio}`, `{negocio}`).
 - **WhatsApp sin costo**: el botón abre WhatsApp en tu dispositivo con el mensaje listo (enlace oficial wa.me) y **tú decides si lo envías**.
 - **Informe**: embudo por estado, tasa de cierre y descarga a Excel (CSV).
+- **Calendario editorial (Diego)**: vista de mes y de lista; publicaciones para Facebook, Instagram, TikTok y YouTube con fecha, hora, responsable, texto, hashtags y material; contador de caracteres y hashtags según la red; horarios sugeridos como punto de partida.
+- **Aprobación obligatoria**: Borrador → Pendiente de aprobación → Aprobado → Programado → Publicado (o Error). Si se modifica algo ya aprobado o programado, vuelve a pedir aprobación. La publicación la haces tú con las herramientas gratuitas de cada red (Meta Business Suite, TikTok Studio, YouTube Studio); la app copia el texto, abre la herramienta y registra el enlace.
 - **Bitácora de actividad** por agente, sonidos opcionales y diseño adaptable a celular.
 
 **Opcional y de pago:** el chat con IA de los agentes necesita una clave de la API de Claude con saldo (ver más abajo). Sin ella, la app funciona igual y lo indica claramente.
 
-**Próximas etapas gratuitas:** calendario editorial manual (Diego), tablero de tareas entre agentes y montaje de video con FFmpeg (Valeria).
+**Próximas etapas gratuitas:** tablero de tareas entre agentes y montaje de video con FFmpeg (Valeria).
 
 ## Instalación (Windows, Mac o Linux)
 

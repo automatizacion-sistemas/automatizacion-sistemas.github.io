@@ -5,6 +5,7 @@ import { AgentPanel } from './ui/AgentPanel';
 import { BusinessLogo, BusinessManager } from './ui/BusinessManager';
 import { IntegrationsModal } from './ui/IntegrationsModal';
 import { CrmModal } from './ui/CrmModal';
+import { CalendarModal } from './ui/CalendarModal';
 import { useOfficeStore } from './store/useOfficeStore';
 import { useServerEvents } from './lib/useServerEvents';
 import { playSound } from './lib/sound';
@@ -76,9 +77,11 @@ export default function App() {
   const [noteOpen, setNoteOpen] = useState(true);
   const activeBusinessId = useOfficeStore((s) => s.activeBusinessId);
   const refreshCrmSummary = useOfficeStore((s) => s.refreshCrmSummary);
+  const refreshCalendarSummary = useOfficeStore((s) => s.refreshCalendarSummary);
   useEffect(() => {
     void refreshCrmSummary();
-  }, [activeBusinessId, refreshCrmSummary]);
+    void refreshCalendarSummary();
+  }, [activeBusinessId, refreshCrmSummary, refreshCalendarSummary]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -101,6 +104,12 @@ export default function App() {
           <button type="button" className="icon-btn" onClick={() => openModal('negocios')} aria-label="Negocios y clientes" title="Negocios y clientes">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M10 21v-4h4v4" />
+            </svg>
+          </button>
+          <button type="button" className="icon-btn" onClick={() => openModal('calendario')} aria-label="Calendario editorial" title="Calendario editorial">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
             </svg>
           </button>
           <button type="button" className="icon-btn" onClick={() => openModal('crm')} aria-label="CRM comercial" title="CRM comercial">
@@ -202,6 +211,7 @@ export default function App() {
       {modal === 'negocios' && <BusinessManager />}
       {modal === 'integraciones' && <IntegrationsModal />}
       {modal === 'crm' && <CrmModal />}
+      {modal === 'calendario' && <CalendarModal />}
     </div>
   );
 }

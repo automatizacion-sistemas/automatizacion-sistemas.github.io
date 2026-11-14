@@ -20,7 +20,7 @@ export function useServerEvents() {
         if (wasOffline) {
           store
             .loadBusinesses()
-            .then(() => store.refreshCrmSummary())
+            .then(() => Promise.all([store.refreshCrmSummary(), store.refreshCalendarSummary()]))
             .catch(() => undefined);
           health()
             .then((h) => store.setAiEnabled(h.ai))
@@ -41,6 +41,7 @@ export function useServerEvents() {
         const a = JSON.parse((e as MessageEvent).data) as ActivityEntry;
         store.pushActivity(a);
         if (a.agentId === 'sofia') void store.refreshCrmSummary();
+        if (a.agentId === 'diego') void store.refreshCalendarSummary();
       });
       es.addEventListener('error', () => {
         store.setServerOnline(false);

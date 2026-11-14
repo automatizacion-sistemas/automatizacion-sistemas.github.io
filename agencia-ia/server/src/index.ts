@@ -23,6 +23,7 @@ import {
 import { describeError, streamChat, type ChatTurn } from './claude.js';
 import { listIntegrations } from './integrations.js';
 import { registerCrm } from './crm.js';
+import { registerCalendar } from './calendar.js';
 
 const app = Fastify({ logger: { level: 'warn' } });
 await app.register(multipart, { limits: { fileSize: 2 * 1024 * 1024, files: 1 } });
@@ -315,6 +316,7 @@ app.get('/api/usage', async () => {
 });
 
 registerCrm(app);
+registerCalendar(app);
 
 app.get('/api/agents', async () => ({
   agents: AGENT_IDS.map((id) => ({ id, name: PERSONAS[id].name, role: PERSONAS[id].role })),

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { AgentId, AgentStatus } from '../data/agents';
-import { api, crm, type ActivityEntry, type AgentStatusPayload, type Business, type CrmSummary } from '../lib/api';
+import { api, calendar, crm, type ActivityEntry, type AgentStatusPayload, type Business, type CalendarSummary, type CrmSummary } from '../lib/api';
 
 /** Estado REAL de cada agente, tal como lo informa el servidor. */
 export interface AgentRuntime {
@@ -30,7 +30,7 @@ function writeSoundPref(on: boolean) {
   }
 }
 
-export type Modal = 'negocios' | 'integraciones' | 'crm' | null;
+export type Modal = 'negocios' | 'integraciones' | 'crm' | 'calendario' | null;
 
 interface OfficeState {
   runtime: Record<AgentId, AgentRuntime>;
@@ -48,6 +48,8 @@ interface OfficeState {
   /** true si hay una clave de Claude configurada (asistente IA opcional, de pago). */
   aiEnabled: boolean | null;
   crmSummary: CrmSummary | null;
+  calendarSummary: CalendarSummary | null;
+  refreshCalendarSummary: () => Promise<void>;
 
   setAiEnabled: (on: boolean) => void;
   refreshCrmSummary: () => Promise<void>;
@@ -87,6 +89,17 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
   lastActivity: null,
   aiEnabled: null,
   crmSummary: null,
+  calendarSummary: null,
+  refreshCalendarSummary: async () => {
+    const id = get().activeBusinessId;
+    if (!id) return set({ calendarSummary: null });
+    try {
+      const summary = await calendar.summary(id);
+      if (get().activeBusinessId === id) set({ calendarSummary: summary });
+    } catch {
+      /* servidor no disponible */
+    }
+  },
 
   setAiEnabled: (on) => set({ aiEnabled: on }),
   refreshCrmSummary: async () => {

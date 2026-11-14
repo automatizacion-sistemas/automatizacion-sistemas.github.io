@@ -294,3 +294,105 @@ export function whatsappLink(phone: string, text: string): { url: string } | { e
   if (digits.length < 10) return { error: 'Agrega el código de país al teléfono (por ejemplo, 51 para Perú).' };
   return { url: `https://wa.me/${digits}?text=${encodeURIComponent(text)}` };
 }
+
+// ---------------- Calendario editorial (gratuito, publicación manual) ----------------
+
+export const NETWORKS = [
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    color: '#1877f2',
+    limit: 63206,
+    hashtagLimit: null as number | null,
+    hours: ['12:00', '13:00', '19:00', '20:00'],
+    studio: { label: 'Meta Business Suite', url: 'https://business.facebook.com/latest/composer' },
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    color: '#d6249f',
+    limit: 2200,
+    hashtagLimit: 30 as number | null,
+    hours: ['11:00', '12:00', '19:00', '21:00'],
+    studio: { label: 'Meta Business Suite', url: 'https://business.facebook.com/latest/composer' },
+  },
+  {
+    id: 'tiktok',
+    label: 'TikTok',
+    color: '#111827',
+    limit: 4000,
+    hashtagLimit: null as number | null,
+    hours: ['18:00', '19:00', '21:00', '22:00'],
+    studio: { label: 'TikTok Studio', url: 'https://www.tiktok.com/tiktokstudio/upload' },
+  },
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    color: '#ff0000',
+    limit: 5000,
+    hashtagLimit: 15 as number | null,
+    hours: ['17:00', '18:00', '20:00'],
+    studio: { label: 'YouTube Studio', url: 'https://studio.youtube.com' },
+  },
+] as const;
+export type NetworkId = (typeof NETWORKS)[number]['id'];
+
+export const POST_STATUSES = [
+  { id: 'borrador', label: 'Borrador', cls: 'bg-slate-100 text-slate-700 ring-slate-200' },
+  { id: 'pendiente', label: 'Pendiente de aprobación', cls: 'bg-amber-50 text-amber-800 ring-amber-200' },
+  { id: 'aprobado', label: 'Aprobado', cls: 'bg-sky-50 text-sky-700 ring-sky-200' },
+  { id: 'programado', label: 'Programado', cls: 'bg-indigo-50 text-indigo-700 ring-indigo-200' },
+  { id: 'publicado', label: 'Publicado', cls: 'bg-emerald-50 text-emerald-700 ring-emerald-200' },
+  { id: 'error', label: 'Error', cls: 'bg-rose-50 text-rose-700 ring-rose-200' },
+] as const;
+export type PostStatus = (typeof POST_STATUSES)[number]['id'];
+
+export const OWNERS = [
+  { id: 'diego', label: 'Diego (CM)' },
+  { id: 'valeria', label: 'Valeria (audiovisual)' },
+  { id: 'sofia', label: 'Sofía (comercial)' },
+  { id: 'usuario', label: 'Yo' },
+] as const;
+
+export interface Post {
+  id: string;
+  businessId: string;
+  date: string;
+  time: string;
+  network: NetworkId;
+  title: string;
+  body: string;
+  hashtags: string;
+  media: string;
+  status: PostStatus;
+  owner: string;
+  postUrl: string;
+  reviewNote: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PostContent = Pick<Post, 'date' | 'time' | 'title' | 'body' | 'hashtags' | 'media' | 'owner'>;
+
+export interface CalendarSummary {
+  today: string;
+  byStatus: Record<PostStatus, number>;
+  overdue: number;
+  dueToday: number;
+}
+
+export const calendar = {
+  posts: (businessId: string, from: string, to: string) =>
+    request<{ posts: Post[] }>(`/api/calendar/posts?businessId=${businessId}&from=${from}&to=${to}`),
+  create: (businessId: string, c: PostContent, networks: NetworkId[]) =>
+    request<{ posts: Post[] }>('/api/calendar/posts', json('POST', { ...c, businessId, networks })),
+  update: (id: string, c: PostContent & { network: NetworkId }) => request<Post>(`/api/calendar/posts/${id}`, json('PUT', c)),
+  setStatus: (id: string, status: PostStatus, extra: { note?: string; postUrl?: string } = {}) =>
+    request<Post>(`/api/calendar/posts/${id}/status`, json('POST', { status, ...extra })),
+  remove: (id: string) => request<{ ok: true }>(`/api/calendar/posts/${id}`, { method: 'DELETE' }),
+  summary: (businessId: string) => request<CalendarSummary>(`/api/calendar/summary?businessId=${businessId}`),
+};
+
+/** Texto final para pegar en la red: cuerpo + hashtags. */
+export const composePost = (p: Pick<Post, 'body' | 'hashtags'>) => [p.body.trim(), p.hashtags.trim()].filter(Boolean).join('\n\n');
+export const countHashtags = (s: string) => (s.match(/#[\p{L}\p{N}_]+/gu) ?? []).length;
