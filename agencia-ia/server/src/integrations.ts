@@ -109,7 +109,7 @@ export async function listIntegrations(forceClaude = false): Promise<Integration
   return [
     {
       id: 'claude',
-      name: 'Claude API (Anthropic)',
+      name: 'Claude API (Anthropic) · opcional, de pago',
       purpose: `Inteligencia de los tres agentes · modelo ${claude.model}, esfuerzo ${claude.effort}`,
       agents: ['Valeria', 'Diego', 'Sofía'],
       state: claude.state,
@@ -119,6 +119,13 @@ export async function listIntegrations(forceClaude = false): Promise<Integration
       credits: 'Anthropic no informa el saldo por API: revísalo en console.anthropic.com → Billing. Abajo ves el gasto estimado que registra la app.',
       docsUrl: 'https://console.anthropic.com/settings/keys',
     },
-    ...PENDING.map((p) => ({ ...p, state: 'desconectado' as const, detail: `Se conecta en la Fase ${p.phase}.` })),
+    ...PENDING.map((p) => ({
+      ...p,
+      state: 'desconectado' as const,
+      detail:
+        p.id === 'whatsapp'
+          ? 'Opcional. Sin costo, el CRM ya abre WhatsApp en tu dispositivo con el mensaje listo (enlace oficial wa.me) y tú decides si lo envías.'
+          : `Se conecta en la Fase ${p.phase}.`,
+    })),
   ];
 }

@@ -14,7 +14,7 @@ const PHASE_NAME: Record<number, string> = {
   6: 'Fase 6 · CRM comercial',
 };
 
-type Tab = 'chat' | 'ficha' | 'actividad';
+type Tab = 'crm' | 'chat' | 'ficha' | 'actividad';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -43,8 +43,7 @@ function Profile({ agent }: { agent: AgentDefinition }) {
           ))}
         </dl>
         <p className="mt-3 text-sm text-slate-600">
-          La asignación de tareas y la coordinación entre agentes se habilitan en la{' '}
-          <strong className="font-semibold text-slate-800">Fase 3</strong>. Por ahora puedes conversar con {agent.name} en la pestaña Chat.
+          El tablero de tareas y la coordinación entre agentes se construyen en una próxima etapa (gratuita).
         </p>
       </Section>
       <Section title="Especialidad">
@@ -60,9 +59,11 @@ function Profile({ agent }: { agent: AgentDefinition }) {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-slate-500">
-          Herramientas propias a partir de: {PHASE_NAME[agent.activeFromPhase] ?? `Fase ${agent.activeFromPhase}`}
-        </p>
+        {agent.id !== 'sofia' && (
+          <p className="mt-3 text-xs text-slate-500">
+            Herramientas propias a partir de: {PHASE_NAME[agent.activeFromPhase] ?? `Fase ${agent.activeFromPhase}`}
+          </p>
+        )}
       </Section>
       <Section title="Integraciones que usará">
         <ul className="flex flex-wrap gap-1.5">
@@ -73,6 +74,57 @@ function Profile({ agent }: { agent: AgentDefinition }) {
           ))}
         </ul>
       </Section>
+    </div>
+  );
+}
+
+function CrmTab() {
+  const summary = useOfficeStore((s) => s.crmSummary);
+  const hasBusiness = useOfficeStore((s) => Boolean(s.activeBusinessId));
+  const openModal = useOfficeStore((s) => s.openModal);
+  return (
+    <div className="flex-1 overflow-y-auto p-5">
+      <p className="text-sm text-slate-600">
+        Sofía lleva tu cartera de prospectos, seguimientos y mensajes de WhatsApp. Funciona gratis y los datos quedan en tu computadora.
+      </p>
+      {hasBusiness && summary && (
+        <dl className="mt-4 grid grid-cols-2 gap-2">
+          {[
+            ['Prospectos', summary.total, 'text-slate-900'],
+            ['Vencidos', summary.overdue, summary.overdue ? 'text-rose-700' : 'text-slate-900'],
+            ['Para hoy', summary.dueToday, summary.dueToday ? 'text-amber-700' : 'text-slate-900'],
+            ['Ganados', summary.byStage.ganado, 'text-emerald-700'],
+          ].map(([label, n, cls]) => (
+            <div key={label as string} className="rounded-xl bg-slate-50 px-3 py-2.5">
+              <dt className="text-[11px] text-slate-500">{label}</dt>
+              <dd className={`text-xl font-bold ${cls}`}>{n}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      <button
+        type="button"
+        onClick={() => openModal(hasBusiness ? 'crm' : 'negocios')}
+        className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+      >
+        {hasBusiness ? 'Abrir CRM' : 'Registrar un negocio'}
+      </button>
+    </div>
+  );
+}
+
+function AiOff({ agent }: { agent: AgentDefinition }) {
+  const openModal = useOfficeStore((s) => s.openModal);
+  return (
+    <div className="flex-1 overflow-y-auto p-5 text-sm text-slate-600">
+      <p>
+        <strong className="text-slate-800">El asistente con IA es opcional y de pago.</strong> Para que {agent.name} redacte por ti se
+        necesita una clave de la API de Claude con saldo (aprox. US$ 0.01–0.05 por respuesta).
+      </p>
+      <p className="mt-2">Todo lo demás de la oficina funciona gratis sin esta función.</p>
+      <button type="button" onClick={() => openModal('integraciones')} className="mt-3 rounded-xl border border-slate-300 px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50">
+        Ver cómo activarlo
+      </button>
     </div>
   );
 }
@@ -121,7 +173,11 @@ export function AgentPanel() {
   const select = useOfficeStore((s) => s.select);
   const openModal = useOfficeStore((s) => s.openModal);
   const closeBtn = useRef<HTMLButtonElement>(null);
-  const [tab, setTab] = useState<Tab>('chat');
+  const aiEnabled = useOfficeStore((s) => s.aiEnabled);
+  const [tab, setTab] = useState<Tab>('ficha');
+  useEffect(() => {
+    if (selectedId) setTab(selectedId === 'sofia' ? 'crm' : aiEnabled ? 'chat' : 'ficha');
+  }, [selectedId, aiEnabled]);
 
   const close = () => {
     select(null);
@@ -174,9 +230,10 @@ export function AgentPanel() {
       <div role="tablist" className="flex gap-1 border-b border-slate-200 px-4">
         {(
           [
-            ['chat', 'Chat'],
+            ...(agent.id === 'sofia' ? [['crm', 'CRM']] : []),
             ['ficha', 'Ficha'],
             ['actividad', 'Actividad'],
+            ['chat', aiEnabled ? 'Chat IA' : 'IA (opcional)'],
           ] as [Tab, string][]
         ).map(([id, label]) => (
           <button
@@ -194,7 +251,10 @@ export function AgentPanel() {
         ))}
       </div>
 
+      {tab === 'crm' && <CrmTab />}
+      {tab === 'chat' && !aiEnabled && <AiOff agent={agent} />}
       {tab === 'chat' &&
+        aiEnabled &&
         (business ? (
           <AgentChat agent={agent} business={business} />
         ) : (

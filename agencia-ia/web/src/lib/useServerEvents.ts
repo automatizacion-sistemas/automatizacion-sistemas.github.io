@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useOfficeStore } from '../store/useOfficeStore';
 import type { AgentId } from '../data/agents';
-import type { ActivityEntry, AgentStatusPayload } from './api';
+import { health, type ActivityEntry, type AgentStatusPayload } from './api';
 import { playSound } from './sound';
 
 /** Escucha el canal de eventos del servidor: estado real de los agentes y actividad. */
@@ -17,7 +17,15 @@ export function useServerEvents() {
       es.addEventListener('open', () => {
         const wasOffline = useOfficeStore.getState().serverOnline !== true;
         store.setServerOnline(true);
-        if (wasOffline) store.loadBusinesses().catch(() => undefined);
+        if (wasOffline) {
+          store
+            .loadBusinesses()
+            .then(() => store.refreshCrmSummary())
+            .catch(() => undefined);
+          health()
+            .then((h) => store.setAiEnabled(h.ai))
+            .catch(() => undefined);
+        }
       });
       es.addEventListener('agent_statuses', (e) => {
         store.applyStatuses(JSON.parse((e as MessageEvent).data));
@@ -30,7 +38,9 @@ export function useServerEvents() {
         if (p.status === 'error' && prev !== 'error') playSound('error');
       });
       es.addEventListener('activity', (e) => {
-        store.pushActivity(JSON.parse((e as MessageEvent).data) as ActivityEntry);
+        const a = JSON.parse((e as MessageEvent).data) as ActivityEntry;
+        store.pushActivity(a);
+        if (a.agentId === 'sofia') void store.refreshCrmSummary();
       });
       es.addEventListener('error', () => {
         store.setServerOnline(false);

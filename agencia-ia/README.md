@@ -2,27 +2,20 @@
 
 Oficina virtual en 3D donde trabajan tres agentes de IA: **Valeria** (productora audiovisual), **Diego** (community manager) y **Sofía** (asistente comercial).
 
-## Estado: Fase 2 de 7
+## Modo gratuito
 
-| Fase | Contenido | Estado |
-|---|---|---|
-| 1 | Oficina 3D y personajes animados | ✅ |
-| 2 | Agentes con IA real, negocios/clientes, integraciones | ✅ |
-| 3 | Sistema de tareas y coordinación entre agentes | Pendiente |
-| 4 | Generación y edición de video | Pendiente |
-| 5 | Calendario editorial y publicación | Pendiente |
-| 6 | CRM comercial | Pendiente |
-| 7 | Seguridad, pruebas y publicación en internet | Pendiente |
+Todo lo siguiente funciona **sin pagar nada** y los datos se guardan en tu computadora:
 
-**Qué funciona hoy**
-- Oficina 3D con tres personajes animados. La etiqueta, la pantalla del monitor y el panel muestran el **estado real** que informa el servidor: *Disponible*, *Trabajando* (mientras Claude responde) o *Error*.
-- **Negocios y clientes**: ficha con logotipo, descripción, productos y servicios, público objetivo, colores, redes y objetivos. Cada negocio tiene sus propias conversaciones y nada se mezcla.
-- **Chat con cada agente** usando la API de Claude, con respuestas en vivo y la ficha del negocio como contexto. Cada respuesta muestra los tokens usados y su costo estimado.
-- **Integraciones**: estado verificado de Claude (conectado / desconectado / error de autenticación / permisos insuficientes) y requisitos de las integraciones de las próximas fases.
-- **Bitácora de actividad** por agente: respuestas, errores y cambios en negocios.
-- Sonidos opcionales y diseño adaptable a celular.
+- **Oficina 3D** con Valeria, Diego y Sofía. La etiqueta de cada uno muestra su estado real.
+- **Negocios y clientes**: ficha con logotipo, servicios, público, colores, redes y objetivos. Nada se mezcla entre negocios.
+- **CRM comercial (Sofía)**: prospectos con todos sus datos, clasificación (caliente/tibio/frío), 7 estados comerciales, próximos seguimientos con alertas de vencidos y de "hoy", historial de seguimientos por canal y plantillas de mensajes con variables (`{nombre}`, `{empresa}`, `{servicio}`, `{negocio}`).
+- **WhatsApp sin costo**: el botón abre WhatsApp en tu dispositivo con el mensaje listo (enlace oficial wa.me) y **tú decides si lo envías**.
+- **Informe**: embudo por estado, tasa de cierre y descarga a Excel (CSV).
+- **Bitácora de actividad** por agente, sonidos opcionales y diseño adaptable a celular.
 
-Los agentes todavía **no** generan videos, no publican y no envían mensajes; lo dicen claramente si se les pide.
+**Opcional y de pago:** el chat con IA de los agentes necesita una clave de la API de Claude con saldo (ver más abajo). Sin ella, la app funciona igual y lo indica claramente.
+
+**Próximas etapas gratuitas:** calendario editorial manual (Diego), tablero de tareas entre agentes y montaje de video con FFmpeg (Valeria).
 
 ## Instalación (Windows, Mac o Linux)
 
@@ -32,7 +25,7 @@ Los agentes todavía **no** generan videos, no publican y no envían mensajes; l
    ```bash
    npm install
    ```
-4. Configura tu clave de Claude (ver abajo).
+4. (Opcional, de pago) Configura tu clave de Claude (ver abajo).
 5. Inicia la app:
    ```bash
    npm run dev
@@ -41,7 +34,7 @@ Los agentes todavía **no** generan videos, no publican y no envían mensajes; l
 
 Para detenerla: `Ctrl + C` en la terminal.
 
-## Cómo obtener y guardar tu clave de Claude
+## (Opcional, de pago) Cómo activar el chat con IA
 
 1. Entra a **https://console.anthropic.com** y crea una cuenta (no es la misma que claude.ai).
 2. En **Settings → Billing**, agrega saldo prepagado (por ejemplo, US$ 10). Sin saldo, la API no responde.

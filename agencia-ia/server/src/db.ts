@@ -51,6 +51,41 @@ const MIGRATIONS: string[] = [
      created_at TEXT NOT NULL
    );
    CREATE INDEX activity_recent ON activity (created_at DESC);`,
+  // 2 · CRM comercial (gratuito, local)
+  `CREATE TABLE prospects (
+     id TEXT PRIMARY KEY,
+     business_id TEXT NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+     name TEXT NOT NULL,
+     company TEXT NOT NULL DEFAULT '',
+     phone TEXT NOT NULL DEFAULT '',
+     email TEXT NOT NULL DEFAULT '',
+     service TEXT NOT NULL DEFAULT '',
+     contact_date TEXT,
+     stage TEXT NOT NULL DEFAULT 'nuevo',
+     priority TEXT NOT NULL DEFAULT 'tibio',
+     next_followup TEXT,
+     notes TEXT NOT NULL DEFAULT '',
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );
+   CREATE INDEX prospects_business ON prospects (business_id, stage);
+   CREATE TABLE followups (
+     id TEXT PRIMARY KEY,
+     prospect_id TEXT NOT NULL REFERENCES prospects(id) ON DELETE CASCADE,
+     date TEXT NOT NULL,
+     channel TEXT NOT NULL DEFAULT 'otro',
+     note TEXT NOT NULL,
+     created_at TEXT NOT NULL
+   );
+   CREATE INDEX followups_prospect ON followups (prospect_id, date);
+   CREATE TABLE message_templates (
+     id TEXT PRIMARY KEY,
+     business_id TEXT NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+     name TEXT NOT NULL,
+     body TEXT NOT NULL,
+     created_at TEXT NOT NULL,
+     updated_at TEXT NOT NULL
+   );`,
 ];
 
 function migrate() {

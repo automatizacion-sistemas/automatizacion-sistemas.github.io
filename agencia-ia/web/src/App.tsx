@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OfficeScene } from './scene/OfficeScene';
 import { AgentDock } from './ui/AgentDock';
 import { AgentPanel } from './ui/AgentPanel';
 import { BusinessLogo, BusinessManager } from './ui/BusinessManager';
 import { IntegrationsModal } from './ui/IntegrationsModal';
+import { CrmModal } from './ui/CrmModal';
 import { useOfficeStore } from './store/useOfficeStore';
 import { useServerEvents } from './lib/useServerEvents';
 import { playSound } from './lib/sound';
@@ -73,6 +74,11 @@ export default function App() {
   const businessesLoaded = useOfficeStore((s) => s.businessesLoaded);
   const hasBusinesses = useOfficeStore((s) => s.businesses.length > 0);
   const [noteOpen, setNoteOpen] = useState(true);
+  const activeBusinessId = useOfficeStore((s) => s.activeBusinessId);
+  const refreshCrmSummary = useOfficeStore((s) => s.refreshCrmSummary);
+  useEffect(() => {
+    void refreshCrmSummary();
+  }, [activeBusinessId, refreshCrmSummary]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -86,7 +92,7 @@ export default function App() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-slate-900 text-sm font-extrabold text-white">IA</span>
           <div className="hidden leading-tight sm:block">
             <h1 className="text-base font-extrabold tracking-tight text-slate-900">MI AGENCIA IA</h1>
-            <p className="text-xs text-slate-500">Oficina virtual · Fase 2 de 7</p>
+            <p className="text-xs text-slate-500">Oficina virtual · modo gratuito</p>
           </div>
           <span className="hidden h-8 w-px bg-slate-200 sm:block" aria-hidden />
           <BusinessSwitcher />
@@ -95,6 +101,11 @@ export default function App() {
           <button type="button" className="icon-btn" onClick={() => openModal('negocios')} aria-label="Negocios y clientes" title="Negocios y clientes">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M10 21v-4h4v4" />
+            </svg>
+          </button>
+          <button type="button" className="icon-btn" onClick={() => openModal('crm')} aria-label="CRM comercial" title="CRM comercial">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
             </svg>
           </button>
           <button type="button" className="icon-btn" onClick={() => openModal('integraciones')} aria-label="Integraciones" title="Integraciones">
@@ -160,7 +171,7 @@ export default function App() {
               <div className="flex items-start justify-between gap-2">
                 <p>
                   <strong className="font-semibold text-slate-800">Los movimientos son ilustrativos.</strong> El estado real de cada agente
-                  lo informa el servidor y se ve en su etiqueta y en su panel. Haz clic en un trabajador para conversar con él.
+                  lo informa el servidor y se ve en su etiqueta y en su panel. Haz clic en un trabajador para abrir su panel.
                 </p>
                 <button
                   type="button"
@@ -190,6 +201,7 @@ export default function App() {
       <AgentPanel />
       {modal === 'negocios' && <BusinessManager />}
       {modal === 'integraciones' && <IntegrationsModal />}
+      {modal === 'crm' && <CrmModal />}
     </div>
   );
 }

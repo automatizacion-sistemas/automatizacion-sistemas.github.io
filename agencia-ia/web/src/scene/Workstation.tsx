@@ -24,6 +24,9 @@ export function Workstation({ agent, index }: Props) {
   const select = useOfficeStore((s) => s.select);
   const hover = useOfficeStore((s) => s.hover);
   const ring = useRef<THREE.Mesh>(null);
+  const crmDue = useOfficeStore((s) =>
+    agent.id === 'sofia' && s.crmSummary ? s.crmSummary.overdue + s.crmSummary.dueToday : 0,
+  );
 
   const statusLine =
     runtime.status === 'disponible'
@@ -215,6 +218,11 @@ export function Workstation({ agent, index }: Props) {
           <span className={`h-2.5 w-2.5 rounded-full ${STATUS_DOT[runtime.status]}`} aria-hidden />
           <span className="text-[13px] font-semibold leading-none text-slate-900">{agent.name}</span>
           <span className="text-[11px] leading-none text-slate-500">· {STATUS_LABEL[runtime.status]}</span>
+          {crmDue > 0 && (
+            <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-amber-800">
+              {crmDue} seguimiento{crmDue === 1 ? '' : 's'} hoy
+            </span>
+          )}
         </button>
       </Html>
     </group>

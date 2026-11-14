@@ -22,6 +22,7 @@ import {
 } from './businesses.js';
 import { describeError, streamChat, type ChatTurn } from './claude.js';
 import { listIntegrations } from './integrations.js';
+import { registerCrm } from './crm.js';
 
 const app = Fastify({ logger: { level: 'warn' } });
 await app.register(multipart, { limits: { fileSize: 2 * 1024 * 1024, files: 1 } });
@@ -38,7 +39,7 @@ const notFound = (reply: FastifyReply, what = 'Recurso') => reply.code(404).send
 
 // ---------- Salud y eventos en vivo ----------
 
-app.get('/api/health', async () => ({ ok: true, time: now() }));
+app.get('/api/health', async () => ({ ok: true, time: now(), ai: config.anthropicKeyPresent }));
 
 app.get('/api/events', (req: FastifyRequest, reply: FastifyReply) => {
   reply.hijack();
@@ -312,6 +313,8 @@ app.get('/api/usage', async () => {
     .get(since.toISOString()) as { calls: number; input: number; output: number; cacheRead: number; cost: number };
   return { since: since.toISOString(), ...row };
 });
+
+registerCrm(app);
 
 app.get('/api/agents', async () => ({
   agents: AGENT_IDS.map((id) => ({ id, name: PERSONAS[id].name, role: PERSONAS[id].role })),
