@@ -17,7 +17,21 @@ Todo lo siguiente funciona **sin pagar nada** y los datos se guardan en tu compu
 
 - **Tablero de tareas y coordinación** (botón **ASIGNAR NUEVA TAREA**): escribe lo que necesitas (por ejemplo, "un video para promocionar mis servicios contables") y elige un flujo. El trabajo se reparte en pasos encadenados: Sofía define la oferta → Valeria produce el video → Diego prepara las publicaciones → tú apruebas → Diego publica, y Sofía prepara el seguimiento. Cada paso se habilita cuando el anterior entrega su trabajo y tú lo apruebas; la entrega pasa al siguiente. También hay tareas individuales, un tablero con columnas (Pendiente, En curso, En revisión, Terminada) y el historial de cada tarea.
 - **Estudio de video (Valeria)**: une clips e imágenes en orden, recorta cada clip, ajusta el encuadre (fondo difuminado, rellenar o barras de color), agrega música con volumen y fundido, y subtítulos (uno por uno o pegando el guion, que se reparte solo). Exporta en **vertical 9:16, horizontal 16:9 y cuadrado 1:1** (1080p o borrador 720p) con barra de progreso, y descarga los subtítulos en .srt. Todo se procesa en tu computadora con FFmpeg, que se instala solo con `npm install`. No genera video con IA: usa el material que subas.
-- **Importar desde Claude (gratis)**: trae lo que ya trabajaste en tu chat o proyecto de claude.ai. En el calendario, las tareas, los prospectos, las plantillas de WhatsApp y la ficha del negocio hay un botón **Importar desde Claude**: copias la instrucción, la pegas en tu chat de Claude, pegas su respuesta en la app, revisas la vista previa e importas todo de una vez. Usa tu cuenta de Claude, no la API de pago. (La app no puede leer tus chats por sí sola: el copiar y pegar lo haces tú.)
+- **Importar desde Claude (gratis)**: trae lo que preparaste con Claude, sin la API de pago. Dos formas:
+  - **Desde archivo (recomendado):** indica una vez tu carpeta de importación (por ejemplo `C:\1.JORGE LUIS\AUTOMATIZACION-SISTEMAS\00-IMPORTAR`). Si Claude u otra herramienta deja allí los archivos, solo pulsas **Leer** e **Importar**:
+
+    | Archivo | Sección |
+    |---|---|
+    | `diego.json` (o `calendario.json`) | Calendario editorial |
+    | `tareas.json` (o `plan.json`) | Tablero de tareas |
+    | `sofia.json` (o `prospectos.json`) | Prospectos del CRM |
+    | `sofia-plantillas.json` (o `plantillas.json`) | Plantillas de WhatsApp |
+    | `negocio.json` (o `ficha.json`) | Ficha del negocio |
+    | `valeria.json` (o `subtitulos.json`) | Subtítulos del estudio de video |
+
+  - **Copiar y pegar (respaldo):** copias la instrucción, la pegas en tu chat de Claude y pegas su respuesta.
+
+  Los archivos son JSON (un arreglo de objetos): los textos conservan saltos de línea, emojis y el símbolo `|`. La vista previa valida cada campo y **marca los duplicados** (por fecha, red y título en el calendario; por teléfono o nombre en el CRM; por nombre en plantillas; por responsable y título en tareas), que se omiten por defecto: importar el mismo archivo dos veces no duplica nada.
 - **Centro de control**: tareas pendientes, en curso, por revisar y terminadas; publicaciones por aprobar y programadas; prospectos y seguimientos del día. Cada cifra abre su sección, y las etiquetas de los agentes muestran su bandeja real.
 
 En modo gratuito el trabajo de cada paso lo haces tú (o tu equipo): el tablero ordena quién hace qué, en qué orden y qué se entregó. Los personajes no ejecutan nada por sí solos.

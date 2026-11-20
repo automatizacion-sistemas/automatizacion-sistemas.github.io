@@ -13,6 +13,18 @@ import {
   type VideoRender,
 } from '../lib/api';
 import { Modal } from './Modal';
+import { importFolder } from '../lib/api';
+import { extractItems } from '../lib/claudeImport';
+
+/** Segundos desde 12.5, "12,5", "0:12.5" o "00:00:12,500". */
+function toSeconds(v: unknown): number | null {
+  if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+  const s = String(v ?? '').trim().replace(',', '.');
+  if (!s) return null;
+  const parts = s.split(':').map(Number);
+  if (parts.some((n) => !Number.isFinite(n))) return null;
+  return parts.reduce((acc, n) => acc * 60 + n, 0);
+}
 
 const inputCls =
   'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20';
@@ -186,6 +198,33 @@ function Subtitles({ project, onSaved }: { project: VideoProject; onSaved: (p: V
     setShowScript(false);
   };
 
+  /** Lee valeria.json (o subtitulos.json) de la carpeta de importación. */
+  const readFile = async () => {
+    setError(null);
+    try {
+      const f = await importFolder.read('subtitulos');
+      const out = extractItems(f.content);
+      if ('error' in out) return setError(out.error);
+      const items = out.items
+        .map((it) => ({
+          start: toSeconds(it.inicio ?? it.start ?? it.desde),
+          end: toSeconds(it.fin ?? it.end ?? it.hasta),
+          text: String(it.texto ?? it.text ?? it.subtitulo ?? it.frase ?? '').trim(),
+        }))
+        .filter((x) => x.text);
+      if (!items.length) return setError(`${f.name} no tiene subtítulos con texto.`);
+      if (items.every((x) => x.start !== null && x.end !== null && x.end > x.start)) {
+        setRows(items.map((x) => ({ start: x.start!, end: x.end!, text: x.text })));
+      } else {
+        // Sin tiempos: se reparten a lo largo del video, como con "Pegar guion".
+        setScript(items.map((x) => x.text).join('\n'));
+        setShowScript(true);
+      }
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
+
   const save = async () => {
     setSaving(true);
     setError(null);
@@ -262,6 +301,9 @@ function Subtitles({ project, onSaved }: { project: VideoProject; onSaved: (p: V
         </button>
         <button type="button" onClick={() => setShowScript((s) => !s)} className={btnSecondary}>
           Pegar guion
+        </button>
+        <button type="button" onClick={readFile} className={btnSecondary} title="Lee valeria.json de tu carpeta de importación">
+          Leer valeria.json
         </button>
         <button type="button" onClick={save} disabled={saving || !dirty} className={btnPrimary}>
           {saving ? 'Guardando…' : saved ? 'Guardado ✓' : 'Guardar subtítulos'}

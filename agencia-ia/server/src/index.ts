@@ -27,6 +27,7 @@ import { registerCalendar } from './calendar.js';
 import { registerTasks } from './tasks.js';
 import { registerVideo } from './video.js';
 import { lanBanner, originAllowed, registerLan } from './lan.js';
+import { registerImportFolder } from './importFolder.js';
 
 const app = Fastify({ logger: { level: 'warn' } });
 await app.register(multipart, { limits: { fileSize: 2 * 1024 * 1024, files: 1 } });
@@ -324,6 +325,7 @@ registerCrm(app);
 registerCalendar(app);
 registerTasks(app);
 registerVideo(app);
+registerImportFolder(app);
 
 app.get('/api/agents', async () => ({
   agents: AGENT_IDS.map((id) => ({ id, name: PERSONAS[id].name, role: PERSONAS[id].role })),

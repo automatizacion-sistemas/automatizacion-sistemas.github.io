@@ -607,3 +607,20 @@ export const video = {
   cancelRender: (renderId: string) => request<{ ok: true }>(`/api/video/renders/${renderId}/cancel`, { method: 'POST' }),
   removeRender: (renderId: string) => request<VideoProject>(`/api/video/renders/${renderId}`, { method: 'DELETE' }),
 };
+
+// ---------------- Carpeta de importación (archivos JSON en la laptop) ----------------
+
+export type ImportFileKind = 'calendario' | 'tareas' | 'prospectos' | 'plantillas' | 'ficha' | 'subtitulos';
+
+export interface ImportFolder {
+  dir: string | null;
+  exists: boolean;
+  files: { kind: ImportFileKind; name: string; size: number; modifiedAt: string }[];
+  names: Record<ImportFileKind, string[]>;
+}
+
+export const importFolder = {
+  config: () => request<ImportFolder>('/api/import/config'),
+  setDir: (dir: string) => request<ImportFolder>('/api/import/config', json('PUT', { dir })),
+  read: (kind: ImportFileKind) => request<{ name: string; modifiedAt: string; content: string }>(`/api/import/file?kind=${kind}`),
+};

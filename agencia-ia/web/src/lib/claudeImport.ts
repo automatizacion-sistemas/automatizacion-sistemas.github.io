@@ -9,6 +9,7 @@ import {
   STAGES,
   calendar,
   crm,
+  tasksApi,
   type Business,
   type BusinessInput,
   type NetworkId,
@@ -24,6 +25,8 @@ export interface Row {
   /** Columnas que se muestran en la vista previa. */
   preview: string[];
   error: string | null;
+  /** 'existente': ya está en la app; 'repetido': aparece más de una vez en lo que se va a importar. */
+  duplicate?: 'existente' | 'repetido' | null;
 }
 
 export interface KindDef {
@@ -32,6 +35,40 @@ export interface KindDef {
   columns: string[];
   prompt: (b: Business) => string;
   normalize: (item: Record<string, unknown>) => Row;
+  /** Clave para detectar duplicados (null si la sección no los controla). */
+  key?: (data: Record<string, unknown>) => string;
+  /** Claves de lo que ya existe en la app para este negocio. */
+  existing?: (b: Business) => Promise<string[]>;
+}
+
+/** Texto comparable: sin tildes, sin mayúsculas ni espacios extra. */
+export const norm = (v: unknown) =>
+  String(v ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const postKey = (p: { date?: unknown; network?: unknown; title?: unknown; body?: unknown }) =>
+  [p.date, p.network, norm(p.title) || norm(p.body).slice(0, 60)].map(String).join('|');
+const prospectKey = (p: { name?: unknown; company?: unknown; phone?: unknown }) => {
+  const digits = String(p.phone ?? '').replace(/\D/g, '');
+  return digits.length >= 7 ? `tel:${digits.slice(-9)}` : `n:${norm(p.name)}|${norm(p.company)}`;
+};
+
+/** Marca los duplicados: contra lo que ya existe y dentro del mismo lote. */
+export async function markDuplicates(def: KindDef, business: Business, rows: Row[]): Promise<Row[]> {
+  if (!def.key || !def.existing) return rows;
+  const existing = new Set(await def.existing(business));
+  const seen = new Set<string>();
+  return rows.map((r) => {
+    if (r.error) return r;
+    const k = def.key!(r.data);
+    const duplicate = existing.has(k) ? 'existente' : seen.has(k) ? 'repetido' : null;
+    seen.add(k);
+    return { ...r, duplicate };
+  });
 }
 
 // ------------------------------------------------------------------ utilidades
@@ -106,18 +143,34 @@ function oneOf<T extends string>(v: unknown, options: { id: T; label: string }[]
 }
 
 /** Extrae el arreglo JSON de la respuesta de Claude (con o sin ```json, con texto alrededor). */
+/** Interpreta JSON de forma estricta y, solo si falla, tolerando comas finales. */
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return JSON.parse(text.replace(/,(\s*[\]}])/g, '$1'));
+  }
+}
+
+/**
+ * Extrae el arreglo de objetos de un archivo .json o de la respuesta de Claude (con o sin ```json,
+ * con texto alrededor). Los textos pueden tener saltos de línea, emojis o "|": JSON los conserva tal cual.
+ */
 export function extractItems(raw: string): { items: Record<string, unknown>[] } | { error: string } {
-  const text = raw.trim();
+  const text = raw.replace(/^\uFEFF/, '').trim();
   if (!text) return { error: 'Pega la respuesta de Claude.' };
-  const fenced = /```(?:json)?\s*([\s\S]*?)```/i.exec(text);
-  const candidates = [fenced?.[1], text];
-  for (const c of candidates) {
-    if (!c) continue;
+  const fenced = /```(?:json)?\s*\n([\s\S]*?)\n\s*```/i.exec(text);
+  const sliced = (c: string) => {
     const start = c.search(/[[{]/);
     const end = Math.max(c.lastIndexOf(']'), c.lastIndexOf('}'));
-    if (start < 0 || end <= start) continue;
+    return start >= 0 && end > start ? c.slice(start, end + 1) : '';
+  };
+  const candidates = [text, fenced?.[1] ?? '', sliced(fenced?.[1] ?? ''), sliced(text)];
+  let lastError = '';
+  for (const c of candidates) {
+    if (!c) continue;
     try {
-      const parsed = JSON.parse(c.slice(start, end + 1).replace(/,\s*([\]}])/g, '$1'));
+      const parsed = parseJson(c);
       const arr = Array.isArray(parsed)
         ? parsed
         : Object.values(parsed as Record<string, unknown>).find(Array.isArray) ?? [parsed];
@@ -125,13 +178,14 @@ export function extractItems(raw: string): { items: Record<string, unknown>[] } 
         .filter((x): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x))
         .map((x) => Object.fromEntries(Object.entries(x).map(([k, v]) => [keyOf(k), v])));
       if (items.length) return { items };
-    } catch {
-      /* se prueba el siguiente candidato */
+    } catch (e) {
+      lastError = (e as Error).message;
     }
   }
   return {
     error:
-      'No encontré un bloque JSON válido en el texto. Pídele a Claude: "Responde solo con el bloque JSON, sin texto adicional" y vuelve a pegarlo.',
+      'No encontré un JSON válido. Pídele a Claude: "Responde solo con el bloque JSON, sin texto adicional" y vuelve a intentarlo.' +
+      (lastError ? ` (Detalle: ${lastError})` : ''),
   };
 }
 
@@ -187,6 +241,8 @@ export const KINDS: Record<ImportKind, KindDef> = {
         error,
       };
     },
+    key: (d) => postKey(d),
+    existing: async (b) => (await calendar.posts(b.id, '0000-01-01', '9999-12-31')).posts.map((p) => postKey(p)),
   },
 
   tareas: {
@@ -235,6 +291,8 @@ export const KINDS: Record<ImportKind, KindDef> = {
         error: !title ? 'Sin título' : !agentId ? 'Responsable no reconocido' : null,
       };
     },
+    key: (d) => `${d.agentId}|${norm(d.title)}`,
+    existing: async (b) => (await tasksApi.list(b.id)).tasks.map((t) => `${t.agentId}|${norm(t.title)}`),
   },
 
   prospectos: {
@@ -278,6 +336,8 @@ export const KINDS: Record<ImportKind, KindDef> = {
         error: !name ? 'Sin nombre' : email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Correo no válido' : null,
       };
     },
+    key: (d) => prospectKey(d),
+    existing: async (b) => (await crm.prospects(b.id)).prospects.map((p) => prospectKey(p)),
   },
 
   plantillas: {
@@ -294,6 +354,8 @@ export const KINDS: Record<ImportKind, KindDef> = {
       const body = str(pick(it, 'texto', 'mensaje', 'body', 'contenido'), 4000);
       return { data: { name, body }, preview: [name, body], error: !name || !body ? 'Falta nombre o texto' : null };
     },
+    key: (d) => norm(d.name),
+    existing: async (b) => (await crm.templates(b.id)).templates.map((t) => norm(t.name)),
   },
 
   ficha: {
